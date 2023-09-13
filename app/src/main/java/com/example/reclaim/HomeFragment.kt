@@ -28,6 +28,22 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding = FragmentHomeBinding.inflate(inflater)
 
+        dateText = binding.idTVDate
+        calendarView = binding.calendarView
+
+
+        // set on date change listener for calendar view
+        calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
+
+            // save the date as String in variable
+            val Date =  (dayOfMonth.toString() + "-"
+                    + (month + 1) + "-" + year)
+
+            // set this date in TextView for Display
+            dateText.setText(Date)
+
+        }
+
 
 
 
