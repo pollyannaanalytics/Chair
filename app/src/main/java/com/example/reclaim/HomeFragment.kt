@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CalendarView
 import android.widget.TextView
+import com.example.reclaim.databinding.FragmentHomeBinding
 
 
 /**
@@ -25,10 +26,13 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        val binding = FragmentHomeBinding.inflate(inflater)
 
 
 
-        return inflater.inflate(R.layout.fragment_home, container, false)
+
+
+        return binding.root
     }
 
 
