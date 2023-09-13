@@ -25,6 +25,7 @@
             android:name=".RTCActivity"
             android:exported="false"
             android:label="@string/title_activity_rtcactivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Reclaim" />
         <activity
             android:name=".MainActivity"

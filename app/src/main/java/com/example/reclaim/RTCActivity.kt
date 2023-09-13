@@ -1,5 +1,6 @@
 package com.example.reclaim
 
+import android.Manifest
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -8,8 +9,19 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.reclaim.databinding.ActivityRtcactivityBinding
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+
+
+// declare this is experimental in coroutine API
+@ExperimentalCoroutinesApi
 class RTCActivity : AppCompatActivity() {
+
+    companion object{
+        private const val CAMERA_AUDIO_PERMISSION_REQUEST_CODE = 1
+        private const val CAMERA_PERMISSION = Manifest.permission.CAMERA
+        private const val AUDIO_PERMISSION = Manifest.permission.RECORD_AUDIO
+    }
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityRtcactivityBinding
