@@ -22,7 +22,7 @@
         android:theme="@style/Theme.Reclaim"
         tools:targetApi="31">
         <activity
-            android:name=".RTCActivity"
+            android:name=".videocall.RTCActivity"
             android:exported="false"
             android:label="@string/title_activity_rtcactivity"
             android:screenOrientation="portrait"
