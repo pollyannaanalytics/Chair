@@ -361,6 +361,14 @@ class RTCAudioManager(context: Context) {
         audioManager?.isSpeakerphoneOn = on
     }
 
+    fun selectAudioDevice(device: AudioDevice){
+        ThreadUtils.checkIsOnMainThread()
+        if(!audioDevices.contains(device)){
+            Log.e(TAG, "Can not select $device from available $audioDevices")
+        }
+        userSelectedAudioDevice = device
+        updateAudioDeviceState()
+    }
 
     init {
         Log.d(TAG, "ctor")

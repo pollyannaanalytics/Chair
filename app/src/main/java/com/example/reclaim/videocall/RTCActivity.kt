@@ -1,9 +1,11 @@
 package com.example.reclaim.videocall
 
 import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -13,23 +15,22 @@ import com.example.reclaim.databinding.ActivityRtcactivityBinding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
-
 // declare this is experimental in coroutine API
 @ExperimentalCoroutinesApi
 class RTCActivity : AppCompatActivity() {
 
     private val audioManager by lazy { RTCAudioManager.create(this) }
-    companion object{
+
+    companion object {
         private const val CAMERA_AUDIO_PERMISSION_REQUEST_CODE = 1
         private const val CAMERA_PERMISSION = Manifest.permission.CAMERA
         private const val AUDIO_PERMISSION = Manifest.permission.RECORD_AUDIO
     }
 
 
-
     val TAG = "MainActivity"
 
-    private var meetingID : String = "test-call"
+    private var meetingID: String = "test-call"
 
     private var isJoin = false
 
@@ -44,13 +45,15 @@ class RTCActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-        if (intent.hasExtra("meetingID")){
+        if (intent.hasExtra("meetingID")) {
             meetingID = intent.getStringExtra("meetingID")!!
         }
-        if(intent.hasExtra("isJoin")){
+        if (intent.hasExtra("isJoin")) {
             isJoin = intent.getBooleanExtra("isJson", false)
         }
 
+        checkCameraAndAudioPermission()
+        audioManager.selectAudioDevice(RTCAudioManager.AudioDevice.SPEAKER_PHONE)
 
 
 
@@ -59,6 +62,23 @@ class RTCActivity : AppCompatActivity() {
 //        return navController.navigateUp(appBarConfiguration)
 //                || super.onSupportNavigateUp()
 //    }
+    }
+
+    private fun checkCameraAndAudioPermission() {
+        if ((ContextCompat.checkSelfPermission(
+                this,
+                CAMERA_PERMISSION
+            ) != PackageManager.PERMISSION_GRANTED) && (ContextCompat.checkSelfPermission(
+                this,
+                AUDIO_PERMISSION
+            ) != PackageManager.PERMISSION_GRANTED)
+        ) {
+           requestCameraAndAudioPermission()
+        }
+    }
+
+    private fun requestCameraAndAudioPermission() {
+        TODO("Not yet implemented")
     }
 
 }
