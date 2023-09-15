@@ -370,6 +370,22 @@ class RTCAudioManager(context: Context) {
         updateAudioDeviceState()
     }
 
+    fun setDefaultAudioDevice(defaultDevice: AudioDevice?){
+        ThreadUtils.checkIsOnMainThread()
+        when(defaultDevice){
+            AudioDevice.SPEAKER_PHONE -> defaultDevice
+            AudioDevice.EARPIECE -> if(hasEarpiece() == true){
+                defaultAudioDevice = defaultDevice
+            }else{
+                defaultAudioDevice = AudioDevice.SPEAKER_PHONE
+            }
+            else -> Log.e(TAG, "Invalid default audio")
+
+        }
+        Log.d(TAG, "setDefaultAudioDevice(device=$defaultAudioDevice)")
+        updateAudioDeviceState()
+    }
+
     init {
         Log.d(TAG, "ctor")
         ThreadUtils.checkIsOnMainThread()
