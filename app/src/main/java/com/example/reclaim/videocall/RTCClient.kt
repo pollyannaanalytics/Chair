@@ -110,7 +110,13 @@ class RTCClient(context: Application,
         localStream.addTrack(localVideoTrack)
         localStream.addTrack(localAudioTrack)
 
-        peerConnection?.addStream(localStream)
+        if(peerConnection == null){
+            Log.i("peerConnectionVideo", "peer connectiion is null")
+        }else{
+            peerConnection?.addStream(localStream)
+            Log.i("peerConnectionVideo", "${peerConnection}")
+        }
+
     }
 
     private fun PeerConnection.call(sdpObserver: SdpObserver, meetingID: String) {
@@ -130,7 +136,7 @@ class RTCClient(context: Application,
                             "sdp" to desc?.description,
                             "type" to desc?.type
                         )
-                        db.collection("calls").document(meetingID)
+                        db.collection("voice_call").document(meetingID)
                             .set(offer)
                             .addOnSuccessListener {
                                 Log.e(TAG, "DocumentSnapshot added")
@@ -143,6 +149,8 @@ class RTCClient(context: Application,
 
                     override fun onCreateSuccess(p0: SessionDescription?) {
                         Log.e(TAG, "onCreateSuccess: Description $p0")
+//                        val sdpWithHostname = addHostnameToSdp(desc?.description, "168.95.192.1")
+
                     }
 
                     override fun onCreateFailure(p0: String?) {
@@ -162,6 +170,14 @@ class RTCClient(context: Application,
         }, constraints)
     }
 
+    private fun addHostnameToSdp(sdp: String?, hostname: String): String? {
+        if (sdp == null) return null
+
+        val updatedSdp = sdp.replaceFirst("stun:", "stun:$hostname:")
+        return updatedSdp
+    }
+
+
     private fun PeerConnection.answer(sdpObserver: SdpObserver, meetingID: String) {
         val constraints = MediaConstraints().apply {
             mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"))
@@ -172,7 +188,7 @@ class RTCClient(context: Application,
                     "sdp" to desc?.description,
                     "type" to desc?.type
                 )
-                db.collection("calls").document(meetingID)
+                db.collection("voice_call").document(meetingID)
                     .set(answer)
                     .addOnSuccessListener {
                         Log.e(TAG, "DocumentSnapshot added")
@@ -235,7 +251,7 @@ class RTCClient(context: Application,
     }
 
     fun endCall(meetingID: String){
-        db.collection("calls").document(meetingID).collection(
+        db.collection("voice_call").document(meetingID).collection(
             "candidates"
         ).get().addOnSuccessListener {
             val iceCandidateArray : MutableList<IceCandidate> = mutableListOf()
@@ -255,7 +271,7 @@ class RTCClient(context: Application,
             "type" to "END_CALL"
         )
 
-        db.collection("calls").document(meetingID)
+        db.collection("voice_call").document(meetingID)
             .set(endCall)
             .addOnSuccessListener {
                 Log.e(TAG, "DocumentSnapshot added")

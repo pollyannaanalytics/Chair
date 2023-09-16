@@ -26,7 +26,7 @@ class SignalingClient(
     private val listener: SignalingClientListener
 ) : CoroutineScope{
 companion object{
-    private const val HOST_ADDRESS = "10.101.2.33"
+    private const val HOST_ADDRESS = "168.95.192.1"
 }
 
     var jsonObject : JsonObject ?= null
@@ -59,7 +59,7 @@ companion object{
             Log.i(this@SignalingClient.javaClass.simpleName, "Sending: $it")
         }
         try {
-            db.collection("calls")
+            db.collection("voice_call")
                 .document(meetingID)
                 .addSnapshotListener{
                     snapshot, e ->
@@ -90,7 +90,7 @@ companion object{
                     }
                 }
 
-            db.collection("calls").document(meetingID)
+            db.collection("voice_call").document(meetingID)
                 .collection("candidates").addSnapshotListener{
                     querysnapshot, e ->
                     if (e != null){
@@ -107,6 +107,8 @@ companion object{
                                         Math.toIntExact(data["sdpMLineIndex"] as Long),
                                         data["sdpCandidate"].toString())
                                 )
+
+
                             } else if (SDPtype == "Answer" && data.containsKey("type") && data.get("type")=="answerCandidate") {
                                 listener.onIceCandidateReceived(
                                     IceCandidate(data["sdpMid"].toString(),
@@ -139,7 +141,7 @@ companion object{
             "sdpCandidate" to candidate?.sdp,
             "type" to type
         )
-        db.collection("calls")
+        db.collection("voice_call")
             .document("$meetingID").collection("candidates").document(type)
             .set(candidateConstant as Map<String, Any>)
             .addOnSuccessListener {
