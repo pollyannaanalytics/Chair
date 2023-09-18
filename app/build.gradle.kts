@@ -1,11 +1,22 @@
+import org.gradle.internal.impldep.org.junit.experimental.categories.Categories.CategoryFilter.exclude
+import java.util.regex.Pattern.compile
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-parcelize")
+    id ("kotlin-kapt")
 }
 apply(plugin = "com.google.gms.google-services")
 
+
 android {
+
+    packagingOptions {
+        exclude("META-INF/LICENSE")
+
+        exclude("META-INF/INDEX.LIST")
+    }
     compileSdkVersion(33)
     buildToolsVersion("30.0.3")
     namespace = "com.example.reclaim"
@@ -29,10 +40,9 @@ android {
     buildFeatures.dataBinding = true
 
     packagingOptions {
-        exclude("META-INF/kotlinx-io.kotlin_module")
-        exclude("META-INF/atomicfu.kotlin_module")
-        exclude("META-INF/kotlinx-coroutines-io.kotlin_module")
-        exclude("META-INF/kotlinx-coroutines-core.kotlin_module")
+        exclude("META-INF/LICENSE")
+        exclude("META-INF/DEPENDENCIES")
+        exclude("META-INF/INDEX.LIST")
     }
 
     compileOptions {
@@ -45,8 +55,19 @@ android {
 }
 
 dependencies {
+    implementation(project(mapOf("path" to ":cloudspeechtotext")))
     val kotlinVersion = "1.4.31"
     val ktorVersion = "1.1.4"
+
+    val room_version = "2.5.2"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+
+    kapt("androidx.room:room-compiler:$room_version")
+
+
+
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     implementation("androidx.core:core-ktx:1.3.2")
@@ -58,10 +79,9 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1")
     implementation("org.webrtc:google-webrtc:1.0.32006")
-    implementation(platform("com.google.firebase:firebase-bom:27.0.0"))
+    implementation(platform("com.google.firebase:firebase-bom:27.0.0")){}
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
-
     //Ktor dependencies (you can retrofit instead)
     implementation("io.ktor:ktor-client-android:$ktorVersion")
     implementation("io.ktor:ktor-client-websocket:$ktorVersion")
@@ -78,4 +98,18 @@ dependencies {
 
     // Jetpack Compose Integration
     implementation("androidx.navigation:navigation-compose:$nav_version")
+//
+//    implementation("com.google.cloud:google-cloud-speech:4.18.0")
+
+
+
+
+
+
+    configurations.all {
+//        if(this.name != "com.google.cloud:google-cloud-speech:1.29.1"){
+            exclude ("com.google.protobuf", "protobuf-java")
+//        }
+        exclude ("com.google.api.grpc", "proto-google-common-protos")
+    }
 }

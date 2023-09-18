@@ -3,24 +3,21 @@ package com.example.reclaim.videocall
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.media.Image
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
-import androidx.databinding.DataBindingUtil
 import com.example.reclaim.MainActivity
-
 import com.example.reclaim.R
+
 import com.example.reclaim.databinding.ActivityRtcactivityBinding
+
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.webrtc.DataChannel
 import org.webrtc.IceCandidate
@@ -31,6 +28,8 @@ import org.webrtc.RtpTransceiver
 import org.webrtc.SessionDescription
 import org.webrtc.SurfaceViewRenderer
 import org.webrtc.VideoSink
+import java.io.ByteArrayOutputStream
+import java.io.IOException
 
 
 // declare this is experimental in coroutine API
@@ -43,6 +42,76 @@ class RTCActivity : AppCompatActivity() {
     private lateinit var rtcClient: RTCClient
     private lateinit var signallingClient: SignalingClient
 
+
+//
+//    private val mVoiceCallback = object : com.example.speechtotext.speechtotext.VoiceRecorder.Callback {
+//        override fun onVoiceStart() {
+//            super.onVoiceStart()
+//        }
+//
+//        override fun onVoice(data: ByteArray, size: Int) {
+//            super.onVoice(data, size)
+//            byteArray = byteArray?.let { appendByteArrays(it, data) }
+//
+//        }
+//
+//        override fun onVoiceEnd() {
+//            super.onVoiceEnd()
+//            Log.e("kya", "" + byteArray)
+//            transcribeRecording(byteArray)
+//        }
+//    }
+//
+//    private fun transcribeRecording(byteArray: ByteArray?) {
+//
+//        try {
+//            Log.e("API_CALL", "API CALL STARTED...")
+//            recordingThread = Thread(){
+//                @Override
+//                fun run(){
+//                    val response = speechClient?.recognize(byteArray?.let {
+//                        createRecognizeRequestFromVoice(
+//                            it
+//                        )
+//                    })
+//                    if (response != null) {
+//                        for(result in response.resultsList){
+//                            val transcript = result.getAlternatives(0).transcript
+//                            updateResult(transcript)
+//                        }
+//                    }
+//                }
+//            }
+//        }catch (e: Exception){
+//            Log.e("API_CALL", "$e")
+//        }
+//
+//    }
+
+//    private fun createRecognizeRequestFromVoice(audioData: ByteArray): RecognizeRequest{
+//        val audioBytes = RecognitionAudio.newBuilder().setContent(ByteString.copyFrom(audioData)).build()
+//        val config = RecognitionConfig.newBuilder()
+//            .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
+//            .setSampleRateHertz(16000)
+//            .setLanguageCode("en-US")
+//            .build()
+//
+//        return RecognizeRequest.newBuilder().setConfig(config).setAudio(audioBytes).build()
+//    }
+//
+//    private fun appendByteArrays(byteArray: ByteArray, data: ByteArray): ByteArray? {
+//        val outputStream = ByteArrayOutputStream()
+//        try {
+//            outputStream.write(byteArray)
+//            outputStream.write(data)
+//        }catch (e: Exception){
+//            e.printStackTrace()
+//        }
+//
+//        return outputStream.toByteArray()
+//    }
+//
+//    private fun updateResult(transcript: String) {}
 
     companion object {
         private const val CAMERA_AUDIO_PERMISSION_REQUEST_CODE = 1
@@ -64,6 +133,8 @@ class RTCActivity : AppCompatActivity() {
     private var isVideoPaused = false
 
     private var inSpeakerMode = true
+
+    private var permissionToRecordAccepted = false
 
     private val sdpObserver = object : AppSdpObserver() {
         override fun onCreateSuccess(p0: SessionDescription?) {
@@ -136,10 +207,43 @@ class RTCActivity : AppCompatActivity() {
 
         }
 
+        binding.startSttBtn.setOnClickListener {
 
+//            if(permissionToRecordAccepted){
+//                startVoiceRecorder()
+//            }else{
+//                stopVoiceRecorder()
+//            }
+        }
 
 
     }
+
+
+//    private fun initializeSpeechClient() {
+//        try {
+//            val credentials =
+//                GoogleCredentials.fromStream(resources.openRawResource(R.raw.credentials))
+//            val credentialsProvider = FixedCredentialsProvider.create(credentials)
+//            speechClient = SpeechClient.create(
+//                SpeechSettings.newBuilder().setCredentialsProvider(credentialsProvider).build()
+//            )
+//        } catch (e: IOException) {
+//            Log.e("kya", "InitException" + e.message)
+//        }
+//    }
+
+//    private fun stopVoiceRecorder() {
+//        TODO("Not yet implemented")
+//    }
+//
+//    private fun startVoiceRecorder() {
+//        if(mVoiceRecorder != null){
+//            mVoiceRecorder.stop()
+//        }
+
+////        mVoiceRecorder = VoiceRecorder(mVoi)
+//    }
 
     val remoteView: SurfaceViewRenderer
         get() = binding.remoteView
