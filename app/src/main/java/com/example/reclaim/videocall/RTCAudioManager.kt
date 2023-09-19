@@ -1,21 +1,22 @@
 package com.example.reclaim.videocall
 
 import android.content.BroadcastReceiver
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
+import android.media.AudioManager.OnAudioFocusChangeListener
 import android.os.Build
 import android.preference.PreferenceManager
 import android.util.Log
+import androidx.annotation.Nullable
 import com.example.reclaim.R
-
-import org.jetbrains.annotations.Nullable
 import org.webrtc.ThreadUtils
-import java.util.Collections
+import java.util.*
+import kotlin.collections.HashSet
+
 
 class RTCAudioManager(context: Context) {
     /**
@@ -81,7 +82,7 @@ class RTCAudioManager(context: Context) {
 
     // Callback method for changes in audio focus.
     @Nullable
-    private var audioFocusChangeListener: AudioManager.OnAudioFocusChangeListener? = null
+    private var audioFocusChangeListener: OnAudioFocusChangeListener? = null
 
 
     /* Receiver which handles changes in wired headset availability. */
@@ -128,7 +129,7 @@ class RTCAudioManager(context: Context) {
 
         // Create an AudioManager.OnAudioFocusChangeListener instance.
         audioFocusChangeListener =
-            AudioManager.OnAudioFocusChangeListener { focusChange ->
+            OnAudioFocusChangeListener { focusChange ->
 
                 // Called on the listener to notify if the audio focus for this listener has been changed.
                 // The |focusChange| value indicates whether the focus was gained, whether the focus was lost,
@@ -140,20 +141,15 @@ class RTCAudioManager(context: Context) {
                     AudioManager.AUDIOFOCUS_GAIN -> typeOfChange = "AUDIOFOCUS_GAIN"
                     AudioManager.AUDIOFOCUS_GAIN_TRANSIENT -> typeOfChange =
                         "AUDIOFOCUS_GAIN_TRANSIENT"
-
                     AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE -> typeOfChange =
                         "AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE"
-
                     AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK -> typeOfChange =
                         "AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK"
-
                     AudioManager.AUDIOFOCUS_LOSS -> typeOfChange = "AUDIOFOCUS_LOSS"
                     AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> typeOfChange =
                         "AUDIOFOCUS_LOSS_TRANSIENT"
-
                     AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> typeOfChange =
                         "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK"
-
                     else -> typeOfChange = "AUDIOFOCUS_INVALID"
                 }
                 Log.d(TAG, "onAudioFocusChange: $typeOfChange")

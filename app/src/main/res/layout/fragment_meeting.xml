@@ -7,27 +7,14 @@
 
     </data>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_margin="16dp"
         android:gravity="center"
         android:layout_height="match_parent">
 
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="match_parent"
-            android:id="@+id/chatroom_btn"
-            android:layout_marginBottom="32dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            app:cornerRadius="8dp"
-            android:textColor="#FFFFFF"
-            android:layout_weight="1"
-            android:background="#CCCCCC"
-            android:text="Start Call"
-            android:layout_height="wrap_content" />
 
         <com.google.android.material.card.MaterialCardView
-            android:layout_below="@+id/chatroom_btn"
             android:layout_width="match_parent"
             app:cardCornerRadius="16dp"
 
@@ -93,5 +80,5 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
