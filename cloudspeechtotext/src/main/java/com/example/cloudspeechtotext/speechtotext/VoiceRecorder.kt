@@ -6,7 +6,7 @@ import android.media.MediaRecorder
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.internal.synchronized
 
-class VoiceRecorder {
+class VoiceRecorder(callback: Callback) {
 
     companion object{
         private val SAMPLE_RATE_CANDIDATES = arrayOf(16000, 11025, 22050, 44100)

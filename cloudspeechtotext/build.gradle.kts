@@ -35,7 +35,7 @@ android {
 dependencies {
 
     implementation("androidx.core:core-ktx:1.9.0")
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.6.0"))
+//    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.6.0"))
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
@@ -44,10 +44,22 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     implementation ("com.google.cloud:google-cloud-speech:1.29.1")
-    implementation ("com.google.auth:google-auth-library-oauth2-http:0.26.0")
-    implementation ("io.grpc:grpc-okhttp:1.38.1")
-    implementation ("io.grpc:grpc-stub:1.38.1")
-    implementation ("com.google.api:gax:1.58.0")
+    implementation ("com.google.auth:google-auth-library-oauth2-http:0.26.0"){
+        exclude ("com.google.protobuf", "protobuf-java")
+        exclude ("com.google.api.grpc", "proto-google-common-protos")
+    }
+    implementation ("io.grpc:grpc-okhttp:1.38.1"){
+        exclude ("com.google.protobuf", "protobuf-java")
+        exclude ("com.google.api.grpc", "proto-google-common-protos")
+    }
+    implementation ("io.grpc:grpc-stub:1.38.1"){
+        exclude ("com.google.protobuf", "protobuf-java")
+        exclude ("com.google.api.grpc", "proto-google-common-protos")
+    }
+    implementation ("com.google.api:gax:1.58.0"){
+        exclude ("com.google.protobuf", "protobuf-java")
+        exclude ("com.google.api.grpc", "proto-google-common-protos")
+    }
 
     implementation ("com.google.dagger:dagger-android:2.35.1")
     annotationProcessor ("com.google.dagger:dagger-android-processor:2.21")

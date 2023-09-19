@@ -16,7 +16,7 @@ import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
-    val db = Firebase.firestore
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,44 +26,6 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        Constants.isIntiatedNow = true
-        Constants.isCallEnded = true
-        binding.startMeeting.setOnClickListener {
-//            if (binding.meetingId.text.toString().trim().isNullOrEmpty())
-//                binding.meetingId.error = "Please enter meeting id"
-//            else
-                db.collection("voice_call")
-                    .document(binding.meetingId.text.toString())
-                    .get()
-                    .addOnSuccessListener {
-                        if (it["type"]=="OFFER" || it["type"]=="ANSWER" || it["type"]=="END_CALL") {
-                            binding.meetingId.error = "Please enter new meeting ID"
-                        } else {
-                            val intent = Intent(this@MainActivity, RTCActivity::class.java)
-                            intent.putExtra("meetingID",binding.meetingId.text.toString())
-                            intent.putExtra("isJoin",false)
-                            startActivity(intent)
-                        }
-
-
-
-                    }
-                    .addOnFailureListener {
-                        Log.i("start_voice_call", it.toString())
-                        binding.meetingId.error = "Please enter new meeting ID"
-                    }
-//            }
-        }
-        binding.joinMeeting.setOnClickListener {
-            if (binding.joinMeeting.text.toString().trim().isNullOrEmpty())
-                binding.joinMeeting.error = "Please enter meeting id"
-            else {
-                val intent = Intent(this@MainActivity, RTCActivity::class.java)
-                intent.putExtra("meetingID",binding.meetingId.text.toString())
-                intent.putExtra("isJoin",true)
-                startActivity(intent)
-            }
-        }
 
     }
 }

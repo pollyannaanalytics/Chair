@@ -3,6 +3,7 @@ package com.example.reclaim.videocall
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
@@ -13,12 +14,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
+import androidx.lifecycle.lifecycleScope
 import com.example.reclaim.MainActivity
 import com.example.reclaim.R
 
 import com.example.reclaim.databinding.ActivityRtcactivityBinding
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import org.webrtc.DataChannel
 import org.webrtc.IceCandidate
 import org.webrtc.MediaStream
@@ -28,8 +32,6 @@ import org.webrtc.RtpTransceiver
 import org.webrtc.SessionDescription
 import org.webrtc.SurfaceViewRenderer
 import org.webrtc.VideoSink
-import java.io.ByteArrayOutputStream
-import java.io.IOException
 
 
 // declare this is experimental in coroutine API
@@ -41,6 +43,16 @@ class RTCActivity : AppCompatActivity() {
     private val audioManager by lazy { RTCAudioManager.create(this) }
     private lateinit var rtcClient: RTCClient
     private lateinit var signallingClient: SignalingClient
+
+//    private var mVoiceRecorder: VoiceRecorder? = null
+
+    private var byteArray: ByteArray? = null
+
+//    private val fromSpeechToText = STTRequire()
+
+    private var mediaPlayer: MediaPlayer? = null
+
+    private var transcript: String? = null
 
 
 //
@@ -118,8 +130,6 @@ class RTCActivity : AppCompatActivity() {
         private const val CAMERA_PERMISSION = Manifest.permission.CAMERA
         private const val AUDIO_PERMISSION = Manifest.permission.RECORD_AUDIO
     }
-
-
 
 
     val TAG = "RTCActivity"
@@ -207,14 +217,22 @@ class RTCActivity : AppCompatActivity() {
 
         }
 
-        binding.startSttBtn.setOnClickListener {
-
-//            if(permissionToRecordAccepted){
-//                startVoiceRecorder()
-//            }else{
-//                stopVoiceRecorder()
-//            }
-        }
+//        binding.startSttBtn.setOnClickListener {
+//
+////            if(permissionToRecordAccepted){
+////                startVoiceRecorder()
+////            }else{
+////                stopVoiceRecorder()
+////            }
+//            startVoiceRecorder()
+//            fromSpeechToText.initializeSpeechClient(resources.openRawResource(com.example.cloudspeechtotext.R.raw.credentials))
+//        }
+//
+//        binding.stopSttBtn.setOnClickListener {
+////            stopVoiceRecorder()
+////            byteArray?.let { clearByteArray(it) }
+//
+//        }
 
 
     }
@@ -257,15 +275,14 @@ class RTCActivity : AppCompatActivity() {
 
                 override fun onIceCandidate(p0: IceCandidate?) {
                     super.onIceCandidate(p0)
-                    if(p0 != null && p0.serverUrl.isNullOrBlank()){
+                    if (p0 != null && p0.serverUrl.isNullOrBlank()) {
                         Log.e(TAG, "IceCandidate serverUrl is empty or null")
-                    }else{
+                    } else {
 
                         Log.i(TAG, "IceCandidate serverUrl: ${p0?.serverUrl}")
                         signallingClient.sendIceCandidate(p0, isJoin)
                         rtcClient.addIceCandidate(p0)
                     }
-
 
 
                 }
@@ -317,9 +334,10 @@ class RTCActivity : AppCompatActivity() {
 
 
     val endCallBtn: ImageView
-    get() = binding.endCallButton
+        get() = binding.endCallButton
     val remoteViewLoading: ProgressBar
         get() = binding.remoteViewLoading
+
     private fun createSignallingClientListener() = object : SignalingClientListener {
         override fun onConnectionEstablished() {
             endCallBtn.isClickable = true
@@ -402,7 +420,12 @@ class RTCActivity : AppCompatActivity() {
             .show()
 
     }
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == CAMERA_AUDIO_PERMISSION_REQUEST_CODE && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
             onCameraAndAudioPermissionGranted()
@@ -412,13 +435,102 @@ class RTCActivity : AppCompatActivity() {
         }
     }
 
+//    private fun transcribeRecording(byteArray: ByteArray?) {
+//
+//        try {
+//            lifecycleScope.launch {
+//                Log.e("API_CALL", "API CALL STARTED...")
+//                if (byteArray != null) {
+//                    transcript = async { fromSpeechToText.recognizeResponse(byteArray) }.await()
+//
+//                    if (transcript != null && transcript != "") {
+//                        updateResult(transcript!!)
+//                    }
+//
+//                }
+//
+//            }
+//        } catch (e: Exception) {
+//            Log.e("API_CALL", "$e")
+//        }
+//
+//    }
+
+//    private val mVoiceCallback = object : VoiceRecorder.Callback {
+//        override fun onVoiceStart() {
+//            super.onVoiceStart()
+//        }
+//
+//        override fun onVoice(data: ByteArray, size: Int) {
+//            super.onVoice(data, size)
+//            byteArray = byteArray?.let { fromSpeechToText.appendByteArrays(it, data) }
+//
+//        }
+//
+//        override fun onVoiceEnd() {
+//            super.onVoiceEnd()
+//            Log.e("kya", "" + byteArray)
+//            transcribeRecording(byteArray)
+//        }
+//    }
+//
+//    private fun stopVoiceRecorder() {
+//        if (mVoiceRecorder != null) {
+//            mVoiceRecorder!!.stop()
+//
+//            mVoiceRecorder = null
+//        }
+//
+//        if (recordingThread != null) {
+//            try {
+//                recordingThread!!.join()
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
+//
+//            recordingThread = null
+//        }
+//    }
+//
+//    private fun startVoiceRecorder() {
+//        if (mVoiceRecorder != null) {
+//            mVoiceRecorder!!.stop()
+//        }
+//
+//        mVoiceRecorder = VoiceRecorder(mVoiceCallback)
+//    }
+
+//    private fun clearByteArray(array: ByteArray) {
+//        array.fill(0, 0, array.size - 1)
+//    }
+//
+//    private fun playSound() {
+//        mediaPlayer = MediaPlayer.create(this, com.example.cloudspeechtotext.R.raw.credentials)
+//        if (mediaPlayer != null) {
+//
+//            mediaPlayer!!.setOnCompletionListener { mediaPlayer!!.release() }
+//            mediaPlayer!!.start()
+//        }
+//
+//    }
+//
+//    private fun updateResult(transcript: String) {
+//        lifecycleScope.launch {
+//            playSound()
+//            if (byteArray != null) {
+//                clearByteArray(byteArray!!)
+//            }
+////            stopVoiceRecorder()
+//        }
+//    }
+
 
     private fun onCameraPermissionDenied() {
         Toast.makeText(this, "Camera and Audio Permission Denied", Toast.LENGTH_LONG).show()
     }
 
-    override fun onDestroy() {
-        signallingClient.destroy()
-        super.onDestroy()
-    }
+//    override fun onDestroy() {
+//        signallingClient.destroy()
+//        super.onDestroy()
+//    }
 }

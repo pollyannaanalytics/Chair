@@ -76,7 +76,7 @@ companion object{
                                 SessionDescription.Type.OFFER, data["sdp"].toString()
                             ))
                             SDPtype = "Offer"
-                        }else if(data ?.containsKey("type") &&
+                        }else if(data ?.containsKey("type")!! &&
                             data.getValue("type").toString() == "ANSWER"){
                             listener.onAnswerReceived(SessionDescription(
                                 SessionDescription.Type.ANSWER, data["sdp"].toString()

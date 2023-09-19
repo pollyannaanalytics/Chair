@@ -3,26 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
-
+    app:startDestination="@id/meetingFragment">
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.example.reclaim.videocall.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
-
+        android:id="@+id/homeFragment"
+        android:name="com.example.reclaim.home.HomeFragment"
+        android:label="HomeFragment" />
+    <fragment
+        android:id="@+id/projectFragment"
+        android:name="com.example.reclaim.ProjectFragment"
+        android:label="ProjectFragment" />
+    <fragment
+        android:id="@+id/meetingFragment"
+        android:name="com.example.reclaim.MeetingFragment"
+        tools:layout="@layout/fragment_meeting"
+        android:label="MeetingFragment" >
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_meetingFragment_to_chatRoomFragment"
+            app:destination="@id/chatRoomFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.reclaim.videocall.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
-
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
-    </fragment>
+        android:id="@+id/chatRoomFragment"
+        android:name="com.example.reclaim.chatroom.ChatRoomFragment"
+        android:label="ChatRoomFragment" />
 </navigation>
