@@ -57,7 +57,7 @@ android {
 }
 
 dependencies {
-//    implementation(project(mapOf("path" to ":cloudspeechtotext")))
+
     val kotlinVersion = "1.8.20"
     val ktorVersion = "1.1.4"
 
@@ -86,10 +86,9 @@ dependencies {
 
     implementation("org.webrtc:google-webrtc:1.0.32006")
 
-    implementation(platform("com.google.firebase:firebase-bom:27.0.0"))
+    implementation(platform("com.google.firebase:firebase-bom:29.3.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
-
     //Ktor dependencies (you can retrofit instead)
 
     implementation("io.ktor:ktor-client-android:$ktorVersion")

@@ -43,23 +43,15 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
-    implementation ("com.google.cloud:google-cloud-speech:1.29.1")
-    implementation ("com.google.auth:google-auth-library-oauth2-http:0.26.0"){
-        exclude ("com.google.protobuf", "protobuf-java")
-        exclude ("com.google.api.grpc", "proto-google-common-protos")
+    implementation ("com.google.cloud:google-cloud-speech:4.18.0")
+        {
+            exclude("com.google.api.grpc", "proto-google-common-protos")
+
     }
-    implementation ("io.grpc:grpc-okhttp:1.38.1"){
-        exclude ("com.google.protobuf", "protobuf-java")
-        exclude ("com.google.api.grpc", "proto-google-common-protos")
-    }
-    implementation ("io.grpc:grpc-stub:1.38.1"){
-        exclude ("com.google.protobuf", "protobuf-java")
-        exclude ("com.google.api.grpc", "proto-google-common-protos")
-    }
-    implementation ("com.google.api:gax:1.58.0"){
-        exclude ("com.google.protobuf", "protobuf-java")
-        exclude ("com.google.api.grpc", "proto-google-common-protos")
-    }
+    implementation ("com.google.auth:google-auth-library-oauth2-http:1.19.0")
+    implementation ("io.grpc:grpc-okhttp:1.58.0")
+    implementation ("io.grpc:grpc-stub:1.58.0")
+//    implementation ("com.google.api:gax:1.58.0")
 
     implementation ("com.google.dagger:dagger-android:2.35.1")
     annotationProcessor ("com.google.dagger:dagger-android-processor:2.21")

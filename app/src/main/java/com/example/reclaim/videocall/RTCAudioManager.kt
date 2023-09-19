@@ -41,9 +41,10 @@ class RTCAudioManager(context: Context) {
 
     private val apprtcContext: Context
 
+    @Nullable
     private val audioManager: AudioManager
 
-    @androidx.annotation.Nullable
+    @Nullable
     private var audioManagerEvents: AudioManagerEvents? = null
     private var amState: AudioManagerState
     private var savedAudioMode = AudioManager.MODE_INVALID
@@ -67,7 +68,7 @@ class RTCAudioManager(context: Context) {
     private var userSelectedAudioDevice: AudioDevice? = null
 
     // Contains speakerphone setting: auto, true or false
-    @androidx.annotation.Nullable
+    @Nullable
     private val useSpeakerphone: String?
 
 
@@ -79,7 +80,7 @@ class RTCAudioManager(context: Context) {
     private val wiredHeadsetReceiver: BroadcastReceiver
 
     // Callback method for changes in audio focus.
-    @androidx.annotation.Nullable
+    @Nullable
     private var audioFocusChangeListener: AudioManager.OnAudioFocusChangeListener? = null
 
 
