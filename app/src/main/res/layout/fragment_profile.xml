@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".profile.ProfileFragment">
+
+    <TextView
+        android:id="@+id/profile_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Profile Page"
+        android:textSize="35sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/username_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/profile_title"
+        android:textSize="20sp"
+        android:text="你的名字"
+        app:layout_constraintStart_toStartOf="@id/profile_title"
+        />
+
+    <EditText
+        android:id="@+id/username_edit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="請輸入你的名字"
+        app:layout_constraintStart_toStartOf="@id/profile_title"
+        app:layout_constraintEnd_toEndOf="@id/profile_title"
+        app:layout_constraintTop_toBottomOf="@id/username_title"
+        />
+
+    <TextView
+        android:id="@+id/gender_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/username_edit"
+        android:textSize="20sp"
+        android:text="你的性別"
+        app:layout_constraintStart_toStartOf="@id/profile_title"
+        />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/gender_title"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+    <TextView
+        android:id="@+id/worries_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/spinner"
+        android:textSize="20sp"
+        android:text="你的煩惱"
+        app:layout_constraintStart_toStartOf="@id/profile_title"
+        />
+
+    <EditText
+        android:id="@+id/worries_edit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="來聊聊你最近的煩惱吧"
+        android:lines="8"
+        app:layout_constraintStart_toStartOf="@id/profile_title"
+        app:layout_constraintEnd_toEndOf="@id/profile_title"
+        app:layout_constraintTop_toBottomOf="@id/worries_title"
+        android:autofillHints=""
+        android:inputType="" />
+
+    <Button
+        android:id="@+id/submit_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="儲存我的資料"
+        app:layout_constraintTop_toBottomOf="@id/worries_edit"
+        app:layout_constraintStart_toStartOf="@id/profile_title"
+        app:layout_constraintEnd_toEndOf="@id/profile_title"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
