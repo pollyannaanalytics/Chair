@@ -74,9 +74,6 @@ class MeetingFragment : Fragment() {
             }
         }
 
-        binding.chatroomBtn.setOnClickListener{
-            findNavController().navigate(MeetingFragmentDirections.actionMeetingFragmentToChatRoomFragment())
-        }
 
         return binding.root
     }

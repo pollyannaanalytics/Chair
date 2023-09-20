@@ -79,6 +79,7 @@ class SignalingClient(
 
                     if (snapshot != null && snapshot.exists()) {
                         val data = snapshot.data
+                        Log.i("snapshotdata", data.toString())
                         if (data?.containsKey("type")!! &&
                             data.getValue("type").toString() == "OFFER") {
                             listener.onOfferReceived(SessionDescription(
