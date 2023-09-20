@@ -8,8 +8,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "friends")
 data class Friends(
 @PrimaryKey(autoGenerate = false)
-    val id: String = "",
-
+val id: Long = 0L,
     @ColumnInfo(name = "user_id")
     val userId: String = "",
 

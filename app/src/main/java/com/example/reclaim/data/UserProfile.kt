@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "user_profile")
 data class UserProfile(
     @PrimaryKey(autoGenerate = false)
-    val id: String = "",
+    val id: Long = 0L,
 
     @ColumnInfo(name = "school_name")
     val schoolName: String = "",

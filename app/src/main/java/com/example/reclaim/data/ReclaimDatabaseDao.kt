@@ -35,7 +35,7 @@ interface ReclaimDatabaseDao {
     fun rejectFriend(id: String)
 
     @Query("SELECT * from user_profile WHERE worry_type = :worries")
-    fun findFriend(worries: String)
+    fun findFriend(worries: String): UserProfile
 
 
 }

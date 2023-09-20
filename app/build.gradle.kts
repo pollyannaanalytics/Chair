@@ -106,7 +106,6 @@ dependencies {
 
     // Jetpack Compose Integration
     implementation("androidx.navigation:navigation-compose:$nav_version")
-//
     implementation("com.google.http-client:google-http-client:1.39.2")
 
 
@@ -119,13 +118,10 @@ dependencies {
     val version_retrofit = "2.9.0"
     implementation ("com.squareup.retrofit2:retrofit:$version_retrofit")
     implementation ("com.squareup.retrofit2:converter-moshi:$version_retrofit")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
 
 
+    implementation ("com.squareup.okhttp3:okhttp:5.0.0-alpha.2")
 
-//    configurations.all {
-//
-//            exclude ("com.google.protobuf", "protobuf-java")
-//
-//        exclude ("com.google.api.grpc", "proto-google-common-protos")
-//    }
+
 }

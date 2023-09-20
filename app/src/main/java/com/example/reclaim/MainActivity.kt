@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.NavHostFragment
 import com.example.reclaim.databinding.ActivityMainBinding
 import com.example.reclaim.databinding.ActivityRtcactivityBinding
 import com.example.reclaim.videocall.Constants
@@ -25,7 +26,7 @@ class MainActivity : AppCompatActivity() {
             DataBindingUtil.setContentView(this, R.layout.activity_main)
 
 
-
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.myNavHostFragment) as NavHostFragment
 
     }
 }

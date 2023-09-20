@@ -8,9 +8,9 @@ import com.squareup.moshi.Json
 @Entity(tableName = "chat_record")
 data class ChatRecord(
 
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "record_id")
-    val id: String ="",
+    val id: Long = 0L,
 
     @ColumnInfo(name = "content")
     val content : String = "",

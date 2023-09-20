@@ -8,7 +8,7 @@ import com.squareup.moshi.Json
 @Entity(tableName = "user_info")
 data class UserInfo(
     @PrimaryKey(autoGenerate = true)
-    var id : String = "",
+    var id : Long = 0L,
 
     @ColumnInfo(name = "email")
     var email : String = "",
