@@ -41,7 +41,7 @@ class MeetingFragment : Fragment() {
 //            if (binding.meetingId.text.toString().trim().isNullOrEmpty())
 //                binding.meetingId.error = "Please enter meeting id"
 //            else
-            db.collection("voice_call")
+            db.collection("calls")
                 .document(binding.meetingId.text.toString())
                 .get()
                 .addOnSuccessListener {
@@ -64,13 +64,27 @@ class MeetingFragment : Fragment() {
 //            }
         }
         binding.joinMeeting.setOnClickListener {
-            if (binding.joinMeeting.text.toString().trim().isNullOrEmpty())
-                binding.joinMeeting.error = "Please enter meeting id"
+            if (binding.meetingId.text.toString().trim().isNullOrEmpty())
+                binding.meetingId.error = "Please enter meeting id"
             else {
-                val intent = Intent(requireActivity(), RTCActivity::class.java)
-                intent.putExtra("meetingID",binding.meetingId.text.toString())
-                intent.putExtra("isJoin",true)
-                startActivity(intent)
+                db.collection("calls")
+                    .document(binding.meetingId.text.toString())
+                    .get()
+                    .addOnSuccessListener {
+                        Log.i("joinmeeting", it.id)
+                        if(it.exists()){
+                            val intent = Intent(requireActivity(), RTCActivity::class.java)
+                            intent.putExtra("meetingID",binding.meetingId.text.toString())
+                            intent.putExtra("isJoin",true)
+                            startActivity(intent)
+                        }else{
+                            binding.meetingId.error = "This Meeting Id is not existed"
+                        }
+
+                    }.addOnFailureListener {
+                        binding.meetingId.error = "This Meeting Id is not valid"
+                    }
+
             }
         }
 

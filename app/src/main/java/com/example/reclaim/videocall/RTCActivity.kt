@@ -34,7 +34,7 @@ class RTCActivity : AppCompatActivity() {
 
     private val audioManager by lazy { RTCAudioManager.create(this) }
 
-    val TAG = "MainActivity"
+    val TAG = "activityconnected"
 
     private lateinit var switchCameraButton: ImageView
     private lateinit var audioOutputButton: ImageView
@@ -130,6 +130,7 @@ class RTCActivity : AppCompatActivity() {
     }
 
     private fun onCameraAndAudioPermissionGranted() {
+
         rtcClient = RTCClient(
             application,
             object : PeerConnectionObserver() {
@@ -141,7 +142,7 @@ class RTCActivity : AppCompatActivity() {
 
                 override fun onAddStream(p0: MediaStream?) {
                     super.onAddStream(p0)
-                    Log.e(TAG, "onAddStream: $p0")
+                    Log.e(TAG, "onAddStream: ${p0?.id}")
                     p0?.videoTracks?.get(0)?.addSink(findViewById<SurfaceViewRenderer>(R.id.remote_view))
                 }
 
@@ -166,7 +167,7 @@ class RTCActivity : AppCompatActivity() {
                 }
 
                 override fun onAddTrack(p0: RtpReceiver?, p1: Array<out MediaStream>?) {
-                    Log.e(TAG, "onAddTrack: $p0 \n $p1")
+                    Log.e(TAG, "onAddTrack: ${p0?.track()} \n ${p1?.size}")
                 }
 
                 override fun onTrack(transceiver: RtpTransceiver?) {
@@ -186,6 +187,7 @@ class RTCActivity : AppCompatActivity() {
     private fun createSignallingClientListener() = object : SignalingClientListener {
         override fun onConnectionEstablished() {
             endCallButton.isClickable = true
+            Log.i(TAG, "onConnection Established")
         }
 
         override fun onOfferReceived(description: SessionDescription) {
@@ -193,16 +195,19 @@ class RTCActivity : AppCompatActivity() {
             Constants.isIntiatedNow = false
             rtcClient.answer(sdpObserver,meetingID)
             findViewById<ProgressBar>(R.id.remote_view_loading).isGone = true
+            Log.i(TAG, "onOfferReceived")
         }
 
         override fun onAnswerReceived(description: SessionDescription) {
             rtcClient.onRemoteSessionReceived(description)
             Constants.isIntiatedNow = false
             findViewById<ProgressBar>(R.id.remote_view_loading).isGone = true
+            Log.i(TAG, "onAnswerReceived")
         }
 
         override fun onIceCandidateReceived(iceCandidate: IceCandidate) {
             rtcClient.addIceCandidate(iceCandidate)
+            Log.i(TAG, "onIceCandidateReceived")
         }
 
         override fun onCallEnded() {
@@ -210,6 +215,7 @@ class RTCActivity : AppCompatActivity() {
                 Constants.isCallEnded = true
                 rtcClient.endCall(meetingID)
                 finish()
+                Log.i(TAG, "onIceCandidateReceived")
                 startActivity(Intent(this@RTCActivity, MainActivity::class.java))
             }
         }

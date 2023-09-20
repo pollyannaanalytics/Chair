@@ -173,7 +173,6 @@ class SignalingClient(
     }
 
     fun destroy() {
-//        client.close()
         job.complete()
     }
 }
