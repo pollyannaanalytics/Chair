@@ -23,6 +23,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.example.reclaim.R
 import com.example.reclaim.chatgpt.MessageToGPT
+import com.example.reclaim.data.ReclaimDatabase
+import com.example.reclaim.data.ReclaimDatabaseDao
 import com.example.reclaim.databinding.FragmentProfileBinding
 import com.example.reclaim.videocall.RTCActivity
 
@@ -35,9 +37,10 @@ import com.example.reclaim.videocall.RTCActivity
 class ProfileFragment : Fragment() {
     val TAG = "PROFILE_PAGE"
 
-    private val viewModel: ProfileViewModel by lazy { ViewModelProvider(this).get(ProfileViewModel::class.java) }
+
     private var imageUri: Uri? = null
     private var imageList: MutableList<Uri?> = emptyList<Uri?>().toMutableList()
+
 
     lateinit var viewPager: ViewPager2
     @RequiresApi(Build.VERSION_CODES.S)
@@ -45,10 +48,14 @@ class ProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        val application = requireNotNull(this.activity).application
+        val dao = ReclaimDatabase.getInstance(application).reclaimDao()
+        val factory = ProfileFactory(dao)
+        val viewModel = ViewModelProvider(this, factory).get(ProfileViewModel::class.java)
 
         // Inflate the layout for this fragment
         val binding = FragmentProfileBinding.inflate(inflater)
+
         viewPager = binding.chooseImgContent
         var username = ""
         var gender = ""

@@ -13,7 +13,7 @@ interface ReclaimDatabaseDao {
     fun insertUserInfo(userInfo: UserInfo)
 
     @Insert
-    fun insertUserProfile(userProfile: UserProfile)
+    suspend fun insertUserProfile(userProfile: UserProfile)
 
     @Insert
     fun insertFriends(friends: Friends)
@@ -37,5 +37,6 @@ interface ReclaimDatabaseDao {
     @Query("SELECT * from user_profile WHERE worry_type = :worries")
     fun findFriend(worries: String): UserProfile
 
-
+    @Insert
+    suspend fun saveImages(images: Images)
 }

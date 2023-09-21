@@ -7,30 +7,32 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "user_profile")
 data class UserProfile(
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
 
-    @ColumnInfo(name = "school_name")
-    val schoolName: String = "",
-
     @ColumnInfo(name = "user_id")
-    val userId: String = "",
+    val userId: String? = "",
 
     @ColumnInfo(name = "user_name")
-    val userName: String = "",
-
-    @ColumnInfo(name = "image_url")
-    val imageUrl: String = "",
+    val userName: String? = "",
 
     @ColumnInfo(name = "gender")
-    val gender: String = "",
+    val gender: String? = "",
 
     @ColumnInfo(name = "worry_type")
-    var worryType: String = "",
+    var worryType: String? = "",
 
     @ColumnInfo(name = "worries_description")
-    var worriesDescription: String = ""
+    var worriesDescription: String? = ""
 
 
 
+)
+
+@Entity(tableName = "images")
+data class Images(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0L,
+    val userId: String?,
+    val imageUri: String?
 )

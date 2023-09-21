@@ -1,8 +1,6 @@
 package com.example.reclaim.profile
 
 import android.util.Log
-import android.widget.Toast
-import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,23 +9,25 @@ import com.example.reclaim.chatgpt.ApiClient
 import com.example.reclaim.chatgpt.CompletionRequest
 import com.example.reclaim.chatgpt.CompletionResponse
 import com.example.reclaim.chatgpt.MessageToGPT
+import com.example.reclaim.data.Images
+import com.example.reclaim.data.ReclaimDatabaseDao
+import com.example.reclaim.data.UserManager
+import com.example.reclaim.data.UserProfile
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import retrofit2.Response
-import java.security.AccessController.getContext
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.UUID
 
 
-data class UserProfile(
+data class ProfileData(
     var userName: String? = "",
     var gender: String? = "",
     var worriesDescription: String? = "",
@@ -42,16 +42,17 @@ enum class WorriesType {
     FAMILY,
     FRIENDSHIP,
     LIFE,
-    HEALTH
+    HEALTH,
+    SCHOOL
 }
 
 private const val TAG = "PROFILEVIEWMODEL"
 
 
-class ProfileViewModel : ViewModel() {
+class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel() {
 
-    private var _userProfile = MutableLiveData<UserProfile?>()
-    val userProfile: LiveData<UserProfile?>
+    private var _userProfile = MutableLiveData<ProfileData?>()
+    val userProfile: LiveData<ProfileData?>
         get() = _userProfile
 
     private val _messageList = MutableLiveData<MutableList<MessageToGPT>>()
@@ -70,7 +71,7 @@ class ProfileViewModel : ViewModel() {
 
     init {
         _messageList.value = mutableListOf()
-        _userProfile.value = UserProfile()
+        _userProfile.value = ProfileData()
         Log.i(TAG, "type is${type}")
         _readyToUploadOnFirebase.value = false
 
@@ -91,22 +92,48 @@ class ProfileViewModel : ViewModel() {
         userData?.images = images
         _userProfile.value = userData
 
-        saveInLocalDB()
 
     }
 
+    private fun saveUserProfileInLocal() {
+        val currentUser = UserProfile(
+            userId = UserManager.userId,
+            userName = _userProfile.value?.userName,
+            gender = _userProfile.value?.gender,
+            worryType = _userProfile.value?.worriesType,
+            worriesDescription = _userProfile.value?.worriesDescription
+        )
+        viewModelScope.launch {
+            databaseDao.insertUserProfile(currentUser)
+        }
+
+    }
+
+    private fun saveImagesInLocal() {
+        _userProfile.value?.images?.forEach {
+            val images = Images(userId = UserManager.userId, imageUri = it)
+            viewModelScope.launch {
+                databaseDao.saveImages(images)
+            }
+
+        }
+    }
+
     private fun saveInLocalDB() {
-        TODO("Not yet implemented")
+        viewModelScope.launch {
+            saveUserProfileInLocal()
+            saveImagesInLocal()
+        }
     }
 
 
     private fun addToChatGPT(message: String, sentBy: String, timestamp: String) {
 
-            val currentList = _messageList.value ?: mutableListOf()
-            currentList.add(MessageToGPT(message, sentBy, timestamp))
-            _messageList.postValue(currentList)
+        val currentList = _messageList.value ?: mutableListOf()
+        currentList.add(MessageToGPT(message, sentBy, timestamp))
+        _messageList.postValue(currentList)
 
-            Log.i(TAG, "messageList is ${_messageList.value}")
+        Log.i(TAG, "messageList is ${_messageList.value}")
 
 
     }
@@ -146,6 +173,7 @@ class ProfileViewModel : ViewModel() {
 //                        addResponse(result)
                         val currentType = result
                         _userProfile.value?.worriesType = currentType
+                        saveInLocalDB()
                         _readyToUploadOnFirebase.value = true
 
                         Log.i(TAG, "result is$result")
@@ -198,8 +226,8 @@ class ProfileViewModel : ViewModel() {
 
         profile.add(data)
             .addOnSuccessListener {
-            Log.i(TAG, "upload success")
-        }
+                Log.i(TAG, "upload success")
+            }
             .addOnFailureListener {
                 Log.i(TAG, "upload failed")
             }
