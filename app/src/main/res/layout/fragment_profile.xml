@@ -10,38 +10,50 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".profile.ProfileFragment">
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/profile_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Profile Page"
-            android:textSize="35sp"
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/choose_img_content"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:gravity="center" />
+            android:src="@drawable/ic_launcher_background"
+            />
+        <Button
+            android:id="@+id/choose_img_btn"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="從相簿請選擇圖片"
+            app:layout_constraintStart_toStartOf="@id/choose_img_content"
+            app:layout_constraintEnd_toEndOf="@id/choose_img_content"
+            app:layout_constraintTop_toBottomOf="@id/choose_img_content"
+            />
 
         <TextView
             android:id="@+id/username_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/profile_title"
+            app:layout_constraintTop_toBottomOf="@id/choose_img_btn"
             android:textSize="20sp"
             android:text="你的名字"
-            app:layout_constraintStart_toStartOf="@id/profile_title" />
+            app:layout_constraintStart_toStartOf="@id/choose_img_content" />
 
         <EditText
             android:id="@+id/username_edit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="請輸入你的名字"
-            app:layout_constraintStart_toStartOf="@id/profile_title"
-            app:layout_constraintEnd_toEndOf="@id/profile_title"
+            app:layout_constraintStart_toStartOf="@id/choose_img_content"
+            app:layout_constraintEnd_toEndOf="@id/choose_img_content"
             app:layout_constraintTop_toBottomOf="@id/username_title" />
 
         <TextView
@@ -51,12 +63,13 @@
             app:layout_constraintTop_toBottomOf="@id/username_edit"
             android:textSize="20sp"
             android:text="你的性別"
-            app:layout_constraintStart_toStartOf="@id/profile_title" />
+            app:layout_constraintStart_toStartOf="@id/choose_img_content" />
 
         <RadioGroup
             android:id="@+id/gender_group"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/choose_img_content"
             app:layout_constraintTop_toBottomOf="@id/gender_title"
             >
             <RadioButton
@@ -84,7 +97,7 @@
             app:layout_constraintTop_toBottomOf="@id/gender_group"
             android:textSize="20sp"
             android:text="你的煩惱"
-            app:layout_constraintStart_toStartOf="@id/profile_title" />
+            app:layout_constraintStart_toStartOf="@id/choose_img_content" />
 
         <EditText
             android:id="@+id/worries_edit"
@@ -92,8 +105,8 @@
             android:layout_height="wrap_content"
             android:hint="來聊聊你最近的煩惱吧"
             android:lines="8"
-            app:layout_constraintStart_toStartOf="@id/profile_title"
-            app:layout_constraintEnd_toEndOf="@id/profile_title"
+            app:layout_constraintStart_toStartOf="@id/choose_img_content"
+            app:layout_constraintEnd_toEndOf="@id/choose_img_content"
             app:layout_constraintTop_toBottomOf="@id/worries_title"
             android:autofillHints=""
             android:inputType="" />
@@ -104,7 +117,8 @@
             android:layout_height="wrap_content"
             android:text="儲存我的資料"
             app:layout_constraintTop_toBottomOf="@id/worries_edit"
-            app:layout_constraintStart_toStartOf="@id/profile_title"
-            app:layout_constraintEnd_toEndOf="@id/profile_title" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintStart_toStartOf="@id/choose_img_content"
+            app:layout_constraintEnd_toEndOf="@id/choose_img_content" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
 </layout>

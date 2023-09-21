@@ -2,6 +2,7 @@ package com.example.reclaim.profile
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -29,7 +31,8 @@ data class UserProfile(
     var userName: String? = "",
     var gender: String? = "",
     var worriesDescription: String? = "",
-    var worriesType: String? = ""
+    var worriesType: String? = "",
+    var images: List<String> = emptyList()
 )
 
 
@@ -44,6 +47,7 @@ enum class WorriesType {
 
 private const val TAG = "PROFILEVIEWMODEL"
 
+
 class ProfileViewModel : ViewModel() {
 
     private var _userProfile = MutableLiveData<UserProfile?>()
@@ -54,11 +58,9 @@ class ProfileViewModel : ViewModel() {
     val messageList: LiveData<MutableList<MessageToGPT>>
         get() = _messageList
 
-    private val type = WorriesType.values()
+    private val type = WorriesType.values().map { it.toString() }
     private val prompt =
-        """If I give you a situation, you should only give me a type but neither of explanation nor description.
-            Also, You should not give me dot. 
-            For example, I give you situation that My dog is dead, you should only answer me: LIFE"""
+        """Force you to select one in $type for """
 
     val db = Firebase.firestore
 
@@ -69,7 +71,7 @@ class ProfileViewModel : ViewModel() {
     init {
         _messageList.value = mutableListOf()
         _userProfile.value = UserProfile()
-        Log.i("profileview", type.toString())
+        Log.i(TAG, "type is${type}")
         _readyToUploadOnFirebase.value = false
 
     }
@@ -78,27 +80,35 @@ class ProfileViewModel : ViewModel() {
         userName: String?,
         userGender: String?,
         worriesDescription: String?,
-        worriesType: String?
+        worriesType: String?,
+        images: List<String>
     ) {
         val userData = _userProfile.value
         userData?.userName = userName
         userData?.gender = userGender
         userData?.worriesDescription = worriesDescription
         userData?.worriesType = worriesType
+        userData?.images = images
         _userProfile.value = userData
 
+        saveInLocalDB()
 
+    }
 
+    private fun saveInLocalDB() {
+        TODO("Not yet implemented")
     }
 
 
     private fun addToChatGPT(message: String, sentBy: String, timestamp: String) {
 
-        val currentList = _messageList.value ?: mutableListOf()
-        currentList.add(MessageToGPT(message, sentBy, timestamp))
-        _messageList.postValue(currentList)
+            val currentList = _messageList.value ?: mutableListOf()
+            currentList.add(MessageToGPT(message, sentBy, timestamp))
+            _messageList.postValue(currentList)
 
-        Log.i(TAG, "messageList is ${_messageList.value}")
+            Log.i(TAG, "messageList is ${_messageList.value}")
+
+
     }
 
     private fun addResponse(response: String) {
@@ -112,7 +122,7 @@ class ProfileViewModel : ViewModel() {
         val completionRequest = CompletionRequest(
             model = "text-davinci-003",
             prompt = question,
-            maxTokens = 4000
+            max_tokens = 4000
         )
 
         viewModelScope.launch {
@@ -130,11 +140,15 @@ class ProfileViewModel : ViewModel() {
         withContext(Dispatchers.Main) {
             if (response.isSuccessful) {
                 response.body()?.let { completionResponse ->
-                    val result = completionResponse.choices.firstOrNull()?.text
+                    val result = completionResponse.choices.first()?.text
 
                     if (result != null) {
-                        addResponse(result.trim())
+//                        addResponse(result)
+                        val currentType = result
+                        _userProfile.value?.worriesType = currentType
                         _readyToUploadOnFirebase.value = true
+
+                        Log.i(TAG, "result is$result")
                     } else {
                         addResponse("No Choices found")
                     }
@@ -142,11 +156,15 @@ class ProfileViewModel : ViewModel() {
             } else {
                 try {
                     val jObjError = JSONObject(response.errorBody()!!.string())
-                    Log.e(TAG, "GPT" +
-                        jObjError.getJSONObject("error").getString("message"))
+                    Log.e(
+                        TAG, "GPT" +
+                                jObjError.getJSONObject("error").getString("message")
+                    )
                 } catch (e: Exception) {
-                    Log.e(TAG, "GPT" +
-                        e.toString())
+                    Log.e(
+                        TAG, "GPT" +
+                                e.toString()
+                    )
 
                 }
             }
@@ -159,7 +177,7 @@ class ProfileViewModel : ViewModel() {
 
     fun sendDescriptionToGPT(worriesDescription: String?) {
         val question =
-            prompt + "which one of these types of ${type.toString()} for this situation:$worriesDescription"
+            prompt + "$worriesDescription"
 
         addToChatGPT(question, MessageToGPT.SENT_BY_USER, getCurrentTimestamp())
         callApi(question)
@@ -171,10 +189,11 @@ class ProfileViewModel : ViewModel() {
 
         val data = hashMapOf(
             "user_id" to UUID.randomUUID(),
-            "user_name" to userProfile.value?.userName,
-            "gender" to userProfile.value?.gender,
-            "worries_description" to userProfile.value?.worriesDescription,
-            "worries_type" to userProfile.value?.worriesType
+            "user_name" to _userProfile.value?.userName,
+            "gender" to _userProfile.value?.gender,
+            "worries_description" to _userProfile.value?.worriesDescription,
+            "worries_type" to _userProfile.value?.worriesType,
+            "images" to _userProfile.value?.images
         )
 
         profile.add(data)

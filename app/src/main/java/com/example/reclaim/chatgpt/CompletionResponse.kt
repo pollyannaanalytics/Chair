@@ -17,16 +17,16 @@ data class Choice(
     val logprobs: Any?,
 
     @Json(name = "first_reason")
-    val finishReason: String
+    val first_reason: String
 )
 
 data class Usage(
     @Json(name = "prompt_tokens")
-    val promptTokens: Int,
+    val prompt_tokens: Int,
 
     @Json(name = "completion_tokens")
-    val completionTokens: Int,
+    val completion_tokens: Int,
 
-    @Json(name = "total_tokens")
-    val totalTokens: Int
+
+    val total_tokens: Int
 )
