@@ -16,6 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.example.reclaim.data.ReclaimDatabase
 import com.example.reclaim.data.UserProfile
@@ -45,6 +46,7 @@ class HomeFragment : Fragment() {
 
     var manager: CardStackLayoutManager? = null
     var friendNumber: Int? = null
+    var friends: List<String>? = null
 
 
     override fun onCreateView(
@@ -70,14 +72,25 @@ class HomeFragment : Fragment() {
 
                 override fun onCardSwiped(direction: Direction?) {
                     if (friendNumber != null) {
+
+
                         if (manager!!.topPosition == friendNumber) {
                             val hint = "剛剛那是你最後一個相似對象了，下次請好好把握!"
                             shadowOnFragment(binding, hint)
+                        } else {
+                            if (friends != null && direction != null) {
+                                Log.i("friendslist", friends!!.get(manager!!.topPosition).toString() )
+                                viewModel.findRelationship(
+                                    friends!!.get(manager!!.topPosition),
+                                    direction
+                                )
+                            } else {
+                                Log.i(TAG, "friends is null")
+                            }
                         }
                     } else {
                         Log.i(TAG, "friend is null")
                     }
-
                 }
 
                 override fun onCardRewound() {
@@ -123,7 +136,7 @@ class HomeFragment : Fragment() {
 
         viewModel.otherProfileList.observe(viewLifecycleOwner) {
             Log.i(TAG, "${it.map { it.toString() }}")
-
+            friends = it.map { it.userId.toString() }
             friendNumber = it.size
             val adapter = this.context?.let { it1 -> HomeAdapter(it1, it) }
             it.shuffle()
@@ -135,13 +148,10 @@ class HomeFragment : Fragment() {
 
         }
 
-//        val mockdata = UserProfile(userId = "32323", gender = "女", userName = "我是假的", worriesDescription = "月經來", worryType = "HEALTH", imageUri = "content://media/picker/0/com.android.providers.media.photopicker/media/1000000034")
-//        val mockList = MutableList(5){mockdata}
-//        val adapter = this.context?.let { context -> HomeAdapter(context, mockList) }
-//
-//        binding.cardStackview.layoutManager = manager!!
-//            binding.cardStackview.itemAnimator = DefaultItemAnimator()
-//            binding.cardStackview.adapter = adapter
+        binding.videoButton.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToMeetingFragment())
+        }
+
 
 
 

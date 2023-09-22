@@ -217,7 +217,6 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
 
     fun uploadProfileToFirebase() {
         val profile = FirebaseFirestore.getInstance().collection("user_profile")
-        val document = profile.document()
 
         val data = hashMapOf(
             "user_id" to UserManager.userId,
