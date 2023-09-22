@@ -84,9 +84,9 @@ class ProfileFragment : Fragment() {
 
         binding.genderGroup.setOnCheckedChangeListener { radioGroup, i ->
             gender = when (i) {
-                R.id.male -> R.id.male.toString()
-                R.id.female -> R.id.female.toString()
-                R.id.third_gender -> R.id.third_gender.toString()
+                R.id.male -> binding.male.text.toString()
+                R.id.female -> binding.female.text.toString()
+                R.id.third_gender -> binding.thirdGender.text.toString()
                 else -> "the gender is not chose"
             }
         }

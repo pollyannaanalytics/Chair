@@ -1,6 +1,9 @@
 package com.example.reclaim.data
 
+import java.util.UUID
+
 object UserManager {
 
-    val userId = "test3100"
+    val userId = UUID.randomUUID().toString()
+    var userType = ""
 }

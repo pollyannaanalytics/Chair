@@ -16,12 +16,14 @@ import com.example.reclaim.data.UserProfile
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firestore.v1.DocumentTransform.FieldTransform.ServerValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import retrofit2.Response
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.UUID
@@ -101,7 +103,8 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
             userName = _userProfile.value?.userName,
             gender = _userProfile.value?.gender,
             worryType = _userProfile.value?.worriesType,
-            worriesDescription = _userProfile.value?.worriesDescription
+            worriesDescription = _userProfile.value?.worriesDescription,
+            imageUri = _userProfile.value?.images?.get(0)
         )
         viewModelScope.launch {
             databaseDao.insertUserProfile(currentUser)
@@ -174,6 +177,7 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
                         val currentType = result
                         _userProfile.value?.worriesType = currentType
                         saveInLocalDB()
+                        UserManager.userType = result
                         _readyToUploadOnFirebase.value = true
 
                         Log.i(TAG, "result is$result")
@@ -216,12 +220,13 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
         val document = profile.document()
 
         val data = hashMapOf(
-            "user_id" to UUID.randomUUID(),
+            "user_id" to UserManager.userId,
             "user_name" to _userProfile.value?.userName,
             "gender" to _userProfile.value?.gender,
             "worries_description" to _userProfile.value?.worriesDescription,
             "worries_type" to _userProfile.value?.worriesType,
-            "images" to _userProfile.value?.images
+            "images" to _userProfile.value?.images,
+            "profile_time" to Calendar.getInstance().timeInMillis
         )
 
         profile.add(data)
@@ -231,6 +236,8 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
             .addOnFailureListener {
                 Log.i(TAG, "upload failed")
             }
+
+
     }
 
 

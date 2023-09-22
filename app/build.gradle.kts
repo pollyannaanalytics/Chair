@@ -130,4 +130,7 @@ dependencies {
 
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
+
+    implementation ("com.yuyakaido.android:card-stack-view:2.3.4")
+
 }

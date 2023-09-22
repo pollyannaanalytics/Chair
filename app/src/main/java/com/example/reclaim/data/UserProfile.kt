@@ -23,8 +23,10 @@ data class UserProfile(
     var worryType: String? = "",
 
     @ColumnInfo(name = "worries_description")
-    var worriesDescription: String? = ""
+    var worriesDescription: String? = "",
 
+    @ColumnInfo(name = "image_uri")
+    var imageUri: String?
 
 
 )
