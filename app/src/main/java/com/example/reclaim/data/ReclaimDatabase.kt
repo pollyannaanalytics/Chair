@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 
-@Database(entities = [UserInfo::class, UserProfile::class, ChatRecord::class, Friends::class, Images::class], version = 2, exportSchema = false)
+@Database(entities = [UserInfo::class, UserProfile::class, ChatRecord::class, Relationship::class, Images::class, Friends::class], version = 4, exportSchema = false)
 
 abstract class ReclaimDatabase: RoomDatabase() {
 

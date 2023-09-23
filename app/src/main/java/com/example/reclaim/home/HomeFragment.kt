@@ -41,7 +41,7 @@ private const val TAG = "HOMEFRAGMENT"
 class HomeFragment : Fragment() {
 
 
-    val db = Firebase.firestore
+
 
 
     var manager: CardStackLayoutManager? = null
@@ -72,8 +72,6 @@ class HomeFragment : Fragment() {
 
                 override fun onCardSwiped(direction: Direction?) {
                     if (friendNumber != null) {
-
-
                         if (manager!!.topPosition == friendNumber) {
                             val hint = "剛剛那是你最後一個相似對象了，下次請好好把握!"
                             shadowOnFragment(binding, hint)
@@ -135,7 +133,7 @@ class HomeFragment : Fragment() {
         }
 
         viewModel.otherProfileList.observe(viewLifecycleOwner) {
-            Log.i(TAG, "${it.map { it.toString() }}")
+            Log.i(TAG, "${it.map { it.userId.toString()}}")
             friends = it.map { it.userId.toString() }
             friendNumber = it.size
             val adapter = this.context?.let { it1 -> HomeAdapter(it1, it) }

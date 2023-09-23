@@ -1,6 +1,6 @@
 package com.example.reclaim.chatgpt
 
-import com.squareup.okhttp.OkHttpClient
+
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create

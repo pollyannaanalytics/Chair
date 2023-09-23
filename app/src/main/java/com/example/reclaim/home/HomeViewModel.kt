@@ -7,8 +7,11 @@ import androidx.lifecycle.ViewModel
 import com.example.reclaim.data.ReclaimDatabaseDao
 import com.example.reclaim.data.UserManager
 import com.example.reclaim.data.UserProfile
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -22,7 +25,6 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
     val otherProfileList: LiveData<MutableList<UserProfile>>
         get() = _otherProfileList
 
-    val db = Firebase.firestore
 
     private var _firebaseDisconnect = MutableLiveData<Boolean>(false)
     val firebaseDisconnect: LiveData<Boolean>
@@ -32,6 +34,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
     val noFriends: LiveData<Boolean>
         get() = _noFriends
 
+    val db = Firebase.firestore
 
     init {
         Log.i(TAG, "viewModel start")
@@ -136,58 +139,41 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
 
     }
 
-    fun likeOrDislike(friendId: String, likeOrDislike: String) {
-        val currentRelationship =
-            db.collection("friends").whereEqualTo("receiver_id", UserManager.userId)
-                .whereEqualTo("sender_id", friendId).orderBy("send_by", Query.Direction.DESCENDING)
-
-        currentRelationship.addSnapshotListener { querySnapshot, error ->
-            if(error != null){
-                return@addSnapshotListener
+    fun likeOrDislike(friendId: String, likeOrDislike: String, result: QueryDocumentSnapshot) {
+        Log.i("likeOrDislike", result.toString())
+               result.reference.update("current_relationship", likeOrDislike)
             }
 
-            if (querySnapshot != null && !querySnapshot.isEmpty){
-                val documentSnapshot = querySnapshot.documents[0]
-                val currentRelationshipId = documentSnapshot.id
-                val currentRelationshipRef = db.collection("friends").document(currentRelationshipId)
-                currentRelationshipRef.update("current_relationship", likeOrDislike)
-                    .addOnSuccessListener {
-                        Log.i(TAG, "update dislike success")
-                    }
-                    .addOnFailureListener {
-                        Log.e(TAG, "failed: ${it}")
-                    }
-            }
-        }
-
-    }
 
 
     fun findRelationship(friendId: String, direction: Direction) {
-        val allRelationShip = db.collection("friends")
+        val allRelationShip = db.collection("relationship")
             .whereEqualTo("receiver_id", UserManager.userId)
-            .orderBy("sent_time", Query.Direction.DESCENDING)
+            .orderBy("receiver_id", Query.Direction.DESCENDING)
 
 
 
         allRelationShip.addSnapshotListener { querySnapShot, e ->
+            if (e != null){
+                return@addSnapshotListener
+                Log.e("friend", "find relationship fail: $e")
+            }
 
-            val friendsList = querySnapShot?.documents?.map { it.data?.get("sender").toString() }
-
-            if (friendsList?.size != 0) {
-                if (friendsList?.contains(friendId) == true) {
-                    updateRelationShip(friendId, direction)
-                }else{
-                    createRelationShip(friendId, direction)
+            if (querySnapShot != null && !querySnapShot.isEmpty) {
+                for (query in querySnapShot){
+                    if (query.data.get("current_relationship") == "Pending"){
+                        updateRelationShip(friendId, direction, query)
+                    }
                 }
-
-
+            }else{
+                createRelationShip(friendId, direction)
             }
         }
     }
 
     private fun createRelationShip(friendId: String, direction: Direction) {
-        val friends = FirebaseFirestore.getInstance().collection("friends")
+        Log.i("friend", "there is no friend, start to create")
+        val friends = FirebaseFirestore.getInstance().collection("relationship")
         val relationship = when(direction){
             Direction.Left -> "Dislike"
             Direction.Right -> "Pending"
@@ -210,12 +196,15 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
 
     }
 
-    private fun updateRelationShip(friendId: String, direction: Enum<Direction>) {
+    private fun updateRelationShip(friendId: String, direction: Enum<Direction>, result: QueryDocumentSnapshot) {
+        Log.i("update my friends", "friendId is $friendId")
         when (direction) {
-            Direction.Left -> likeOrDislike(friendId, "dislike")
-            Direction.Right -> likeOrDislike(friendId, "like")
+            Direction.Left -> likeOrDislike(friendId, "Dislike", result)
+            Direction.Right -> {
+                likeOrDislike(friendId, "Like", result)
+            }
 
-            else -> likeOrDislike(friendId, "like")
+            else -> likeOrDislike(friendId, "Like", result)
         }
     }
 }

@@ -20,15 +20,16 @@
         android:id="@+id/meetingFragment"
         android:name="com.example.reclaim.MeetingFragment"
         tools:layout="@layout/fragment_meeting"
-        android:label="MeetingFragment" >
-        <action
-            android:id="@+id/action_meetingFragment_to_chatRoomFragment"
-            app:destination="@id/chatRoomFragment" />
-    </fragment>
+        android:label="MeetingFragment" />
     <fragment
         android:id="@+id/chatRoomFragment"
         android:name="com.example.reclaim.chatroom.ChatRoomFragment"
-        android:label="ChatRoomFragment" />
+        android:label="ChatRoomFragment" >
+    <argument
+        android:name="chatFriend"
+        app:argType="com.example.reclaim.data.Friends"
+        />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.reclaim.profile.ProfileFragment"
@@ -37,5 +38,14 @@
         <action
             android:id="@+id/action_profileFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatListFragment"
+        android:name="com.example.reclaim.chatlist.ChatListFragment"
+        android:label="ChatListFragment" >
+        <action
+            android:id="@+id/action_chatListFragment_to_chatRoomFragment"
+            app:destination="@id/chatRoomFragment" />
+
     </fragment>
 </navigation>

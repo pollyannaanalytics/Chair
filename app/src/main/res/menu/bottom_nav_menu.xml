@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/profileFragment"
+        android:title="Setting"
+        android:icon="@drawable/settings"
+        />
+    <item
+        android:id="@+id/homeFragment"
+        android:title="HomePage"
+        android:icon="@drawable/heart__1_"
+        />
+    <item
+        android:id="@+id/chatListFragment"
+        android:title="Chat"
+        android:icon="@drawable/messenger"
+
+        />
+</menu>

@@ -16,13 +16,13 @@ interface ReclaimDatabaseDao {
     suspend fun insertUserProfile(userProfile: UserProfile)
 
     @Insert
-    fun insertFriends(friends: Friends)
+    fun insertFriends(relationship: Relationship)
 
     @Insert
     fun insertChatRecord(chatRecord: ChatRecord)
 
     @Update
-    fun receiveFriends(friends: Friends)
+    fun receiveFriends(relationship: Relationship)
 
     @Update
     fun changeUserInfo(userInfo: UserInfo)
@@ -31,12 +31,15 @@ interface ReclaimDatabaseDao {
     fun changeUserProfile(userProfile: UserProfile)
 
 
-    @Query("DELETE from friends WHERE friend_user_id = :id")
-    fun rejectFriend(id: String)
-
-    @Query("SELECT * from user_profile WHERE worry_type = :worries")
-    fun findFriend(worries: String): UserProfile
+//    @Query("DELETE from relationship WHERE friend_user_id = :id")
+//    fun rejectFriend(id: String)
+//
+//    @Query("SELECT * from user_profile WHERE worry_type = :worries")
+//    fun findFriend(worries: String): UserProfile
 
     @Insert
     suspend fun saveImages(images: Images)
+
+    @Insert
+    suspend fun saveFriendList(friend: List<Friends>)
 }
