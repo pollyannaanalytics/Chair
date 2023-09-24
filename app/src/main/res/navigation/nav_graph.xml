@@ -8,27 +8,15 @@
         android:id="@+id/homeFragment"
         android:name="com.example.reclaim.home.HomeFragment"
         android:label="HomeFragment" >
-        <action
-            android:id="@+id/action_homeFragment_to_meetingFragment"
-            app:destination="@id/meetingFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/projectFragment"
-        android:name="com.example.reclaim.ProjectFragment"
-        android:label="ProjectFragment" />
-    <fragment
-        android:id="@+id/meetingFragment"
-        android:name="com.example.reclaim.MeetingFragment"
-        tools:layout="@layout/fragment_meeting"
-        android:label="MeetingFragment" />
+
     <fragment
         android:id="@+id/chatRoomFragment"
         android:name="com.example.reclaim.chatroom.ChatRoomFragment"
         android:label="ChatRoomFragment" >
     <argument
         android:name="chatFriend"
-        app:argType="com.example.reclaim.data.Friends"
-        />
+        app:argType="com.example.reclaim.data.Friends"/>
     </fragment>
     <fragment
         android:id="@+id/profileFragment"

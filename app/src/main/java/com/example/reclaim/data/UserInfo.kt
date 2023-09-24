@@ -11,16 +11,16 @@ data class UserInfo(
     var id : Long = 0L,
 
     @ColumnInfo(name = "email")
-    var email : String = "",
+    var email : String ,
 
     @ColumnInfo(name = "user_name")
-    var userName : String = "",
+    var userName : String,
 
     @ColumnInfo(name = "password")
-    var password : String = "",
+    var password : String,
 
     @ColumnInfo(name = "gender")
-    var gender: String = ""
+    var gender: String
 
 
 )

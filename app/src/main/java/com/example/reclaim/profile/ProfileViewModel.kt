@@ -112,20 +112,20 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
 
     }
 
-    private fun saveImagesInLocal() {
-        _userProfile.value?.images?.forEach {
-            val images = Images(userId = UserManager.userId, imageUri = it)
-            viewModelScope.launch {
-                databaseDao.saveImages(images)
-            }
-
-        }
-    }
+//    private fun saveImagesInLocal() {
+//        _userProfile.value?.images?.forEach {
+//            val images = Images(userId = UserManager.userId, imageUri = it)
+//            viewModelScope.launch {
+//                databaseDao.saveImages(images)
+//            }
+//
+//        }
+//    }
 
     private fun saveInLocalDB() {
         viewModelScope.launch {
             saveUserProfileInLocal()
-            saveImagesInLocal()
+//            saveImagesInLocal()
         }
     }
 
@@ -208,6 +208,7 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
     }
 
     fun sendDescriptionToGPT(worriesDescription: String?) {
+
         val question =
             prompt + "$worriesDescription"
 

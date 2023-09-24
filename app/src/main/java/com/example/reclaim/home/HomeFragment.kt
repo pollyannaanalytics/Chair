@@ -4,31 +4,18 @@ import android.graphics.Color
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import android.os.Bundle
-import android.text.Layout
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CalendarView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.example.reclaim.data.ReclaimDatabase
-import com.example.reclaim.data.UserProfile
 import com.example.reclaim.databinding.FragmentHomeBinding
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
-import com.yuyakaido.android.cardstackview.CardStackView
 import com.yuyakaido.android.cardstackview.Direction
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 
 
 /**
@@ -38,26 +25,31 @@ import kotlinx.coroutines.launch
  */
 private const val TAG = "HOMEFRAGMENT"
 
+
+data class FriendInfo(
+    var friendId: String? = null,
+    var friendName: String? = null
+)
+
 class HomeFragment : Fragment() {
 
 
-
-
-
     var manager: CardStackLayoutManager? = null
-    var friendNumber: Int? = null
-    var friends: List<String>? = null
+    var OtherUserNumber: Int? = null
+    var OtherInfoList = emptyList<FriendInfo>().toMutableList()
 
 
+    lateinit var viewModel: HomeViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+
+// Inflate the layout for this fragment
         val application = requireNotNull(this.activity).application
         val databaseDao = ReclaimDatabase.getInstance(application).reclaimDao()
         val homeFactory = HomeFactory(databaseDao)
-        val viewModel = ViewModelProvider(this, homeFactory).get(HomeViewModel::class.java)
+        viewModel = ViewModelProvider(this, homeFactory).get(HomeViewModel::class.java)
 
         val binding = FragmentHomeBinding.inflate(inflater)
 
@@ -71,21 +63,20 @@ class HomeFragment : Fragment() {
                 }
 
                 override fun onCardSwiped(direction: Direction?) {
-                    if (friendNumber != null) {
-                        if (manager!!.topPosition == friendNumber) {
-                            val hint = "剛剛那是你最後一個相似對象了，下次請好好把握!"
-                            shadowOnFragment(binding, hint)
-                        } else {
-                            if (friends != null && direction != null) {
-                                Log.i("friendslist", friends!!.get(manager!!.topPosition).toString() )
+                    if (OtherUserNumber != null) {
+
+                            val currentFriend = OtherInfoList.get(manager!!.topPosition - 1 )
+                            if (direction != null) {
+                                Log.i(TAG, "current user is ${currentFriend.friendName}")
                                 viewModel.findRelationship(
-                                    friends!!.get(manager!!.topPosition),
+                                    currentFriend.friendId!!,
+                                    currentFriend.friendName!!,
                                     direction
                                 )
                             } else {
                                 Log.i(TAG, "friends is null")
                             }
-                        }
+
                     } else {
                         Log.i(TAG, "friend is null")
                     }
@@ -133,9 +124,14 @@ class HomeFragment : Fragment() {
         }
 
         viewModel.otherProfileList.observe(viewLifecycleOwner) {
-            Log.i(TAG, "${it.map { it.userId.toString()}}")
-            friends = it.map { it.userId.toString() }
-            friendNumber = it.size
+
+            it.forEach { it ->
+                val currentFriend = FriendInfo(it.userId, it.userName)
+                OtherInfoList?.add(currentFriend)
+                Log.i(TAG, "all friendInfoList is ${OtherInfoList.toString()}")
+            }
+            OtherUserNumber = OtherInfoList.size
+            Log.i(TAG, "all friendnumber is ${OtherUserNumber.toString()}")
             val adapter = this.context?.let { it1 -> HomeAdapter(it1, it) }
             it.shuffle()
 
@@ -146,9 +142,9 @@ class HomeFragment : Fragment() {
 
         }
 
-        binding.videoButton.setOnClickListener {
-            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToMeetingFragment())
-        }
+//        binding.videoButton.setOnClickListener {
+//            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToMeetingFragment())
+//        }
 
 
 
@@ -170,5 +166,8 @@ class HomeFragment : Fragment() {
 
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.removeProfileListener()
+    }
 }

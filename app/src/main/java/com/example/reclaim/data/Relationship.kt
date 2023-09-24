@@ -10,12 +10,12 @@ data class Relationship(
 @PrimaryKey(autoGenerate = false)
 val id: Long = 0L,
     @ColumnInfo(name = "user_id")
-    val userId: String = "",
+    val userId: String,
 
     @ColumnInfo(name = "friend_user_id")
-    val friendUserId: String = "",
+    val friendUserId: String,
 
     @ColumnInfo(name = "current_relation_ship")
-    val currentRelationship: String = ""
+    val currentRelationship: String
 
 )

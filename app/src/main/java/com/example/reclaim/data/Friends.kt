@@ -1,20 +1,25 @@
 package com.example.reclaim.data
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
-@Entity(tableName = "friends")
+@Parcelize
 data class Friends(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0L,
 
-    @ColumnInfo
-    val userId: String,
+    var id: Long = 0L,
 
-    @ColumnInfo
-    val userName: String,
 
-    @ColumnInfo
-    val imageUri: String
-)
+    var userId: String,
+
+
+    var userName: String,
+
+
+    var imageUri: String,
+
+
+    var chatRoomKey: String
+): Parcelable

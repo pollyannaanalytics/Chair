@@ -55,17 +55,18 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
                         Log.i(TAG, "document number is ${document.data.get("receiver_id")}")
                         val senderId = document.data.get("sender_id")
                         val receiverId = document.data.get("receiver_id")
+                        val chatRoomKey = document.data.get("chat_room_key").toString()
                         if(senderId == UserManager.userId){
                             val newFriend = receiverId
                             Log.i(TAG, "new friend is $newFriend")
                             currentFriendsList.add(newFriend.toString())
-                            searchFriendsInfoFromFirebase(newFriend.toString())
+                            searchFriendsInfoFromFirebase(newFriend.toString(), chatRoomKey)
                             Log.i(TAG, "friends include $currentFriendsList")
                         }else{
                             val newFriend = senderId
                             Log.i(TAG, "new friend is $newFriend")
                             currentFriendsList.add(newFriend.toString())
-                            searchFriendsInfoFromFirebase(newFriend.toString())
+                            searchFriendsInfoFromFirebase(newFriend.toString(),chatRoomKey)
                             Log.i(TAG, "friends include ${currentFriendsList}")
                         }
                     }
@@ -83,15 +84,15 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
 
     }
 
-    private fun saveFriendListInLocal(friends: MutableList<Friends>) {
+//    private fun saveFriendListInLocal(friends: MutableList<Friends>) {
+//
+//        viewModelScope.launch {
+//            dao.saveFriendList(friends)
+//        }
+//
+//    }
 
-        viewModelScope.launch {
-            dao.saveFriendList(friends)
-        }
-
-    }
-
-    private fun searchFriendsInfoFromFirebase(friendId: String) {
+    private fun searchFriendsInfoFromFirebase(friendId: String, chatRoomKey: String) {
         val currentFriendList = emptyList<Friends>().toMutableList()
         val searchFriendProfile = db.collection("user_profile").whereEqualTo("user_id", friendId).orderBy("user_name", Query.Direction.DESCENDING)
 
@@ -106,11 +107,11 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
                     val userName = snapshot.data?.get("user_name").toString()
                     val imageInArray = listOf<String>(snapshot.data.get("images").toString())
                     val mainImage = imageInArray[0].removeSurrounding("[", "]")
-                    val friendInfo = Friends(userId = userId, userName = userName, imageUri = mainImage)
+                    val friendInfo = Friends(userId = userId, userName = userName, imageUri = mainImage, chatRoomKey = chatRoomKey)
                     currentFriendList.add(friendInfo)
                 }
 
-                saveFriendListInLocal(currentFriendList)
+//                saveFriendListInLocal(currentFriendList)
                 Log.i(TAG, currentFriendList.toString())
                 _friendsList.value = currentFriendList
             }

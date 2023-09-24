@@ -20,7 +20,7 @@ android {
         exclude("META-INF/INDEX.LIST")
     }
     compileSdkVersion(33)
-    buildToolsVersion("30.0.3")
+    buildToolsVersion("33.0.1")
     namespace = "com.example.reclaim"
 
     defaultConfig {
@@ -61,7 +61,7 @@ dependencies {
     val kotlinVersion = "1.8.20"
     val ktorVersion = "1.1.4"
 
-    val room_version = "2.5.2"
+    val room_version = "2.5.0"
 
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")

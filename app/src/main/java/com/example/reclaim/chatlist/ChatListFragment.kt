@@ -35,7 +35,7 @@ class ChatListFragment : Fragment() {
 
 
         val adapter = ChatListAvatorAdapter(ChatListAvatorAdapter.OnClickListener {
-            viewModel.navigateToChatRoom
+            viewModel.displayChatRoom(it)
         })
         binding.friendsRecylerview.adapter = adapter
 

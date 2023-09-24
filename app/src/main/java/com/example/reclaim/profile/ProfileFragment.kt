@@ -25,6 +25,7 @@ import com.example.reclaim.R
 import com.example.reclaim.chatgpt.MessageToGPT
 import com.example.reclaim.data.ReclaimDatabase
 import com.example.reclaim.data.ReclaimDatabaseDao
+import com.example.reclaim.data.UserManager
 import com.example.reclaim.databinding.FragmentProfileBinding
 import com.example.reclaim.videocall.RTCActivity
 
@@ -93,6 +94,7 @@ class ProfileFragment : Fragment() {
 
 
         binding.submitBtn.setOnClickListener {
+            UserManager.userName = username
             viewModel.sendDescriptionToGPT(worriesDescription)
 
         }

@@ -37,9 +37,8 @@ interface ReclaimDatabaseDao {
 //    @Query("SELECT * from user_profile WHERE worry_type = :worries")
 //    fun findFriend(worries: String): UserProfile
 
-    @Insert
-    suspend fun saveImages(images: Images)
 
-    @Insert
-    suspend fun saveFriendList(friend: List<Friends>)
+
+//    @Insert
+//    suspend fun saveFriendList(friend: List<Friends>)
 }

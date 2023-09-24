@@ -9,18 +9,20 @@ import com.squareup.moshi.Json
 data class ChatRecord(
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "record_id")
     val id: Long = 0L,
 
-    @ColumnInfo(name = "content")
-    val content : String = "",
+    @ColumnInfo(name = "chat_room_key")
+    val chatRoomKey: String ,
 
-    @ColumnInfo(name = "send_time")
-    val sendTime: String = "",
+    @ColumnInfo(name = "content")
+    val content : String ,
+
+    @ColumnInfo(name = "sent_time")
+    val sendTime: String,
 
     @ColumnInfo(name = "sender_id")
-    val sender : String = "",
+    val sender : String,
 
     @ColumnInfo(name = "receiver_id")
-    val receiver: String = ""
+    val receiver: String
 )
