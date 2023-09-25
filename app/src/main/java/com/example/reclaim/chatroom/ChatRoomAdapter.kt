@@ -17,8 +17,10 @@ import java.lang.ClassCastException
 private const val ITEM_BY_ME = 0
 private const val ITEM_BY_OTHER = 1
 
-class ChatRoomAdapter(val context: Context, val list: List<ChatRecord>) :
+
+class ChatRoomAdapter :
     ListAdapter<ChatRecord, RecyclerView.ViewHolder>(DiffCallback) {
+    private val TAG = "ChatRoomAdapter"
     class SendByMe(val binding: ChatRoomSendByMeBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(record: ChatRecord){
             binding.chatRecord = record
@@ -60,7 +62,18 @@ class ChatRoomAdapter(val context: Context, val list: List<ChatRecord>) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val recordItem = getItem(position)
+
+        if (recordItem.sender == UserManager.userName){
+            (holder as SendByMe).bind(recordItem)
+
+        }else{
+            (holder as SendByOther).bind(recordItem)
+        }
+//        when(holder){
+//            is SendByOther -> holder.bind(recordItem)
+//            is SendByMe -> holder.bind(recordItem)
+//        }
     }
 
 

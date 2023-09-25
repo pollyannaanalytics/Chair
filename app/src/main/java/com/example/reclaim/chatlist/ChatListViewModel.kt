@@ -32,7 +32,7 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
     }
 
     fun loadAllMatch() {
-        val currentFriendIdList = emptyList<String>().toMutableList()
+
         try {
             var currentFriendsList = emptyList<String>().toMutableList()
 
@@ -71,7 +71,6 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
                         }
                     }
 
-//                    saveFriendListInLocal(currentFriendsList)
 
                 }else{
                     Log.i(TAG, "no one add this person")
@@ -98,10 +97,13 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
 
         searchFriendProfile.addSnapshotListener { querySnapShot, error ->
             if (error != null){
+                Log.e(TAG, error.toString())
                 return@addSnapshotListener
             }
 
-            if(querySnapShot != null && !querySnapShot.isEmpty){
+            if(querySnapShot != null &&  !querySnapShot.metadata.hasPendingWrites()){
+                currentFriendList.clear()
+                _friendsList.value!!.clear()
                 for (snapshot in querySnapShot){
                     val userId = snapshot.data?.get("user_id").toString()
                     val userName = snapshot.data?.get("user_name").toString()

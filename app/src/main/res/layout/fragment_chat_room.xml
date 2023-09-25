@@ -14,6 +14,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".chatroom.ChatRoomFragment">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chat_record_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/message_input"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/message_input"

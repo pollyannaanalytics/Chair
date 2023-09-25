@@ -1,6 +1,7 @@
 package com.example.reclaim.chatlist
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,8 @@ import com.example.reclaim.databinding.FragmentChatListBinding
  */
 class ChatListFragment : Fragment() {
 
+    private val TAG = "ChatListFragment"
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,18 +37,19 @@ class ChatListFragment : Fragment() {
         binding.viewModel = viewModel
 
 
-        val adapter = ChatListAvatorAdapter(ChatListAvatorAdapter.OnClickListener {
-            viewModel.displayChatRoom(it)
-        })
-        binding.friendsRecylerview.adapter = adapter
-
-
 
 
         viewModel.friendsList.observe(viewLifecycleOwner) {
-            if (it != null) {
+
+            val adapter = ChatListAvatorAdapter(ChatListAvatorAdapter.OnClickListener {
+                    viewModel.displayChatRoom(it)
+                    Log.i(TAG, "click on $it")
+                })
+                binding.friendsRecylerview.adapter = adapter
+
                 adapter.submitList(it)
-            }
+            Log.i(TAG, "friend in recyclerview: $it")
+
 
         }
 

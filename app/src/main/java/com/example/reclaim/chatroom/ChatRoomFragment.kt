@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.example.reclaim.R
 import com.example.reclaim.data.Friends
@@ -20,6 +21,10 @@ import com.google.firebase.firestore.ServerTimestamp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firestore.v1.DocumentTransform.FieldTransform.ServerValue
+import io.ktor.client.HttpClient
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import okhttp3.internal.notify
 import java.util.UUID
 
 
@@ -47,15 +52,36 @@ val db = Firebase.firestore
         val factory = ChatRoomFactory(arg, databaseDao)
         val viewModel = ViewModelProvider(this, factory).get(ChatRoomViewModel::class.java)
         var sendText = ""
-
+        val adapter = ChatRoomAdapter()
         binding.viewModel = viewModel
+        binding.chatRecordRecyclerview.adapter = adapter
+
+
 
         binding.messageEdit.doAfterTextChanged {
             sendText = it.toString()
         }
 
         binding.sendBtn.setOnClickListener {
-            viewModel.sendMessage(sendText)
+            if(sendText != ""){
+                Log.i(TAG, "send btn is clicked")
+                viewModel.sendMessage(sendText)
+                binding.messageEdit.setText("")
+
+            }
+
+
+
+        }
+
+
+        viewModel.recordWithFriend.observe(viewLifecycleOwner){
+            adapter.submitList(it)
+                Log.i(TAG, "submit to adapter: $it")
+//            viewModel.clearRecord()
+
+
+
         }
 
 

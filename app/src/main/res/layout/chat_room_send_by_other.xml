@@ -32,7 +32,7 @@
                     android:layout_height="wrap_content"
                     android:minHeight="35dp"
                     android:textSize="25sp"
-                    android:text="Send by Me"
+                    android:text="@{chatRecord.content}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"

@@ -349,8 +349,9 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
 
         allRelationShip.addSnapshotListener { querySnapShot, e ->
             if (e != null) {
+                Log.e(TAG, "find relationship fail: $e")
                 return@addSnapshotListener
-                Log.e("friend", "find relationship fail: $e")
+
             }
 
             if (querySnapShot != null && !querySnapShot.isEmpty) {
@@ -362,17 +363,18 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                         }
 
                     } else {
-                        Log.i("relationship", "there is already relationships")
+                        Log.i(TAG, "there is already relationships")
                     }
                 }
             } else {
+                Log.i(TAG, "we have no relationship")
                 createRelationShip(friendId, friendName, direction)
             }
         }
     }
 
     private fun createRelationShip(friendId: String, friendName: String, direction: Direction) {
-        Log.i("friend", "there is no friend, start to create")
+        Log.i(TAG, "there is no friend, start to create")
         val friends = FirebaseFirestore.getInstance().collection("relationship")
         val relationship = when (direction) {
             Direction.Left -> "Dislike"

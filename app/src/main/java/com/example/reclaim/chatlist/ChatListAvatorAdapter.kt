@@ -29,6 +29,10 @@ class ChatListAvatorAdapter(private val onClickListener: OnClickListener):androi
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val friend = getItem(position)
         holder.bind(friend)
+
+        holder.itemView.setOnClickListener {
+            onClickListener.onClick(friend)
+        }
     }
 
     class OnClickListener(val clickListener: (data: Friends) -> Unit){
