@@ -55,7 +55,7 @@ val db = Firebase.firestore
         }
 
         binding.sendBtn.setOnClickListener {
-
+            viewModel.sendMessage(sendText)
         }
 
 

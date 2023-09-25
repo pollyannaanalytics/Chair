@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.reclaim.data.ReclaimDatabaseDao
 import com.example.reclaim.data.UserManager
 import com.example.reclaim.data.UserProfile
@@ -16,9 +15,6 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.yuyakaido.android.cardstackview.Direction
-import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 
 private const val TAG = "HOMEVIEWMODEL"
 
@@ -280,18 +276,23 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         friendId: String,
         friendName: String,
         likeOrDislike: String,
-        result: QueryDocumentSnapshot
+        documentId: String
     ) {
-        Log.i("likeOrDislike", result.toString())
-        result.reference.update("current_relationship", likeOrDislike)
+        Log.i("likeOrDislike", documentId.toString())
+        val reference = db.collection("relationship").document(documentId)
+        reference.update("current_relationship", likeOrDislike)
+
 
         if (likeOrDislike == "Like") {
+
             Log.i(TAG, "like, to create room")
-                createAChatRoom(friendId, friendName, result)
+            createAChatRoom(friendId, friendName, documentId)
+
+
         }
     }
 
-    private fun createAChatRoom(friendId: String, friendName: String, result: QueryDocumentSnapshot): String {
+    private fun createAChatRoom(friendId: String, friendName: String, documentId: String): String {
         val chatRoom = FirebaseFirestore.getInstance().collection("chat_room")
 
         val data = hashMapOf(
@@ -305,10 +306,12 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         var currentRoomKey = ""
 
         chatRoom.add(data).addOnSuccessListener {
-            Log.i("TAG", "current room key is ${it.id}")
-            currentRoomKey = it.id
-            it.update("key", currentRoomKey)
-            result.reference.update("chat_room_key", currentRoomKey)
+            if (it.id != null && it.id.isNotEmpty()) {
+                Log.i(TAG, "current room key is ${it.id}")
+                currentRoomKey = it.id
+                it.update("key", currentRoomKey)
+                updateChatRoomKeyInRelationship(currentRoomKey, documentId)
+            }
 
         }.addOnFailureListener {
             Log.e(TAG, "create room failed: $it")
@@ -318,6 +321,17 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
 
 
         return currentRoomKey
+    }
+
+    private fun updateChatRoomKeyInRelationship(currentRoomKey: String, relationshipId: String) {
+        val reference = db.collection("relationship").document(relationshipId)
+        reference.update("chat_room_key", currentRoomKey)
+            .addOnSuccessListener {
+                Log.i(TAG, "DocumentSnapshot successfully updated!")
+            }.addOnFailureListener {
+                Log.w(TAG, "Error updating document", it)
+            }
+
     }
 
 
@@ -340,10 +354,13 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
             }
 
             if (querySnapShot != null && !querySnapShot.isEmpty) {
-                Log.i("friend", "there is my friend: ${querySnapShot.documents[0].id}")
+                Log.i(TAG, "there is my friend: ${querySnapShot.documents[0].id}")
                 for (query in querySnapShot) {
                     if (query.data.get("current_relationship") == "Pending") {
-                        updateRelationShip(friendId, friendName, direction, query)
+                        if (query.data.get("chat_room_key") == "null") {
+                            updateRelationShip(friendId, friendName, direction, querySnapShot.documents[0].id)
+                        }
+
                     } else {
                         Log.i("relationship", "there is already relationships")
                     }
@@ -386,16 +403,17 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         friendId: String,
         friendName: String,
         direction: Enum<Direction>,
-        result: QueryDocumentSnapshot
+        documentId: String
     ) {
-        Log.i("update my friends", "friendId is $friendId")
+        Log.i(TAG, "friendId is $friendId")
         when (direction) {
-            Direction.Left -> likeOrDislike(friendId, friendName, "Dislike", result)
+            Direction.Left -> likeOrDislike(friendId, friendName, "Dislike", documentId)
             Direction.Right -> {
-                likeOrDislike(friendId, friendName, "Like", result)
+                likeOrDislike(friendId, friendName, "Like", documentId)
+                Log.i(TAG, "Liked friendId is $friendId")
             }
 
-            else -> likeOrDislike(friendId, friendName, "Like", result)
+            else -> likeOrDislike(friendId, friendName, "Like", documentId)
         }
     }
 
