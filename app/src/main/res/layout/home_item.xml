@@ -24,12 +24,14 @@
 
                 <ImageView
                     android:id="@+id/users_first_img"
-                    android:layout_width="400dp"
-                    android:layout_height="400dp"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:scaleType="centerCrop"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
                 <TextView
                     android:id="@+id/user_name_title"
@@ -39,7 +41,7 @@
                     android:textSize="40dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/users_first_img" />
+                    app:layout_constraintBottom_toTopOf="@id/user_gender" />
 
                 <TextView
                     android:id="@+id/user_gender"
@@ -48,36 +50,12 @@
                     android:text="gender"
                     android:textSize="25dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/user_name_title"
-                    app:layout_constraintBottom_toTopOf="@id/worries_description" />
-
-                <ImageView
-                    android:id="@+id/info_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_info_40"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="@id/user_gender" />
-
-
-                <ImageView
-                    android:id="@+id/end_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:src="@drawable/gradient_shape"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/user_gender"
-                    app:layout_constraintVertical_bias="0.0"
-                    tools:layout_editor_absoluteX="77dp" />
+                     />
 
-                <TextView
-                    android:id="@+id/worries_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    app:layout_constraintBottom_toTopOf="@id/end_image"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/user_gender" />
+
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
