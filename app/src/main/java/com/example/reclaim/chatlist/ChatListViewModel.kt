@@ -175,5 +175,9 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
         _navigateToChatRoom.value = data
     }
 
+    fun navigateToRoom(){
+        _navigateToChatRoom.value = null
+    }
+
 
 }

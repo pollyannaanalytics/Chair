@@ -41,10 +41,21 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener{ _, destination, _ ->
             when(destination.id){
-                R.id.homeFragment -> binding.toolbarTitle.setText("Reclaim")
-                R.id.profileFragment -> binding.toolbarTitle.setText("我的個人檔案")
-                R.id.chatListFragment -> binding.toolbarTitle.setText("我的好友")
-                R.id.chatRoomFragment -> binding.toolbar.visibility = View.GONE
+                R.id.homeFragment -> {
+                    binding.toolbar.visibility = View.VISIBLE
+                    binding.toolbarTitle.setText("Reclaim")
+                }
+                R.id.profileFragment -> {
+                    binding.toolbar.visibility = View.VISIBLE
+                    binding.toolbarTitle.setText("我的個人檔案")
+                }
+                R.id.chatListFragment -> {
+                    binding.toolbar.visibility = View.VISIBLE
+                    binding.toolbarTitle.setText("我的好友")
+                }
+                R.id.chatRoomFragment -> {
+                    binding.toolbar.visibility = View.GONE
+                }
 
             }
         }

@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.reclaim.R
 import com.example.reclaim.data.Friends
@@ -118,6 +119,11 @@ class ChatRoomFragment : Fragment() {
             intent.putExtra("isJoin", true)
 
             startActivity(intent)
+        }
+
+        binding.backBtn.setOnClickListener {
+            findNavController().navigateUp()
+
         }
 
 

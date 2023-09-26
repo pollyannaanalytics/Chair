@@ -54,7 +54,11 @@ class ChatListFragment : Fragment() {
         }
 
         viewModel.navigateToChatRoom.observe(viewLifecycleOwner) {
-            findNavController().navigate(ChatListFragmentDirections.actionChatListFragmentToChatRoomFragment(it))
+            if(it != null){
+                findNavController().navigate(ChatListFragmentDirections.actionChatListFragmentToChatRoomFragment(it))
+                viewModel.navigateToRoom()
+            }
+
         }
 
         return binding.root
