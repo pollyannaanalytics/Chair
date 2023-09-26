@@ -87,10 +87,14 @@ dependencies {
 
     implementation("org.webrtc:google-webrtc:1.0.32006")
 
-    implementation(platform("com.google.firebase:firebase-bom:29.3.1"))
+    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation ("com.google.firebase:firebase-firestore:24.8.1")
+    implementation ("com.google.firebase:firebase-database:20.2.2")
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")
+
+    implementation ("com.google.firebase:firebase-auth:22.1.2")
     //Ktor dependencies (you can retrofit instead)
 
     implementation("io.ktor:ktor-client-android:$ktorVersion")

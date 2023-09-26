@@ -83,7 +83,7 @@ class ChatRoomViewModel(
                         val timeStamp = document.get("sent_time").toString()
                         val sender = document.get("sender_name").toString()
                         val type = document.get("message_type").toString()
-                        val meetingId = document.get("meetingId").toString()
+                        val meetingId = document.get("meeting_id").toString()
 
 
 

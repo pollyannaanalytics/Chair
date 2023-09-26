@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -40,10 +41,10 @@ class ProfileFragment : Fragment() {
 
 
     private var imageUri: Uri? = null
-    private var imageList: MutableList<Uri?> = emptyList<Uri?>().toMutableList()
+
+    lateinit var binding: FragmentProfileBinding
 
 
-    lateinit var viewPager: ViewPager2
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,9 +56,9 @@ class ProfileFragment : Fragment() {
         val viewModel = ViewModelProvider(this, factory).get(ProfileViewModel::class.java)
 
         // Inflate the layout for this fragment
-        val binding = FragmentProfileBinding.inflate(inflater)
+        binding = FragmentProfileBinding.inflate(inflater)
 
-        viewPager = binding.chooseImgContent
+//        viewPager = binding.chooseImgContent
         var username = ""
         var gender = ""
         var worriesDescription = ""
@@ -76,7 +77,6 @@ class ProfileFragment : Fragment() {
         }
 
         binding.chooseImgBtn.setOnClickListener {
-            imageList = emptyList<Uri>().toMutableList()
             checkImagePermission()
             pickImageFromGallery()
         }
@@ -93,9 +93,17 @@ class ProfileFragment : Fragment() {
         }
 
 
+
         binding.submitBtn.setOnClickListener {
-            UserManager.userName = username
-            viewModel.sendDescriptionToGPT(worriesDescription)
+            if (username != null && gender != null && worriesDescription != null && imageUri != null){
+                UserManager.userName = username
+                UserManager.userImage = imageUri.toString()
+                viewModel.sendDescriptionToGPT(worriesDescription)
+            }else{
+                Toast.makeText(requireActivity(), "很抱歉，您的訊息尚未填妥!", Toast.LENGTH_SHORT).show()
+            }
+
+
 
         }
 
@@ -106,7 +114,7 @@ class ProfileFragment : Fragment() {
                     gender,
                     worriesDescription,
                     it.first().message.trim(),
-                    imageList.map { it.toString() }
+                    imageUri.toString()
                 )
             }
 
@@ -114,7 +122,7 @@ class ProfileFragment : Fragment() {
 
         viewModel.readyToUploadOnFirebase.observe(viewLifecycleOwner) {
             if (it != false) {
-                viewModel.uploadProfileToFirebase()
+                viewModel.uploadImageToFireStorage(imageUri.toString())
                 findNavController().navigate(
                     ProfileFragmentDirections.actionProfileFragmentToHomeFragment()
                 )
@@ -134,40 +142,29 @@ class ProfileFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1 && resultCode == RESULT_OK && data?.clipData != null) {
-            val count = data.clipData!!.itemCount
-
-            for (i in 0 until count) {
-                imageUri = data.clipData!!.getItemAt(i).uri
-                imageList.add(imageUri)
-
-                Log.i(TAG, imageList.toString())
-                try {
-                    val adapter = ImageAdapter()
-                    viewPager.adapter = adapter
-                    adapter.submitList(imageList)
-
-                    Log.i(TAG, "adapter submit successfully")
-                }catch (e: Exception){
-                    Log.e(TAG, e.toString())
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+                imageUri = data?.data
+                if (null != imageUri) {
+                    binding.userImage.setImageURI(imageUri)
                 }
-
-
             }
         }
+
     }
 
     private fun pickImageFromGallery() {
         val intent = Intent()
 
         intent.setType("image/*")
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
         intent.setAction(Intent.ACTION_GET_CONTENT)
 
-        startActivityForResult(intent, 1)
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE)
+
 
     }
-    private fun showPermissionRationaleDialog(){
+
+    private fun showPermissionRationaleDialog() {
         AlertDialog.Builder(requireContext())
             .setTitle("Album Permission Required")
             .setMessage("This app need use your album")
@@ -184,36 +181,45 @@ class ProfileFragment : Fragment() {
 
 
     private fun requestReadImagesPermission(dialogShown: Boolean = false) {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), READ_IMAGE_PERMISSION
+        if (ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(), READ_IMAGE_PERMISSION
             ) &&
-            !dialogShown) {
+            !dialogShown
+        ) {
             showPermissionRationaleDialog()
         } else {
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(
-                READ_IMAGE_PERMISSION
-            ), READ_IMAGE_PERMISSION_REQUEST_CODE
+            ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    READ_IMAGE_PERMISSION
+                ), READ_IMAGE_PERMISSION_REQUEST_CODE
             )
         }
     }
+
     private fun onImageReadPermissionDenied() {
-        Toast.makeText(requireContext(), "Camera and Audio Permission Denied", Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), "Camera and Audio Permission Denied", Toast.LENGTH_LONG)
+            .show()
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
     fun checkImagePermission() {
-        if(ContextCompat.checkSelfPermission(requireActivity(), READ_IMAGE_PERMISSION) != PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(
+                requireActivity(),
+                READ_IMAGE_PERMISSION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             requestReadImagesPermission()
-        } else{
+        } else {
             pickImageFromGallery()
         }
     }
-    companion object{
+
+    companion object {
         private const val READ_IMAGE_PERMISSION_REQUEST_CODE = 1
         private const val READ_IMAGE_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
+        private const val SELECT_PICTURE = 200
 
     }
-
-
 
 
 }

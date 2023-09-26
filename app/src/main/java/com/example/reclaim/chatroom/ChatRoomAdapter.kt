@@ -2,6 +2,7 @@ package com.example.reclaim.chatroom
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
@@ -41,6 +42,8 @@ class ChatRoomAdapter(private val onClickListener: OnClickListener) :
                 binding.videoInvitationBtn.visibility = View.VISIBLE
                 binding.videoInvitationBtn.setOnClickListener {
                     onClickListener.onClick(record)
+
+                    Log.i(TAG, "record is : $record")
                 }
 
             }else{

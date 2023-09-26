@@ -1,6 +1,8 @@
 package com.example.reclaim.profile
 
+import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,14 +11,14 @@ import com.example.reclaim.chatgpt.ApiClient
 import com.example.reclaim.chatgpt.CompletionRequest
 import com.example.reclaim.chatgpt.CompletionResponse
 import com.example.reclaim.chatgpt.MessageToGPT
-import com.example.reclaim.data.Images
 import com.example.reclaim.data.ReclaimDatabaseDao
 import com.example.reclaim.data.UserManager
 import com.example.reclaim.data.UserProfile
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firestore.v1.DocumentTransform.FieldTransform.ServerValue
+import com.google.firebase.storage.FirebaseStorage
+//import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -34,7 +36,7 @@ data class ProfileData(
     var gender: String? = "",
     var worriesDescription: String? = "",
     var worriesType: String? = "",
-    var images: List<String> = emptyList()
+    var images: String? = ""
 )
 
 
@@ -84,14 +86,14 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
         userGender: String?,
         worriesDescription: String?,
         worriesType: String?,
-        images: List<String>
+        images: String
     ) {
         val userData = _userProfile.value
         userData?.userName = userName
         userData?.gender = userGender
         userData?.worriesDescription = worriesDescription
         userData?.worriesType = worriesType
-        userData?.images = images
+        userData?.images = images.toString()
         _userProfile.value = userData
 
 
@@ -104,7 +106,7 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
             gender = _userProfile.value?.gender,
             worryType = _userProfile.value?.worriesType,
             worriesDescription = _userProfile.value?.worriesDescription,
-            imageUri = _userProfile.value?.images?.get(0)
+            imageUri = _userProfile.value?.images.toString()
         )
         viewModelScope.launch {
             databaseDao.insertUserProfile(currentUser)
@@ -177,7 +179,7 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
                         val currentType = result
                         _userProfile.value?.worriesType = currentType
                         saveInLocalDB()
-                        UserManager.userType = result
+//                        UserManager.userType = result
                         _readyToUploadOnFirebase.value = true
 
                         Log.i(TAG, "result is$result")
@@ -216,16 +218,17 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
         callApi(question)
     }
 
-    fun uploadProfileToFirebase() {
+    fun uploadProfileToFirebase(image: String) {
         val profile = FirebaseFirestore.getInstance().collection("user_profile")
+
 
         val data = hashMapOf(
             "user_id" to UserManager.userId,
             "user_name" to _userProfile.value?.userName,
             "gender" to _userProfile.value?.gender,
             "worries_description" to _userProfile.value?.worriesDescription,
-            "worries_type" to _userProfile.value?.worriesType,
-            "images" to _userProfile.value?.images,
+            "worries_type" to UserManager.userType,
+            "images" to image,
             "profile_time" to Calendar.getInstance().timeInMillis
         )
 
@@ -236,6 +239,30 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
             .addOnFailureListener {
                 Log.i(TAG, "upload failed")
             }
+
+
+    }
+
+    fun uploadImageToFireStorage(stringOfUri: String) {
+        var currentUri = ""
+        val reference = FirebaseStorage.getInstance().reference
+        val path = UUID.randomUUID().leastSignificantBits
+        val imageRef = reference.child("images/$path.jpg")
+
+        val uploadTask = imageRef.putFile(stringOfUri.toUri())
+
+        uploadTask.addOnSuccessListener { uri ->
+            imageRef.downloadUrl.addOnSuccessListener {
+                currentUri = it.toString()
+                uploadProfileToFirebase(currentUri)
+                Log.i(TAG, "upload successfully, url is $it")
+            }
+
+
+        }.addOnFailureListener {
+            Log.e(TAG, "failed: $it")
+        }
+        Log.i(TAG, "currentUri is $currentUri")
 
 
     }

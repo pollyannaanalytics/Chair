@@ -137,7 +137,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                 val userGender = snapshot.data?.get("gender").toString()
                 val worriesDescription = snapshot.data?.get("worries_description").toString()
                 val worriesType = snapshot.data?.get("worries_type").toString()
-                val images = listOf<String>(snapshot.data?.get("images").toString())
+                val images = snapshot.data?.get("images").toString()
 
                 val newUser = UserProfile(
                     userId = userId,
@@ -145,7 +145,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                     gender = userGender,
                     worriesDescription = worriesDescription,
                     worryType = worriesType,
-                    imageUri = images.first().removeSurrounding("[", "]").toString()
+                    imageUri = images
                 )
 
                 currentList.add(newUser)

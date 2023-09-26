@@ -66,6 +66,7 @@ class ChatRoomFragment : Fragment() {
         var sendText = ""
         val adapter = ChatRoomAdapter(
             ChatRoomAdapter.OnClickListener {
+                Log.i(TAG, "join meeting ${it.meetingId}")
                 viewModel.joinMeeting(it.meetingId)
                 Log.i(TAG, "join meeting click")
             }
