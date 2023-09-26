@@ -1,123 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.example.reclaim.profile.ProfileViewModel" />
 
     </data>
 
-        <ScrollView
-            android:id="@+id/scrollView"
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="@color/white"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <ImageView
-                    android:id="@+id/user_image"
-                    android:layout_width="300dp"
-                    android:layout_height="300dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:src="@drawable/ic_launcher_foreground"
-                    />
+            android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/choose_img_btn"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:text="從相簿請選擇圖片"
-            app:layout_constraintStart_toStartOf="@id/user_image"
-            app:layout_constraintEnd_toEndOf="@id/user_image"
-            app:layout_constraintTop_toBottomOf="@id/user_image"
-            />
+            <ImageView
 
-        <TextView
-            android:id="@+id/username_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/choose_img_btn"
-            android:textSize="20sp"
-            android:text="你的名字"
-            app:layout_constraintStart_toStartOf="@id/user_image" />
+                android:id="@+id/user_image"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:src="@drawable/ic_launcher_foreground"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/username_edit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="請輸入你的名字"
-            app:layout_constraintStart_toStartOf="@id/user_image"
-            app:layout_constraintEnd_toEndOf="@id/user_image"
-            app:layout_constraintTop_toBottomOf="@id/username_title" />
+            <Button
+                android:id="@+id/choose_img_btn"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="從相簿請選擇圖片"
+                app:layout_constraintEnd_toEndOf="@id/user_image"
+                app:layout_constraintStart_toStartOf="@id/user_image"
+                app:layout_constraintTop_toBottomOf="@id/user_image" />
 
-        <TextView
-            android:id="@+id/gender_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/username_edit"
-            android:textSize="20sp"
-            android:text="你的性別"
-            app:layout_constraintStart_toStartOf="@id/user_image" />
+            <TextView
+                android:id="@+id/id_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="你的ID"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@id/user_image"
+                app:layout_constraintTop_toBottomOf="@id/choose_img_btn" />
 
-        <RadioGroup
-            android:id="@+id/gender_group"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/user_image"
-            app:layout_constraintTop_toBottomOf="@id/gender_title"
-            >
-            <RadioButton
-                android:id="@+id/male"
+            <EditText
+                android:id="@+id/id_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="請輸入你的ID"
+                app:layout_constraintEnd_toEndOf="@id/user_image"
+                app:layout_constraintStart_toStartOf="@id/user_image"
+                app:layout_constraintTop_toBottomOf="@id/id_title" />
+
+            <TextView
+                android:id="@+id/username_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="你的名字"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@id/user_image"
+                app:layout_constraintTop_toBottomOf="@id/id_edit" />
+
+            <EditText
+                android:id="@+id/username_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="請輸入你的名字"
+                app:layout_constraintEnd_toEndOf="@id/user_image"
+                app:layout_constraintStart_toStartOf="@id/user_image"
+                app:layout_constraintTop_toBottomOf="@id/username_title" />
+
+            <TextView
+                android:id="@+id/gender_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="你的性別"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@id/user_image"
+                app:layout_constraintTop_toBottomOf="@id/username_edit" />
+
+            <RadioGroup
+                android:id="@+id/gender_group"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/user_image"
+                app:layout_constraintTop_toBottomOf="@id/gender_title">
+
+                <RadioButton
+                    android:id="@+id/male"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="男" />
+
+                <RadioButton
+                    android:id="@+id/female"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="女" />
+
+                <RadioButton
+                    android:id="@+id/third_gender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="非二元性別" />
+
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/worries_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="你的煩惱"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@id/user_image"
+                app:layout_constraintTop_toBottomOf="@id/gender_group" />
+
+            <EditText
+                android:id="@+id/worries_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:autofillHints=""
+                android:hint="來聊聊你最近的煩惱吧"
+                android:inputType=""
+                android:lines="8"
+                app:layout_constraintEnd_toEndOf="@id/user_image"
+                app:layout_constraintStart_toStartOf="@id/user_image"
+                app:layout_constraintTop_toBottomOf="@id/worries_title" />
+
+            <Button
+                android:id="@+id/submit_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="男"/>
-            <RadioButton
-                android:id="@+id/female"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="女"/>
-            <RadioButton
-                android:id="@+id/third_gender"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="非二元性別"/>
-
-        </RadioGroup>
-
-        <TextView
-            android:id="@+id/worries_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/gender_group"
-            android:textSize="20sp"
-            android:text="你的煩惱"
-            app:layout_constraintStart_toStartOf="@id/user_image" />
-
-        <EditText
-            android:id="@+id/worries_edit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="來聊聊你最近的煩惱吧"
-            android:lines="8"
-            app:layout_constraintStart_toStartOf="@id/user_image"
-            app:layout_constraintEnd_toEndOf="@id/user_image"
-            app:layout_constraintTop_toBottomOf="@id/worries_title"
-            android:autofillHints=""
-            android:inputType="" />
-
-        <Button
-            android:id="@+id/submit_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="儲存我的資料"
-            app:layout_constraintTop_toBottomOf="@id/worries_edit"
-            app:layout_constraintStart_toStartOf="@id/user_image"
-            app:layout_constraintEnd_toEndOf="@id/user_image" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
+                android:text="儲存我的資料"
+                app:layout_constraintEnd_toEndOf="@id/user_image"
+                app:layout_constraintStart_toStartOf="@id/user_image"
+                app:layout_constraintTop_toBottomOf="@id/worries_edit" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>

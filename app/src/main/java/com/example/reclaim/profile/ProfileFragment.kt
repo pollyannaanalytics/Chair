@@ -29,6 +29,7 @@ import com.example.reclaim.data.ReclaimDatabaseDao
 import com.example.reclaim.data.UserManager
 import com.example.reclaim.databinding.FragmentProfileBinding
 import com.example.reclaim.videocall.RTCActivity
+import com.google.firebase.firestore.auth.User
 
 
 /**
@@ -43,7 +44,7 @@ class ProfileFragment : Fragment() {
     private var imageUri: Uri? = null
 
     lateinit var binding: FragmentProfileBinding
-
+    lateinit var viewModel: ProfileViewModel
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreateView(
@@ -63,17 +64,23 @@ class ProfileFragment : Fragment() {
         var gender = ""
         var worriesDescription = ""
 
+
+
+
+
         binding.viewModel = viewModel
 
-
+        binding.idEdit.doAfterTextChanged {
+//            UserManager.userId = it.toString()
+        }
 
 
         binding.usernameEdit.doAfterTextChanged {
-            username = it.toString()
+//            username = it.toString()
         }
 
         binding.worriesEdit.doAfterTextChanged {
-            worriesDescription = it.toString()
+//            worriesDescription = it.toString()
         }
 
         binding.chooseImgBtn.setOnClickListener {
@@ -95,14 +102,13 @@ class ProfileFragment : Fragment() {
 
 
         binding.submitBtn.setOnClickListener {
-            if (username != null && gender != null && worriesDescription != null && imageUri != null){
-                UserManager.userName = username
+            if (UserManager.userId != null && UserManager.userType != null && UserManager.userName != null && imageUri != null) {
                 UserManager.userImage = imageUri.toString()
                 viewModel.sendDescriptionToGPT(worriesDescription)
-            }else{
-                Toast.makeText(requireActivity(), "很抱歉，您的訊息尚未填妥!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireActivity(), "很抱歉，您的訊息尚未填妥!", Toast.LENGTH_SHORT)
+                    .show()
             }
-
 
 
         }
@@ -110,7 +116,7 @@ class ProfileFragment : Fragment() {
         viewModel.messageList.observe(viewLifecycleOwner) {
             if (it != emptyList<MessageToGPT>()) {
                 viewModel.saveUserProfile(
-                    username,
+                    UserManager.userName,
                     gender,
                     worriesDescription,
                     it.first().message.trim(),
@@ -221,5 +227,7 @@ class ProfileFragment : Fragment() {
 
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+    }
 }

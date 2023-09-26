@@ -279,7 +279,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         likeOrDislike: String,
         documentId: String
     ) {
-        Log.i("likeOrDislike", documentId.toString())
+        Log.i(TAG, documentId.toString())
         val reference = db.collection("relationship").document(documentId)
         reference.update("current_relationship", likeOrDislike)
 
@@ -341,41 +341,57 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
 
 
     fun findRelationship(friendId: String, friendName: String, friendImg: String, direction: Direction) {
-        val allRelationShip = db.collection("relationship")
-            .where(
-                Filter.and(
-                    Filter.equalTo("sender_id", friendId),
-                    Filter.equalTo("receiver_id", UserManager.userId)
+        Log.i(TAG, "start to find relationship")
+        var cancellistener = false
+        val allRelationship = db.collection("relationship").where(
+                Filter.or(
+                    Filter.and(
+                        Filter.equalTo("sender_id", UserManager.userId),
+                        Filter.equalTo("receiver_id", friendId)
+                    ),
+                    Filter.and(
+                        Filter.equalTo("sender_id", friendId),
+                        Filter.equalTo("receiver_id", UserManager.userId)
+                    )
                 )
-            )
-            .orderBy("receiver_id", Query.Direction.DESCENDING)
+            ).orderBy("receiver_id", Query.Direction.DESCENDING)
 
-
-
-        allRelationShip.addSnapshotListener { querySnapShot, e ->
+        val registration = allRelationship.addSnapshotListener { querySnapShot, e ->
             if (e != null) {
                 Log.e(TAG, "find relationship fail: $e")
+                cancellistener = true
                 return@addSnapshotListener
 
             }
 
-            if (querySnapShot != null && !querySnapShot.isEmpty) {
-                Log.i(TAG, "there is my friend: ${querySnapShot.documents[0].id}")
+            if (querySnapShot != null&& !querySnapShot.isEmpty) {
                 for (query in querySnapShot) {
                     if (query.data.get("current_relationship") == "Pending") {
                         if (query.data.get("chat_room_key") == "null") {
                             updateRelationShip(friendId, friendName, friendImg,direction, querySnapShot.documents[0].id)
+                            cancellistener = true
                         }
 
                     } else {
-                        Log.i(TAG, "there is already relationships")
+                        Log.i(TAG, "there is already a room")
+                        cancellistener = true
                     }
+
+                    cancellistener = true
                 }
+
             } else {
-                Log.i(TAG, "we have no relationship")
+                Log.i(TAG, "query is null")
                 createRelationShip(friendId, friendName, direction)
             }
         }
+
+        if(cancellistener){
+            registration.remove()
+        }
+
+
+
     }
 
     private fun createRelationShip(friendId: String, friendName: String, direction: Direction) {

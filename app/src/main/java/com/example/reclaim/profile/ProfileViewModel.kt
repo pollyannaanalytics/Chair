@@ -73,11 +73,17 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
     val readyToUploadOnFirebase: LiveData<Boolean>
         get() = _readyToUploadOnFirebase
 
+
+    private var _onDestroyed = MutableLiveData<Boolean>()
+    val onDestroyed: LiveData<Boolean>
+        get() = _onDestroyed
+
     init {
         _messageList.value = mutableListOf()
         _userProfile.value = ProfileData()
         Log.i(TAG, "type is${type}")
         _readyToUploadOnFirebase.value = false
+        _onDestroyed.value = false
 
     }
 
@@ -220,25 +226,31 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
 
     fun uploadProfileToFirebase(image: String) {
         val profile = FirebaseFirestore.getInstance().collection("user_profile")
+        try {
+            val data = hashMapOf(
+                "user_id" to UserManager.userId,
+                "user_name" to _userProfile.value?.userName,
+                "gender" to _userProfile.value?.gender,
+                "worries_description" to _userProfile.value?.worriesDescription,
+                "worries_type" to UserManager.userType,
+                "images" to image,
+                "profile_time" to Calendar.getInstance().timeInMillis
+            )
+            Log.i(TAG, "my profile is $data")
+
+            profile.add(data)
+                .addOnSuccessListener {
+                    Log.i(TAG, "upload success")
+                }
+                .addOnFailureListener {
+                    Log.i(TAG, "upload failed")
+                }
+        }catch (e: Exception){
+            Log.e(TAG, "cannot upload: $e")
+        }
 
 
-        val data = hashMapOf(
-            "user_id" to UserManager.userId,
-            "user_name" to _userProfile.value?.userName,
-            "gender" to _userProfile.value?.gender,
-            "worries_description" to _userProfile.value?.worriesDescription,
-            "worries_type" to UserManager.userType,
-            "images" to image,
-            "profile_time" to Calendar.getInstance().timeInMillis
-        )
 
-        profile.add(data)
-            .addOnSuccessListener {
-                Log.i(TAG, "upload success")
-            }
-            .addOnFailureListener {
-                Log.i(TAG, "upload failed")
-            }
 
 
     }
@@ -265,6 +277,11 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
         Log.i(TAG, "currentUri is $currentUri")
 
 
+    }
+
+
+    fun removeSnapListener(){
+        _onDestroyed.value = true
     }
 
 

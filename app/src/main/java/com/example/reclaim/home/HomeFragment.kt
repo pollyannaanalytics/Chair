@@ -57,6 +57,8 @@ class HomeFragment : Fragment() {
 
         binding.viewModel = viewModel
 
+        var counter = 0
+
         fun init() {
             manager = CardStackLayoutManager(requireContext(), object : CardStackListener {
                 override fun onCardDragging(direction: Direction?, ratio: Float) {
@@ -66,7 +68,7 @@ class HomeFragment : Fragment() {
                 override fun onCardSwiped(direction: Direction?) {
                     if (OtherUserNumber != null) {
 
-                            val currentFriend = OtherInfoList.get(manager!!.topPosition - 1 )
+                            val currentFriend = OtherInfoList.get(manager!!.topPosition - 1)
                             if (direction != null) {
                                 Log.i(TAG, "current user is ${currentFriend.friendName}")
                                 viewModel.findRelationship(
@@ -78,6 +80,9 @@ class HomeFragment : Fragment() {
                             } else {
                                 Log.i(TAG, "friends is null")
                             }
+
+                        OtherInfoList.removeAt(manager!!.topPosition - 1)
+                        OtherUserNumber = OtherUserNumber!! - 1
 
                     } else {
                         Log.i(TAG, "friend is null")

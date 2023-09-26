@@ -65,11 +65,12 @@ class ChatRoomViewModel(
     }
 
     private fun getAllRecordFromRoom(room: DocumentSnapshot) {
+        Log.i(TAG, "start to get data")
         val regitration = room.reference.collection("chat_record")
             .orderBy("send_time", Query.Direction.ASCENDING)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
-                    Log.e(TAG, error.toString())
+                    Log.e(TAG, "this is error: ${error.message}")
                     return@addSnapshotListener
                 }
                 if (snapshot != null) {
@@ -99,10 +100,11 @@ class ChatRoomViewModel(
                         )
 
 
+
                         currentRecord.add(newRecord)
                         Log.i(TAG, "get record: ${room.id}")
                     }
-
+                    Log.i(TAG, "current record: $currentRecord")
                     _recordWithFriend.value = currentRecord
                 } else {
                     Log.i(TAG, "record is null")

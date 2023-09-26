@@ -87,6 +87,7 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
 
         try {
             var currentFriendsList = emptyList<String>().toMutableList()
+            Log.i(TAG, UserManager.userId)
 
             val allMatchDocument = db.collection("relationship").where(
                 Filter.or(
@@ -149,7 +150,6 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
 
             if (querySnapShot != null && !querySnapShot.metadata.hasPendingWrites()) {
                 currentFriendList.clear()
-                _friendsList.value!!.clear()
                 for (snapshot in querySnapShot) {
                     val userId = snapshot.data?.get("user_id").toString()
                     val userName = snapshot.data?.get("user_name").toString()
