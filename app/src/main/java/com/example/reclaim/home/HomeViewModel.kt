@@ -300,7 +300,9 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
             "user_a_id" to UserManager.userId,
             "user_a_name" to UserManager.userName,
             "user_b_id" to friendId,
-            "user_b_name" to friendName
+            "user_b_name" to friendName,
+            "last_sentence" to "",
+            "send_by_id" to ""
 
         )
         var currentRoomKey = ""
