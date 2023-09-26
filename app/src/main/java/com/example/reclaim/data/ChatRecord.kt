@@ -21,5 +21,9 @@ data class ChatRecord(
     val sendTime: String,
 
     @ColumnInfo(name = "sender_id")
-    val sender : String
+    val sender : String,
+
+    val type: String,
+
+    val meetingId: String
 )

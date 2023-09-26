@@ -14,12 +14,65 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".chatroom.ChatRoomFragment">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tool_bar_chat_room"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/user_avator_container"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:cardCornerRadius="250dp"
+                    >
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        imageUri="@{viewModel.friend.imageUri}"
+                        android:src="@mipmap/ic_launcher"/>
+
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.friend.userName}"
+                    android:gravity="center"
+                    android:textSize="40sp"
+                    app:layout_constraintEnd_toStartOf="@id/video_button"
+                    app:layout_constraintStart_toEndOf="@id/user_avator_container"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+                <Button
+                    android:id="@+id/video_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="去視訊"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.appcompat.widget.Toolbar>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chat_record_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tool_bar_chat_room"
             app:layout_constraintBottom_toTopOf="@id/message_input"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -30,8 +83,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="說些什麼吧..."
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/start_video_call_btn"
             app:layout_constraintEnd_toStartOf="@id/send_btn">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -41,15 +94,6 @@
 
                 />
         </com.google.android.material.textfield.TextInputLayout>
-        <ImageView
-            android:id="@+id/start_video_call_btn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/messenger"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/message_input"
-            app:layout_constraintBottom_toBottomOf="@id/message_input"
-            />
 
         <ImageView
             android:id="@+id/send_btn"

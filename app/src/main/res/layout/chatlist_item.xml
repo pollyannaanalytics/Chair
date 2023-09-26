@@ -32,11 +32,14 @@
         <TextView
             android:id="@+id/user_name"
 
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/chatlist_item_container"
-            app:layout_constraintEnd_toEndOf="@id/chatlist_item_container"
-            app:layout_constraintTop_toBottomOf="@id/chatlist_item_container"
+            android:minWidth="35dp"
+            app:layout_constraintStart_toEndOf="@id/chatlist_item_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/chatlist_item_container"
+            app:layout_constraintBottom_toBottomOf="@id/chatlist_item_container"
+            android:textSize="25dp"
             android:text="@{friend.userName}"
             android:gravity="center"
             />

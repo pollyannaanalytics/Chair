@@ -3,6 +3,8 @@ package com.example.reclaim.chatroom
 import android.content.Context
 import android.net.Uri
 import android.view.LayoutInflater
+import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -18,7 +20,7 @@ private const val ITEM_BY_ME = 0
 private const val ITEM_BY_OTHER = 1
 
 
-class ChatRoomAdapter :
+class ChatRoomAdapter(private val onClickListener: OnClickListener) :
     ListAdapter<ChatRecord, RecyclerView.ViewHolder>(DiffCallback) {
     private val TAG = "ChatRoomAdapter"
     class SendByMe(val binding: ChatRoomSendByMeBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -31,11 +33,23 @@ class ChatRoomAdapter :
 
     class SendByOther(val binding: ChatRoomSendByOtherBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(record: ChatRecord) {
+        fun bind(record: ChatRecord, onClickListener: OnClickListener) {
             binding.chatRecord = record
             binding.executePendingBindings()
+
+            if (record.type == "videocall"){
+                binding.videoInvitationBtn.visibility = View.VISIBLE
+                binding.videoInvitationBtn.setOnClickListener {
+                    onClickListener.onClick(record)
+                }
+
+            }else{
+                binding.videoInvitationBtn.visibility = View.GONE
+
+            }
         }
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -61,6 +75,9 @@ class ChatRoomAdapter :
         }
     }
 
+
+
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val recordItem = getItem(position)
 
@@ -68,12 +85,16 @@ class ChatRoomAdapter :
             (holder as SendByMe).bind(recordItem)
 
         }else{
-            (holder as SendByOther).bind(recordItem)
+            (holder as SendByOther).bind(recordItem, onClickListener)
         }
 //        when(holder){
 //            is SendByOther -> holder.bind(recordItem)
 //            is SendByMe -> holder.bind(recordItem)
 //        }
+    }
+
+    class OnClickListener(val clickListener: (record: ChatRecord) -> Unit) {
+        fun onClick(record: ChatRecord) = clickListener(record)
     }
 
 

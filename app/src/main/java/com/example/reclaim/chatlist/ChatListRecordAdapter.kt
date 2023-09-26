@@ -1,5 +1,5 @@
 package com.example.reclaim.chatlist
 
-class ChatListRecordAdapter() {
+import androidx.recyclerview.widget.ListAdapter
+import com.example.reclaim.data.ChatRoom
 
-}

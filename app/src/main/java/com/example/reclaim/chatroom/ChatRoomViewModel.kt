@@ -6,29 +6,18 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavArgs
 import com.example.reclaim.data.ChatRecord
-import com.example.reclaim.data.Friends
 import com.example.reclaim.data.ReclaimDatabaseDao
 import com.example.reclaim.data.UserManager
-import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QueryDocumentSnapshot
-import com.google.firebase.firestore.ServerTimestamp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firestore.v1.DocumentTransform.FieldTransform.ServerValue
-import io.grpc.Server
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.time.Clock
 import java.time.LocalTime
 import java.time.ZoneId
-import java.util.Date
-import java.util.TimeZone
+import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
 const val TAG = "ChatRoomViewModel"
@@ -43,6 +32,7 @@ class ChatRoomViewModel(
     }
 
     private val chatRoomKey = navArgs.chatFriend.chatRoomKey
+    val friend = navArgs.chatFriend
 
     private var _recordWithFriend = MutableLiveData<MutableList<ChatRecord>>()
     val recordWithFriend: LiveData<MutableList<ChatRecord>>
@@ -60,6 +50,11 @@ class ChatRoomViewModel(
     private var _onDestroyed = MutableLiveData<Boolean>()
     val onDestroyed: LiveData<Boolean>
         get() = _onDestroyed
+
+    private var _joinMeetingId = MutableLiveData<String>()
+    val joinMeetingId: LiveData<String>
+        get() = _joinMeetingId
+
 
 
     init {
@@ -87,24 +82,24 @@ class ChatRoomViewModel(
                         val content = document.get("content").toString()
                         val timeStamp = document.get("sent_time").toString()
                         val sender = document.get("sender_name").toString()
-                        val isProcessed = document.get("isProcessed").toString()
-                        val sendTimeStamp = changeTimeStampToHHMMFormat(timeStamp)
+                        val type = document.get("message_type").toString()
+                        val meetingId = document.get("meetingId").toString()
+
+
 
 
                         val newRecord = ChatRecord(
                             id = id.toLong(),
                             chatRoomKey = chatRoomKey,
                             content = content,
-                            sendTime = sendTimeStamp,
-                            sender = sender
+                            sendTime = timeStamp,
+                            sender = sender,
+                            type = type,
+                            meetingId = meetingId
                         )
-                        if (isProcessed == "false") {
-                            currentRecord.add(newRecord)
-
-                        }
 
 
-
+                        currentRecord.add(newRecord)
                         Log.i(TAG, "get record: ${room.id}")
                     }
 
@@ -146,8 +141,7 @@ class ChatRoomViewModel(
 
     fun searchChatRoomWithFriend(chatRoom: Query) {
 
-
-        chatRoom.addSnapshotListener { rooms, error ->
+        val registration = chatRoom.addSnapshotListener { rooms, error ->
             if (error != null) {
                 return@addSnapshotListener
             }
@@ -163,6 +157,12 @@ class ChatRoomViewModel(
             }
         }
 
+        registration
+
+        if (_onDestroyed.value == true){
+            registration.remove()
+        }
+
     }
 
 
@@ -176,14 +176,17 @@ class ChatRoomViewModel(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun sendMessage(text: String) {
+    fun sendMessage(text: String, type: String, meetingId: String = "") {
+        val sendTimeInTaiwan = setUpTime()
 
         val newRecord = ChatRecord(
             id = Random.nextLong(),
             chatRoomKey = chatRoomKey,
             content = text,
-            sendTime = LocalTime.now(Clock.system(ZoneId.of("Asia/Taiwan"))).toString(),
-            sender = UserManager.userName
+            sendTime = sendTimeInTaiwan,
+            sender = UserManager.userName,
+            type = type,
+            meetingId = meetingId
         )
 
         val data = hashMapOf(
@@ -192,7 +195,8 @@ class ChatRoomViewModel(
             "sent_time" to newRecord.sendTime,
             "sender_name" to newRecord.sender,
             "id" to newRecord.id,
-            "isProcessed" to false
+            "message_type" to type,
+            "meeting_id" to meetingId
         )
 
         db.collection("chat_room").document(newRecord.chatRoomKey).collection("chat_record")
@@ -207,6 +211,17 @@ class ChatRoomViewModel(
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setUpTime(): String {
+        val taipeiClock = Clock.system(ZoneId.of("Asia/Taipei"))
+        val localTimeNow = LocalTime.now(taipeiClock)
+
+        val formatter = DateTimeFormatter.ofPattern("HH:mm")
+
+        return localTimeNow.format(formatter)
+
+    }
+
     private fun updateOnFriendList(text: String, chatRoomKey: String, currentTime: String) {
         val chatRoom = FirebaseFirestore.getInstance().collection("chat_room").document(chatRoomKey)
         chatRoom.update("last_sentence", text)
@@ -215,5 +230,20 @@ class ChatRoomViewModel(
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun sendVideoCallMessage(meetingId: String){
+        val text = "我開啟了視訊，一起加入吧! Meeting ID: $meetingId"
+        val type = "videocall"
+        sendMessage(text, type, meetingId)
+
+    }
+
+    fun joinMeeting(meetingId: String) {
+        _joinMeetingId.value = meetingId
+    }
+
+    fun removeListener(){
+        _onDestroyed.value = true
+    }
 
 }

@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.homeFragment -> binding.toolbarTitle.setText("Reclaim")
                 R.id.profileFragment -> binding.toolbarTitle.setText("我的個人檔案")
                 R.id.chatListFragment -> binding.toolbarTitle.setText("我的好友")
+                R.id.chatRoomFragment -> binding.toolbar.visibility = View.GONE
 
             }
         }

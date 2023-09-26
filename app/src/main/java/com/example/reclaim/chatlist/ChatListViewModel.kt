@@ -35,7 +35,7 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
         _friendsList.value = emptyList<Friends>().toMutableList()
         _recordList.value = emptyList<ChatRoom>().toMutableList()
         loadAllMatch()
-        loadAllRecords()
+//        loadAllRecords()
     }
 
     fun loadAllRecords() {
