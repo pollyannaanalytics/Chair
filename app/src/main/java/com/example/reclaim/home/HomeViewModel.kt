@@ -275,6 +275,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
     fun likeOrDislike(
         friendId: String,
         friendName: String,
+        friendImg:String,
         likeOrDislike: String,
         documentId: String
     ) {
@@ -286,13 +287,13 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         if (likeOrDislike == "Like") {
 
             Log.i(TAG, "like, to create room")
-            createAChatRoom(friendId, friendName, documentId)
+            createAChatRoom(friendId, friendName, friendImg, documentId)
 
 
         }
     }
 
-    private fun createAChatRoom(friendId: String, friendName: String, documentId: String): String {
+    private fun createAChatRoom(friendId: String, friendName: String, friendImg: String, documentId: String): String {
         val chatRoom = FirebaseFirestore.getInstance().collection("chat_room")
 
         val data = hashMapOf(
@@ -302,7 +303,9 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
             "user_b_id" to friendId,
             "user_b_name" to friendName,
             "last_sentence" to "",
-            "send_by_id" to ""
+            "send_by_id" to "",
+            "user_a_img" to UserManager.userImage,
+            "user_b_img" to friendImg
 
         )
         var currentRoomKey = ""
@@ -337,7 +340,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
     }
 
 
-    fun findRelationship(friendId: String, friendName: String, direction: Direction) {
+    fun findRelationship(friendId: String, friendName: String, friendImg: String, direction: Direction) {
         val allRelationShip = db.collection("relationship")
             .where(
                 Filter.and(
@@ -361,7 +364,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                 for (query in querySnapShot) {
                     if (query.data.get("current_relationship") == "Pending") {
                         if (query.data.get("chat_room_key") == "null") {
-                            updateRelationShip(friendId, friendName, direction, querySnapShot.documents[0].id)
+                            updateRelationShip(friendId, friendName, friendImg,direction, querySnapShot.documents[0].id)
                         }
 
                     } else {
@@ -406,18 +409,19 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
     private fun updateRelationShip(
         friendId: String,
         friendName: String,
+        friendImg: String,
         direction: Enum<Direction>,
         documentId: String
     ) {
         Log.i(TAG, "friendId is $friendId")
         when (direction) {
-            Direction.Left -> likeOrDislike(friendId, friendName, "Dislike", documentId)
+            Direction.Left -> likeOrDislike(friendId, friendName, friendImg,"Dislike", documentId)
             Direction.Right -> {
-                likeOrDislike(friendId, friendName, "Like", documentId)
+                likeOrDislike(friendId, friendName, friendImg,"Like", documentId)
                 Log.i(TAG, "Liked friendId is $friendId")
             }
 
-            else -> likeOrDislike(friendId, friendName, "Like", documentId)
+            else -> likeOrDislike(friendId, friendName, friendImg,"Like", documentId)
         }
     }
 

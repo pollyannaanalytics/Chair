@@ -4,7 +4,8 @@ import java.util.UUID
 
 object UserManager {
 
-    val userId = "r118500001"
+    val userId = "09222023"
     var userType = "WORK"
     var userName = ""
+    var userImage = ""
 }

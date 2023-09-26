@@ -1,6 +1,8 @@
 package com.example.reclaim.chatroom
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,6 +13,7 @@ import com.example.reclaim.data.ReclaimDatabaseDao
 import com.example.reclaim.data.UserManager
 import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QueryDocumentSnapshot
@@ -21,7 +24,11 @@ import com.google.firestore.v1.DocumentTransform.FieldTransform.ServerValue
 import io.grpc.Server
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.time.Clock
+import java.time.LocalTime
+import java.time.ZoneId
 import java.util.Date
+import java.util.TimeZone
 import kotlin.random.Random
 
 const val TAG = "ChatRoomViewModel"
@@ -48,7 +55,7 @@ class ChatRoomViewModel(
     private val db = Firebase.firestore
 
     private val chatRoom = db.collection("chat_room").whereEqualTo("key", chatRoomKey)
-        .orderBy("send", Query.Direction.DESCENDING)
+
 
     private var _onDestroyed = MutableLiveData<Boolean>()
     val onDestroyed: LiveData<Boolean>
@@ -63,7 +70,6 @@ class ChatRoomViewModel(
     }
 
     private fun getAllRecordFromRoom(room: DocumentSnapshot) {
-        _recordWithFriend.value!!.clear()
         val regitration = room.reference.collection("chat_record")
             .orderBy("send_time", Query.Direction.ASCENDING)
             .addSnapshotListener { snapshot, error ->
@@ -82,14 +88,14 @@ class ChatRoomViewModel(
                         val timeStamp = document.get("sent_time").toString()
                         val sender = document.get("sender_name").toString()
                         val isProcessed = document.get("isProcessed").toString()
+                        val sendTimeStamp = changeTimeStampToHHMMFormat(timeStamp)
 
-                        val sendTime = changeTimeStampToHHMMFormat(timeStamp)
 
                         val newRecord = ChatRecord(
                             id = id.toLong(),
                             chatRoomKey = chatRoomKey,
                             content = content,
-                            sendTime = sendTime,
+                            sendTime = sendTimeStamp,
                             sender = sender
                         )
                         if (isProcessed == "false") {
@@ -115,26 +121,27 @@ class ChatRoomViewModel(
     }
 
     private fun changeTimeStampToHHMMFormat(timeStamp: String): String {
-        val timeStampToLong = timeStamp.toLong()
-        val minuteInt = ((timeStampToLong / (1000 * 60)) % 60)
-        val hourInt = ((timeStampToLong / (1000 * 60 * 60)) % 24)
-        var minutString = ""
-        var hourString = ""
+            val timeStampToLong = timeStamp.toLong()
+            val minuteInt = ((timeStampToLong / (1000 * 60)) % 60)
+            val hourInt = ((timeStampToLong / (1000 * 60 * 60)) % 24)
+            var minutString = ""
+            var hourString = ""
 
-        minutString = if (minuteInt < 10) {
-            "0$minuteInt"
-        } else {
-            minuteInt.toString()
-        }
-        hourString = if(hourInt < 10){
-            "0$hourInt"
-        }else{
-            hourInt.toString()
-        }
+            minutString = if (minuteInt < 10) {
+                "0$minuteInt"
+            } else {
+                minuteInt.toString()
+            }
+            hourString = if(hourInt < 10){
+                "0$hourInt"
+            }else{
+                hourInt.toString()
+            }
 
-        val timeFormatResult = "$hourString : $minutString"
+            val timeFormatResult = "$hourString : $minutString"
 
-        return timeFormatResult
+            return timeFormatResult
+
     }
 
     fun searchChatRoomWithFriend(chatRoom: Query) {
@@ -159,7 +166,7 @@ class ChatRoomViewModel(
     }
 
 
-    private fun updateSentTime(chatRoomKey: String, currentTime: String, documentId: String) {
+    private fun updateSentTime(chatRoomKey: String, currentTime: String, documentId: String){
         val updateDocument =
             db.collection("chat_room").document(chatRoomKey).collection("chat_record")
                 .document(documentId)
@@ -168,20 +175,21 @@ class ChatRoomViewModel(
         Log.i(TAG, "successfully update sendtime")
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun sendMessage(text: String) {
 
         val newRecord = ChatRecord(
             id = Random.nextLong(),
             chatRoomKey = chatRoomKey,
             content = text,
-            sendTime = "",
+            sendTime = LocalTime.now(Clock.system(ZoneId.of("Asia/Taiwan"))).toString(),
             sender = UserManager.userName
         )
 
         val data = hashMapOf(
             "chat_room_key" to newRecord.chatRoomKey,
             "content" to newRecord.content,
-            "send_time" to newRecord.sendTime,
+            "sent_time" to newRecord.sendTime,
             "sender_name" to newRecord.sender,
             "id" to newRecord.id,
             "isProcessed" to false
@@ -189,19 +197,21 @@ class ChatRoomViewModel(
 
         db.collection("chat_room").document(newRecord.chatRoomKey).collection("chat_record")
             .add(data).addOnSuccessListener {
-            val currentTime = ServerValue.REQUEST_TIME_VALUE.toString()
+            val currentTime = System.currentTimeMillis().toString()
             updateSentTime(newRecord.chatRoomKey, currentTime, it.id)
+                updateOnFriendList(text, chatRoomKey, currentTime)
         }
 
-        updateOnFriendList(text, chatRoomKey)
+
 
 
     }
 
-    private fun updateOnFriendList(text: String, chatRoomKey: String) {
+    private fun updateOnFriendList(text: String, chatRoomKey: String, currentTime: String) {
         val chatRoom = FirebaseFirestore.getInstance().collection("chat_room").document(chatRoomKey)
         chatRoom.update("last_sentence", text)
         chatRoom.update("send_by_id", UserManager.userId)
+        chatRoom.update("sent_time",currentTime )
 
     }
 

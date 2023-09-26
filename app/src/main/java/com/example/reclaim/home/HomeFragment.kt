@@ -28,7 +28,8 @@ private const val TAG = "HOMEFRAGMENT"
 
 data class FriendInfo(
     var friendId: String? = null,
-    var friendName: String? = null
+    var friendName: String? = null,
+    var friendImg: String? = null
 )
 
 class HomeFragment : Fragment() {
@@ -71,6 +72,7 @@ class HomeFragment : Fragment() {
                                 viewModel.findRelationship(
                                     currentFriend.friendId!!,
                                     currentFriend.friendName!!,
+                                    currentFriend.friendImg!!,
                                     direction
                                 )
                             } else {
@@ -126,7 +128,7 @@ class HomeFragment : Fragment() {
         viewModel.otherProfileList.observe(viewLifecycleOwner) {
 
             it.forEach { it ->
-                val currentFriend = FriendInfo(it.userId, it.userName)
+                val currentFriend = FriendInfo(it.userId, it.userName, it.imageUri)
                 OtherInfoList?.add(currentFriend)
                 Log.i(TAG, "all friendInfoList is ${OtherInfoList.toString()}")
             }
