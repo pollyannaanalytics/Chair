@@ -148,6 +148,8 @@ class HomeFragment : Fragment() {
         }
 
 
+
+
         return binding.root
     }
 
@@ -164,6 +166,7 @@ class HomeFragment : Fragment() {
 
 
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

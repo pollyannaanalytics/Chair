@@ -24,7 +24,8 @@ class HomeAdapter(val context: Context, val list: List<UserProfile>):
 
     override fun onBindViewHolder(holder: DatingViewHolder, position: Int) {
         holder.binding.userNameTitle.text = list[position].userName
-        holder.binding.userGender.text = list[position].gender
+        holder.binding.worryType.text = list[position].worryType
+        holder.binding.worriesDescription.setText(list[position].worriesDescription)
 
         list[position].imageUri?.let { bindImage(holder.binding.usersFirstImg, it) }
     }
