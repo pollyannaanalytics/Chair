@@ -4,12 +4,12 @@ import java.util.UUID
 
 object UserManager {
 
-    var userId = "iam"
+    var userId = "iampinyun"
     val userType = "WORK"
-    var userName = "i am IamJimmy"
+    var userName = "PinYun Wu"
     var userImage =
-        "https://firebasestorage.googleapis.com/v0/b/reclaim-12ffd.appspot.com/o/images%2F-6913368255853759482.jpg?alt=media&token=34608bed-2cac-4cac-86d3-44503b52b0be"
-    var gender = "男"
+        "https://firebasestorage.googleapis.com/v0/b/reclaim-12ffd.appspot.com/o/images%2F%E8%9E%A2%E5%B9%95%E6%93%B7%E5%8F%96%E7%95%AB%E9%9D%A2%202023-07-08%20165137.png?alt=media&token=0f47e17c-6ecf-414a-a81f-2c73c4c6e949"
+    var gender = "女"
     var age = "24"
     var worriesDescription = "一個很焦慮的人，總是擔心自己的作業做不完"
 }

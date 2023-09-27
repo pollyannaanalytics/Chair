@@ -59,34 +59,33 @@ class HomeFragment : Fragment() {
 
 
         fun init() {
+            var counter = 0
             manager = CardStackLayoutManager(requireContext(), object : CardStackListener {
                 override fun onCardDragging(direction: Direction?, ratio: Float) {
 
                 }
 
                 override fun onCardSwiped(direction: Direction?) {
-                    if (OtherUserNumber != null) {
+                    if (counter < OtherUserNumber!!) {
+                        val currentFriend = OtherInfoList.get(counter)
+                        if (direction != null) {
+                            Log.i(TAG, "current user is ${currentFriend.friendName}")
+                            viewModel.findRelationship(
+                                currentFriend.friendId!!,
+                                currentFriend.friendName!!,
+                                currentFriend.friendImg!!,
+                                direction
+                            )
+                        } else {
+                            Log.i(TAG, "friends is null")
+                        }
+                        counter++
 
-                            val currentFriend = OtherInfoList.get(manager!!.topPosition - 1)
-                            if (direction != null) {
-                                Log.i(TAG, "current user is ${currentFriend.friendName}")
-                                viewModel.findRelationship(
-                                    currentFriend.friendId!!,
-                                    currentFriend.friendName!!,
-                                    currentFriend.friendImg!!,
-                                    direction
-                                )
-                            } else {
-                                Log.i(TAG, "friends is null")
-                            }
-
-                        OtherInfoList.removeAt(manager!!.topPosition - 1)
-                        OtherUserNumber = OtherUserNumber!! - 1
-
-                    } else {
-                        Log.i(TAG, "friend is null")
                     }
+
+
                 }
+
 
                 override fun onCardRewound() {
 

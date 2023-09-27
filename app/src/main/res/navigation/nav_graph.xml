@@ -40,5 +40,9 @@
     <fragment
         android:id="@+id/alreadySignUpProfileFragment"
         android:name="com.example.reclaim.profile.AlreadySignUpProfileFragment"
-        android:label="AlreadySignUpProfileFragment" />
+        android:label="AlreadySignUpProfileFragment" >
+        <action
+            android:id="@+id/action_alreadySignUpProfileFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
 </navigation>

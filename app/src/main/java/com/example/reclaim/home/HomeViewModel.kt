@@ -237,6 +237,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
     }
 
     private fun loadWhoLikeMe(userId: String): MutableList<String> {
+        Log.i(TAG, "start to load who is friend currently")
+        var shouldRemove = false
         val currentFriendList = emptyList<String>().toMutableList()
         val registration = db.collection("relationship")
             .where(
@@ -247,6 +249,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
             ).whereNotEqualTo("current_relationship", "Like")
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
+                    Log.e(TAG, "cannot load current friend: $error")
                     return@addSnapshotListener
                 }
 
@@ -257,6 +260,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                         } else {
                             currentFriendList.add("receiver_id")
                         }
+                        Log.i(TAG, "currentFriendList: $currentFriendList")
+                        shouldRemove = true
                     }
                 } else {
                     Log.e("findFriends", "no friends")
@@ -266,7 +271,11 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
             }
         registration
 
-        registration.remove()
+        if (shouldRemove) {
+            registration.remove()
+        }
+
+
 
         return currentFriendList
 
@@ -275,17 +284,16 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
     fun likeOrDislike(
         friendId: String,
         friendName: String,
-        friendImg:String,
+        friendImg: String,
         likeOrDislike: String,
         documentId: String
     ) {
-        Log.i(TAG, documentId.toString())
+        Log.i(TAG, documentId)
         val reference = db.collection("relationship").document(documentId)
         reference.update("current_relationship", likeOrDislike)
 
 
         if (likeOrDislike == "Like") {
-
             Log.i(TAG, "like, to create room")
             createAChatRoom(friendId, friendName, friendImg, documentId)
 
@@ -293,11 +301,17 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         }
     }
 
-    private fun createAChatRoom(friendId: String, friendName: String, friendImg: String, documentId: String): String {
+    private fun createAChatRoom(
+        friendId: String,
+        friendName: String,
+        friendImg: String,
+        documentId: String
+    ): String {
         val chatRoom = FirebaseFirestore.getInstance().collection("chat_room")
 
+
         val data = hashMapOf(
-            "key" to "",
+            "key" to friendId + UserManager.userId,
             "user_a_id" to UserManager.userId,
             "user_a_name" to UserManager.userName,
             "user_b_id" to friendId,
@@ -308,16 +322,12 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
             "user_b_img" to friendImg
 
         )
-        var currentRoomKey = ""
+        var currentRoomKey = friendId + UserManager.userId
+
 
         chatRoom.add(data).addOnSuccessListener {
-            if (it.id != null || !it.id.isNotEmpty()) {
-                Log.i(TAG, "current room key is ${it.id}")
-                currentRoomKey = it.id
-                it.update("key", currentRoomKey)
-                updateChatRoomKeyInRelationship(currentRoomKey, documentId)
-            }
 
+            updateChatRoomKeyInRelationship(currentRoomKey, documentId)
         }.addOnFailureListener {
             Log.e(TAG, "create room failed: $it")
 
@@ -340,56 +350,51 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
     }
 
 
-    fun findRelationship(friendId: String, friendName: String, friendImg: String, direction: Direction) {
+    fun findRelationship(
+        friendId: String,
+        friendName: String,
+        friendImg: String,
+        direction: Direction
+    ) {
         Log.i(TAG, "start to find relationship")
-        var cancellistener = false
-        val allRelationship = db.collection("relationship").where(
-                Filter.or(
-                    Filter.and(
-                        Filter.equalTo("sender_id", UserManager.userId),
-                        Filter.equalTo("receiver_id", friendId)
-                    ),
-                    Filter.and(
-                        Filter.equalTo("sender_id", friendId),
-                        Filter.equalTo("receiver_id", UserManager.userId)
-                    )
+
+        db.collection("relationship").where(
+            Filter.or(
+                Filter.and(
+                    Filter.equalTo("sender_id", UserManager.userId),
+                    Filter.equalTo("receiver_id", friendId)
+                ),
+                Filter.and(
+                    Filter.equalTo("sender_id", friendId),
+                    Filter.equalTo("receiver_id", UserManager.userId)
                 )
-            ).orderBy("receiver_id", Query.Direction.DESCENDING)
-
-        val registration = allRelationship.addSnapshotListener { querySnapShot, e ->
-            if (e != null) {
-                Log.e(TAG, "find relationship fail: $e")
-                cancellistener = true
-                return@addSnapshotListener
-
-            }
-
-            if (querySnapShot != null&& !querySnapShot.isEmpty) {
-                for (query in querySnapShot) {
-                    if (query.data.get("current_relationship") == "Pending") {
-                        if (query.data.get("chat_room_key") == "null") {
-                            updateRelationShip(friendId, friendName, friendImg,direction, querySnapShot.documents[0].id)
-                            cancellistener = true
-                        }
+            )
+        ).orderBy("receiver_id", Query.Direction.DESCENDING).get().addOnSuccessListener {
+            if (!it.isEmpty) {
+                Log.i(TAG, "relationship is not null")
+                for (query in it) {
+                    if (query.data.get("chat_room_key") == "null") {
+                        updateRelationShip(
+                            friendId,
+                            friendName,
+                            friendImg,
+                            direction,
+                            query.id
+                        )
 
                     } else {
-                        Log.i(TAG, "there is already a room")
-                        cancellistener = true
+                        Log.i(TAG, "there is already room key")
+
                     }
-
-                    cancellistener = true
                 }
-
-            } else {
-                Log.i(TAG, "query is null")
+            }else{
                 createRelationShip(friendId, friendName, direction)
+                Log.i(TAG, "there is no relationship, start to create")
             }
-        }
 
-        if(cancellistener){
-            registration.remove()
+        }.addOnFailureListener {
+            Log.i(TAG, "find relationship fail: $it")
         }
-
 
 
     }
@@ -431,13 +436,13 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
     ) {
         Log.i(TAG, "friendId is $friendId")
         when (direction) {
-            Direction.Left -> likeOrDislike(friendId, friendName, friendImg,"Dislike", documentId)
+            Direction.Left -> likeOrDislike(friendId, friendName, friendImg, "Dislike", documentId)
             Direction.Right -> {
-                likeOrDislike(friendId, friendName, friendImg,"Like", documentId)
+                likeOrDislike(friendId, friendName, friendImg, "Like", documentId)
                 Log.i(TAG, "Liked friendId is $friendId")
             }
 
-            else -> likeOrDislike(friendId, friendName, friendImg,"Like", documentId)
+            else -> likeOrDislike(friendId, friendName, friendImg, "Like", documentId)
         }
     }
 
