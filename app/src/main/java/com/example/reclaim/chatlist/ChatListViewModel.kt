@@ -27,8 +27,8 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
     val recordList: LiveData<MutableList<ChatRoom>>
         get() = _recordList
 
-    private var _navigateToChatRoom = MutableLiveData<Friends>()
-    val navigateToChatRoom: LiveData<Friends>
+    private var _navigateToChatRoom = MutableLiveData<Friends?>()
+    val navigateToChatRoom: LiveData<Friends?>
         get() = _navigateToChatRoom
 
     init {
@@ -100,7 +100,7 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
 
             allMatchDocument.addSnapshotListener { querySnapshot, e ->
                 if (e != null) {
-                    Log.e(TAG, "$e")
+                    Log.e(TAG, "error: $e")
                 }
 
                 if (querySnapshot != null && !querySnapshot.isEmpty) {
@@ -162,10 +162,11 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
                         chatRoomKey = chatRoomKey
                     )
                     currentFriendList.add(friendInfo)
+                    _friendsList.value = currentFriendList
                 }
 
                 Log.i(TAG, currentFriendList.toString())
-                _friendsList.value = currentFriendList
+
             }
         }
     }

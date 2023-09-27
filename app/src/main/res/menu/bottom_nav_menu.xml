@@ -3,8 +3,8 @@
 
     <item
         android:id="@+id/profileFragment"
-        android:title="Setting"
-        android:icon="@drawable/settings"
+        android:title="Profile"
+        android:icon="@drawable/profile_user"
         />
     <item
         android:id="@+id/homeFragment"

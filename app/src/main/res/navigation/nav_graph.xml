@@ -37,4 +37,8 @@
             app:destination="@id/chatRoomFragment" />
 
     </fragment>
+    <fragment
+        android:id="@+id/alreadySignUpProfileFragment"
+        android:name="com.example.reclaim.profile.AlreadySignUpProfileFragment"
+        android:label="AlreadySignUpProfileFragment" />
 </navigation>

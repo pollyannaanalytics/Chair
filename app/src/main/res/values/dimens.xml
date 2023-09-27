@@ -5,4 +5,9 @@
     <dimen name="padding_swipestack">64dp</dimen>
     <dimen name="elevation_normal">4dp</dimen>
     <dimen name="elevation_large">8dp</dimen>
+    <dimen name="title_text_size">35sp</dimen>
+    <dimen name="detail_text_size">16sp</dimen>
+    <dimen name="standard_margin">16dp</dimen>
+    <dimen name="standard_margin_one_forth">4dp</dimen>
+    <dimen name="standard_margin_half">8dp</dimen>
 </resources>

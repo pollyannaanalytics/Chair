@@ -46,9 +46,13 @@ class ChatListFragment : Fragment() {
                     Log.i(TAG, "click on $it")
                 })
                 binding.friendsRecylerview.adapter = adapter
-
+            if(it != null && it.size != 0){
                 adapter.submitList(it)
-            Log.i(TAG, "friend in recyclerview: $it")
+                Log.i(TAG, "friend in recyclerview: $it")
+            }
+
+
+
 
 
         }

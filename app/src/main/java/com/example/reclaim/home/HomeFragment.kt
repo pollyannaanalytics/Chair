@@ -57,7 +57,6 @@ class HomeFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-        var counter = 0
 
         fun init() {
             manager = CardStackLayoutManager(requireContext(), object : CardStackListener {
@@ -148,12 +147,6 @@ class HomeFragment : Fragment() {
 
 
         }
-
-//        binding.videoButton.setOnClickListener {
-//            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToMeetingFragment())
-//        }
-
-
 
 
         return binding.root

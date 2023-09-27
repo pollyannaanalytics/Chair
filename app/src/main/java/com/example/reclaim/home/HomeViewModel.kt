@@ -311,7 +311,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         var currentRoomKey = ""
 
         chatRoom.add(data).addOnSuccessListener {
-            if (it.id != null && it.id.isNotEmpty()) {
+            if (it.id != null || !it.id.isNotEmpty()) {
                 Log.i(TAG, "current room key is ${it.id}")
                 currentRoomKey = it.id
                 it.update("key", currentRoomKey)
