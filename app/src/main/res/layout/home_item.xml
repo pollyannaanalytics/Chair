@@ -41,11 +41,11 @@
                     android:layout_height="wrap_content"
 
                     app:layout_constraintStart_toStartOf="@id/user_name_title"
-                    app:layout_constraintBottom_toTopOf="@id/worries_description"
+                    app:layout_constraintBottom_toTopOf="@id/user_tag"
                     >
                 <TextView
                     android:id="@+id/worry_type"
-                    android:layout_marginVertical="@dimen/standard_margin"
+
                     android:text="Work"
                     android:textColor="@color/white"
                     android:background="@color/shadow"
@@ -66,9 +66,21 @@
                     android:textSize="40dp"
                     app:layout_constraintBottom_toTopOf="@id/worry_type_container"
                     android:layout_marginLeft="@dimen/standard_margin"
+                    android:layout_marginBottom="@dimen/standard_margin_one_forth"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     />
+                <TextView
+                    android:id="@+id/user_tag"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/detail_text_size"
+                    app:layout_constraintBottom_toTopOf="@id/worries_description"
+                    android:layout_marginLeft="@dimen/standard_margin"
+                    android:layout_marginVertical="@dimen/standard_margin_one_forth"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/user_name_title"/>
 
                 <TextView
                     android:id="@+id/worries_description"

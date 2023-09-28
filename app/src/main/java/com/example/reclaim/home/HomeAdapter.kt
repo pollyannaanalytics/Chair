@@ -8,13 +8,24 @@ import com.example.reclaim.bindImage
 import com.example.reclaim.data.UserProfile
 import com.example.reclaim.databinding.HomeItemBinding
 
-class HomeAdapter(val context: Context, val list: List<UserProfile>, onClickListener: OnClickListener):
+class HomeAdapter(val context: Context, val list: List<UserProfile>, val onClickListener: OnClickListener):
     RecyclerView.Adapter<HomeAdapter.DatingViewHolder>() {
     inner class DatingViewHolder(val binding: HomeItemBinding): RecyclerView.ViewHolder(binding.root){
 
+        fun bind(item: UserProfile){
+            binding.executePendingBindings()
+            binding.userNameTitle.text = item.userName
+            binding.worryType.text = item.worryType
+            binding.worriesDescription.setText(item.worriesDescription)
+            binding.userTag.text = item.gender + "， 30"
+        }
     }
 
-    inner class OnClickListener(){}
+    class OnClickListener(val dislistener: (position: Int) -> Unit, val likeListener: (position: Int) -> Unit){
+        fun onDisLike(position: Int) = dislistener(position)
+        fun onLike(position: Int) = likeListener(position)
+
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DatingViewHolder {
         return DatingViewHolder(HomeItemBinding.inflate(LayoutInflater.from(context), parent, false))
@@ -25,10 +36,21 @@ class HomeAdapter(val context: Context, val list: List<UserProfile>, onClickList
     }
 
     override fun onBindViewHolder(holder: DatingViewHolder, position: Int) {
-        holder.binding.userNameTitle.text = list[position].userName
-        holder.binding.worryType.text = list[position].worryType
-        holder.binding.worriesDescription.setText(list[position].worriesDescription)
+
+
+
+        holder.bind(list[position])
 
         list[position].imageUri?.let { bindImage(holder.binding.usersFirstImg, it) }
+
+        holder.binding.dislikeBtn.setOnClickListener {
+            onClickListener.onDisLike(position)
+        }
+
+        holder.binding.likeBtn.setOnClickListener {
+            onClickListener.onLike(position)
+        }
+
+
     }
 }

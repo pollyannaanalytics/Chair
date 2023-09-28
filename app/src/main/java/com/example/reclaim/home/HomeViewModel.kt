@@ -71,6 +71,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
 
 
                     if (querysnapshot!!.documents.size != 0) {
+                        Log.i(TAG, "current all profile size: ${querysnapshot.documents.size}")
                         Log.i(TAG, "querysnapshot is not empty, start to get firebase")
                         getFieldFromFirebase(querysnapshot)
                     } else {
@@ -106,6 +107,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
 
                     if (querysnapshot!!.documents.size != 0) {
                         Log.i(TAG, "querysnapshot is not empty, start to get firebase")
+                        Log.i(TAG, "current all size: ${querysnapshot.documents.size}")
                         getFieldFromFirebase(querysnapshot)
                     } else {
                         loadAllUsers()
@@ -246,19 +248,20 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                     Filter.equalTo("receiver_id", UserManager.userId),
                     Filter.equalTo("sender_id", UserManager.userId)
                 )
-            ).whereNotEqualTo("current_relationship", "Like")
+            ).whereEqualTo("current_relationship", "Like")
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     Log.e(TAG, "cannot load current friend: $error")
                     return@addSnapshotListener
                 }
 
-                if (snapshot != null) {
+                if (snapshot != null && !snapshot.isEmpty) {
                     for (shot in snapshot) {
-                        if (shot.data.get("receiver_id") == UserManager.userId) {
-                            currentFriendList.add("sender_id")
+                        if (shot.data["receiver_id"].toString() == UserManager.userId) {
+                            Log.i(TAG, "current receiver: ${UserManager.userId}")
+                            currentFriendList.add(shot.data["sender_id"].toString())
                         } else {
-                            currentFriendList.add("receiver_id")
+                            currentFriendList.add(shot.data["receiver_id"].toString())
                         }
                         Log.i(TAG, "currentFriendList: $currentFriendList")
                         shouldRemove = true
@@ -290,14 +293,24 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
     ) {
         Log.i(TAG, documentId)
         val reference = db.collection("relationship").document(documentId)
-        reference.update("current_relationship", likeOrDislike)
-
+        if (likeOrDislike == "Dislike"){
+            reference.update("current_relationship", likeOrDislike)
+            Log.i(TAG, "update relationship: $likeOrDislike")
+        }
 
         if (likeOrDislike == "Like") {
-            Log.i(TAG, "like, to create room")
-            createAChatRoom(friendId, friendName, friendImg, documentId)
-
-
+            reference.get().addOnSuccessListener {
+                val currentRelationship = it.get("current_relationship")
+                if (currentRelationship == "Pending"){
+                    Log.i(TAG, "like, to create room")
+                    reference.update("current_relationship", likeOrDislike)
+                    createAChatRoom(friendId, friendName, friendImg, documentId)
+                }else{
+                    Log.i(TAG, "another user dislike, not to create room")
+                }
+            }.addOnFailureListener {
+                Log.e(TAG, "cannot get relationship: $it")
+            }
         }
     }
 

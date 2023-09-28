@@ -1,8 +1,11 @@
 package com.example.reclaim.home
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.graphics.Color
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -128,17 +131,95 @@ class HomeFragment : Fragment() {
 
         }
 
-        viewModel.otherProfileList.observe(viewLifecycleOwner) {
+        fun swipeAnimation(direction: Direction) {
+            var scrollX: Float
+            var angle: Float
+            when(direction){
+                Direction.Right -> {
+                    scrollX = binding.cardStackview.width.toFloat()
+                    angle = 45f
+                }
+                Direction.Left -> {
+                    scrollX = -binding.cardStackview.width.toFloat()
+                    angle = -45f
+                }
+                else -> {
+                    scrollX = binding.cardStackview.width.toFloat()
+                    angle = 45f
+                }
+            }
+            val animator = ObjectAnimator.ofFloat(
+                binding.cardStackview,
+                View.TRANSLATION_X,
+                scrollX
+            )
+            animator.duration = 1000
 
-            it.forEach { it ->
-                val currentFriend = FriendInfo(it.userId, it.userName, it.imageUri)
+            val rotationAnimator = ObjectAnimator.ofFloat(
+                binding.cardStackview,
+                View.ROTATION,
+                angle
+            )
+            val alphaAnimator = ObjectAnimator.ofFloat(
+                binding.cardStackview,
+                View.ALPHA,
+                0f
+            )
+
+            val animationSet = AnimatorSet()
+            animationSet.playTogether(animator, rotationAnimator, alphaAnimator)
+            animationSet.duration = 1000
+
+
+            animationSet.start()
+
+            Thread(
+                Runnable {
+                    while(true) {
+                        if(!animationSet.isRunning) {
+
+                            binding.cardStackview.post {
+                                binding.cardStackview.scrollToPosition(binding.cardStackview.adapter!!.itemCount - 1)
+                                binding.cardStackview.alpha = 1.0f
+                                binding.cardStackview.rotation = 0f
+                                binding.cardStackview.translationX = 0f
+
+                            }
+                            break
+                        }
+                    }
+                }
+            ).start()
+
+        }
+
+        viewModel.otherProfileList.observe(viewLifecycleOwner) {
+            userProfileList ->
+            userProfileList.forEach { userProfile ->
+                val currentFriend = FriendInfo(userProfile.userId, userProfile.userName, userProfile.imageUri)
                 OtherInfoList?.add(currentFriend)
                 Log.i(TAG, "all friendInfoList is ${OtherInfoList.toString()}")
             }
             OtherUserNumber = OtherInfoList.size
             Log.i(TAG, "all friendnumber is ${OtherUserNumber.toString()}")
-            val adapter = this.context?.let { it1 -> HomeAdapter(it1, it) }
-            it.shuffle()
+            val clickListener = HomeAdapter.OnClickListener(
+                dislistener = {position ->
+                    Log.i(TAG, "dislike btn is clicked")
+                    val currentProfile = userProfileList[position]
+                    viewModel.findRelationship(currentProfile.userId!!, currentProfile.userName!!, currentProfile.imageUri!!, Direction.Left)
+
+                    swipeAnimation(Direction.Left)
+
+                },
+                likeListener = {position ->
+                    Log.i(TAG, "like btn is clicked")
+                    val currentProfile = userProfileList[position]
+                    viewModel.findRelationship(currentProfile.userId!!, currentProfile.userName!!, currentProfile.imageUri!!, Direction.Right)
+                    swipeAnimation(Direction.Right)
+                }
+            )
+            val adapter = this.context?.let { context -> HomeAdapter(context, userProfileList, clickListener)}
+            userProfileList.shuffle()
 
             binding.cardStackview.layoutManager = manager!!
             binding.cardStackview.itemAnimator = DefaultItemAnimator()
@@ -152,6 +233,8 @@ class HomeFragment : Fragment() {
 
         return binding.root
     }
+
+
 
     private fun shadowOnFragment(binding: FragmentHomeBinding, hint: String) {
         val shadowDrawable = ShapeDrawable()
