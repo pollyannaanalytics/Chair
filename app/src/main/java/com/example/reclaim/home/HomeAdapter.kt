@@ -8,11 +8,13 @@ import com.example.reclaim.bindImage
 import com.example.reclaim.data.UserProfile
 import com.example.reclaim.databinding.HomeItemBinding
 
-class HomeAdapter(val context: Context, val list: List<UserProfile>):
+class HomeAdapter(val context: Context, val list: List<UserProfile>, onClickListener: OnClickListener):
     RecyclerView.Adapter<HomeAdapter.DatingViewHolder>() {
     inner class DatingViewHolder(val binding: HomeItemBinding): RecyclerView.ViewHolder(binding.root){
 
     }
+
+    inner class OnClickListener(){}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DatingViewHolder {
         return DatingViewHolder(HomeItemBinding.inflate(LayoutInflater.from(context), parent, false))
@@ -29,5 +31,4 @@ class HomeAdapter(val context: Context, val list: List<UserProfile>):
 
         list[position].imageUri?.let { bindImage(holder.binding.usersFirstImg, it) }
     }
-
 }
