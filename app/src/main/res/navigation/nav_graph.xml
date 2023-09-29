@@ -19,8 +19,8 @@
         android:name="com.example.reclaim.chatroom.ChatRoomFragment"
         android:label="ChatRoomFragment" >
     <argument
-        android:name="chatFriend"
-        app:argType="com.example.reclaim.data.Friends"/>
+        android:name="chatRoom"
+        app:argType="com.example.reclaim.data.ChatRoom"/>
     </fragment>
     <fragment
         android:id="@+id/profileFragment"

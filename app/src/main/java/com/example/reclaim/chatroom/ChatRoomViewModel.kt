@@ -31,8 +31,8 @@ class ChatRoomViewModel(
         private const val TAG = "ChatRoomViewModel"
     }
 
-    private val chatRoomKey = navArgs.chatFriend.chatRoomKey
-    val friend = navArgs.chatFriend
+    private val chatRoomKey = navArgs.chatRoom.key
+    val friend = navArgs.chatRoom.key
 
     private var _recordWithFriend = MutableLiveData<MutableList<ChatRecord>>()
     val recordWithFriend: LiveData<MutableList<ChatRecord>>

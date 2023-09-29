@@ -10,7 +10,7 @@ import java.lang.IllegalArgumentException
 class MatchFactory(private val args: MatchFragmentArgs, private val reclaimDatabaseDao: ReclaimDatabaseDao): ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MatchViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(MatchViewModel ::class.java)) {
             return MatchViewModel(args, reclaimDatabaseDao) as T
         }
 

@@ -13,11 +13,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/shallow_background"
+        android:background="@drawable/gradient_gold"
         android:alpha="0.9"
         tools:context=".match.MatchFragment">
 
         <TextView
+
             android:id="@+id/match_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -54,6 +55,14 @@
                 imageUri="@{viewModel.chatRoomInfo.userAImg}" />
 
         </androidx.cardview.widget.CardView>
+        <View
+            android:id="@+id/center_line"
+            app:layout_constraintStart_toEndOf="@id/self_container"
+            app:layout_constraintEnd_toStartOf="@id/other_container"
+            app:layout_constraintTop_toTopOf="@id/self_container"
+            app:layout_constraintBottom_toBottomOf="@id/self_container"
+            android:layout_width="0dp"
+            android:layout_height="0dp"/>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/other_container"
@@ -89,15 +98,31 @@
             app:layout_constraintTop_toBottomOf="@id/self_container"
 
             />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/message_input_container"
+            app:layout_constraintStart_toStartOf="@id/self_container"
+            app:layout_constraintEnd_toStartOf="@id/go_to_chat"
+            app:layout_constraintTop_toTopOf="@id/go_to_chat"
+            app:layout_constraintBottom_toBottomOf="@id/go_to_chat"
+            android:layout_width="0dp"
+            android:layout_height="0dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/message_input_edit"
+                android:hint="跟對方打聲招呼吧!"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </com.google.android.material.textfield.TextInputLayout>
         <Button
             android:id="@+id/go_to_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/match_description"
-            android:text="來去聊天"
+            android:layout_marginLeft="@dimen/standard_margin_one_forth"
+            android:text="傳送"
+            app:layout_constraintStart_toEndOf="@id/message_input_container"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/other_container"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

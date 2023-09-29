@@ -4,4 +4,6 @@
     <color name="white">#FFFFFF</color>
     <color name="myPrimary">#252B48</color>
     <color name="shadow">#616060</color>
+    <color name="red">#CA3030</color>
+    <color name="yellow">#DDDC88</color>
 </resources>

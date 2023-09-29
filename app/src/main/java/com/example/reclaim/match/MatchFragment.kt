@@ -1,10 +1,15 @@
 package com.example.reclaim.match
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavArgs
 import androidx.navigation.fragment.navArgs
@@ -34,12 +39,104 @@ class MatchFragment : Fragment() {
         viewModel = ViewModelProvider(this, factory).get(MatchViewModel::class.java)
         binding.viewModel = viewModel
 
+        val leftAvatar = binding.selfContainer
+        val rightAvatar = binding.otherContainer
+        val matchTitle = binding.matchTitle
+
+        avatarMatchAnimate(leftAvatar, rightAvatar)
+        matchTitleAnimate(matchTitle)
 
 
+        binding.goToChat.setOnClickListener {
 
+        }
 
         return binding.root
     }
+
+    private fun matchTitleAnimate(matchTitle: TextView) {
+        val scaleUpX = ObjectAnimator.ofFloat(
+            matchTitle,
+            "scaleX",
+            0f,
+            1f
+        )
+
+        val scaleUpY = ObjectAnimator.ofFloat(
+            matchTitle,
+            "scaleY",
+            0f,
+            1f
+        )
+
+
+
+        val animationSet = AnimatorSet()
+        animationSet.playTogether(scaleUpX, scaleUpY)
+
+        animationSet.duration = 1000
+        animationSet.start()
+    }
+
+    fun avatarMatchAnimate(leftAvatar: CardView, rightAvatar: CardView) {
+
+        val scaleUpX = ObjectAnimator.ofFloat(
+            leftAvatar,
+            "scaleX",
+            1.0f,
+            1.5f
+        )
+
+        val scaleUpY = ObjectAnimator.ofFloat(
+            leftAvatar,
+            "scaleY",
+            1.0f,
+            1.5f
+        )
+
+        val scaleDownX = ObjectAnimator.ofFloat(
+            rightAvatar,
+            "scaleX",
+            1.0f, 1.5f
+        )
+        val scaleDownY = ObjectAnimator.ofFloat(
+            rightAvatar,
+            "scaleY",
+            1.0f, 1.5f
+        )
+
+
+        val transitionSelfMoveAnimation = ObjectAnimator.ofFloat(
+            leftAvatar,
+            View.TRANSLATION_X,
+            50f
+        )
+
+        val transitionOtherMoveAnimation = ObjectAnimator.ofFloat(
+            rightAvatar,
+            View.TRANSLATION_X,
+            -50f
+        )
+
+        val scaleUpSet = AnimatorSet()
+        scaleUpSet.playTogether(
+            scaleUpX, scaleUpY
+        )
+
+        val scaleDownSet = AnimatorSet()
+        scaleDownSet.playTogether(
+            scaleDownX, scaleDownY
+        )
+
+        val animationSet = AnimatorSet()
+        animationSet.playTogether(scaleUpSet, transitionSelfMoveAnimation, transitionOtherMoveAnimation, scaleDownSet)
+        animationSet.duration = 1000
+
+        animationSet.start()
+
+    }
+
+
 
 
 }
