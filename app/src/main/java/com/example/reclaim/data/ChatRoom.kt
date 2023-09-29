@@ -1,5 +1,9 @@
 package com.example.reclaim.data
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class ChatRoom (
     val key: String,
     val userAId: String,
@@ -10,4 +14,4 @@ data class ChatRoom (
     val sendById: String,
     val userAImg: String,
     val userBImg: String
-    )
+    ): Parcelable

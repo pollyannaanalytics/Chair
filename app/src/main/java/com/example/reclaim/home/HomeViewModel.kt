@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.reclaim.data.ChatRoom
 import com.example.reclaim.data.ReclaimDatabaseDao
 import com.example.reclaim.data.UserManager
 import com.example.reclaim.data.UserProfile
@@ -23,6 +24,10 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
     private var _otherProfileList = MutableLiveData<MutableList<UserProfile>>()
     val otherProfileList: LiveData<MutableList<UserProfile>>
         get() = _otherProfileList
+
+    private var _matchToChatRoom = MutableLiveData<ChatRoom?>()
+    val matchToChatRoom: LiveData<ChatRoom?>
+        get() = _matchToChatRoom
 
 
     private var _firebaseDisconnect = MutableLiveData<Boolean>(false)
@@ -293,7 +298,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
     ) {
         Log.i(TAG, documentId)
         val reference = db.collection("relationship").document(documentId)
-        if (likeOrDislike == "Dislike"){
+        if (likeOrDislike == "Dislike") {
             reference.update("current_relationship", likeOrDislike)
             Log.i(TAG, "update relationship: $likeOrDislike")
         }
@@ -301,11 +306,11 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         if (likeOrDislike == "Like") {
             reference.get().addOnSuccessListener {
                 val currentRelationship = it.get("current_relationship")
-                if (currentRelationship == "Pending"){
+                if (currentRelationship == "Pending") {
                     Log.i(TAG, "like, to create room")
                     reference.update("current_relationship", likeOrDislike)
                     createAChatRoom(friendId, friendName, friendImg, documentId)
-                }else{
+                } else {
                     Log.i(TAG, "another user dislike, not to create room")
                 }
             }.addOnFailureListener {
@@ -339,8 +344,19 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
 
 
         chatRoom.add(data).addOnSuccessListener {
-
             updateChatRoomKeyInRelationship(currentRoomKey, documentId)
+            _matchToChatRoom.value = ChatRoom(
+                currentRoomKey,
+                UserManager.userId,
+                friendId,
+                UserManager.userName,
+                friendName,
+                "",
+                "",
+                UserManager.userImage,
+                friendImg
+            )
+
         }.addOnFailureListener {
             Log.e(TAG, "create room failed: $it")
 
@@ -400,7 +416,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
 
                     }
                 }
-            }else{
+            } else {
                 createRelationShip(friendId, friendName, direction)
                 Log.i(TAG, "there is no relationship, start to create")
             }
@@ -462,5 +478,9 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
 
     fun removeProfileListener() {
         _onDestroyed.value = true
+    }
+
+    fun navigateToMatch(){
+        _matchToChatRoom.value = null
     }
 }

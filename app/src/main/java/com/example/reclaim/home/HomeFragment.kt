@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.example.reclaim.data.ReclaimDatabase
 import com.example.reclaim.databinding.FragmentHomeBinding
@@ -134,15 +135,17 @@ class HomeFragment : Fragment() {
         fun swipeAnimation(direction: Direction) {
             var scrollX: Float
             var angle: Float
-            when(direction){
+            when (direction) {
                 Direction.Right -> {
                     scrollX = binding.cardStackview.width.toFloat()
                     angle = 45f
                 }
+
                 Direction.Left -> {
                     scrollX = -binding.cardStackview.width.toFloat()
                     angle = -45f
                 }
+
                 else -> {
                     scrollX = binding.cardStackview.width.toFloat()
                     angle = 45f
@@ -175,8 +178,8 @@ class HomeFragment : Fragment() {
 
             Thread(
                 Runnable {
-                    while(true) {
-                        if(!animationSet.isRunning) {
+                    while (true) {
+                        if (!animationSet.isRunning) {
 
                             binding.cardStackview.post {
                                 binding.cardStackview.scrollToPosition(binding.cardStackview.adapter!!.itemCount - 1)
@@ -193,32 +196,48 @@ class HomeFragment : Fragment() {
 
         }
 
-        viewModel.otherProfileList.observe(viewLifecycleOwner) {
-            userProfileList ->
+        viewModel.otherProfileList.observe(viewLifecycleOwner) { userProfileList ->
             userProfileList.forEach { userProfile ->
-                val currentFriend = FriendInfo(userProfile.userId, userProfile.userName, userProfile.imageUri)
+                val currentFriend =
+                    FriendInfo(userProfile.userId, userProfile.userName, userProfile.imageUri)
                 OtherInfoList?.add(currentFriend)
                 Log.i(TAG, "all friendInfoList is ${OtherInfoList.toString()}")
             }
             OtherUserNumber = OtherInfoList.size
             Log.i(TAG, "all friendnumber is ${OtherUserNumber.toString()}")
             val clickListener = HomeAdapter.OnClickListener(
-                dislistener = {position ->
+                dislistener = { position ->
                     Log.i(TAG, "dislike btn is clicked")
                     val currentProfile = userProfileList[position]
-                    viewModel.findRelationship(currentProfile.userId!!, currentProfile.userName!!, currentProfile.imageUri!!, Direction.Left)
+                    viewModel.findRelationship(
+                        currentProfile.userId!!,
+                        currentProfile.userName!!,
+                        currentProfile.imageUri!!,
+                        Direction.Left
+                    )
 
                     swipeAnimation(Direction.Left)
 
                 },
-                likeListener = {position ->
+                likeListener = { position ->
                     Log.i(TAG, "like btn is clicked")
                     val currentProfile = userProfileList[position]
-                    viewModel.findRelationship(currentProfile.userId!!, currentProfile.userName!!, currentProfile.imageUri!!, Direction.Right)
+                    viewModel.findRelationship(
+                        currentProfile.userId!!,
+                        currentProfile.userName!!,
+                        currentProfile.imageUri!!,
+                        Direction.Right
+                    )
                     swipeAnimation(Direction.Right)
                 }
             )
-            val adapter = this.context?.let { context -> HomeAdapter(context, userProfileList, clickListener)}
+            val adapter = this.context?.let { context ->
+                HomeAdapter(
+                    context,
+                    userProfileList,
+                    clickListener
+                )
+            }
             userProfileList.shuffle()
 
             binding.cardStackview.layoutManager = manager!!
@@ -228,12 +247,23 @@ class HomeFragment : Fragment() {
 
         }
 
+        viewModel.matchToChatRoom.observe(viewLifecycleOwner) {
+            Log.i(TAG, it.toString())
+            if(it != null){
+                Log.i(TAG, "like each other, go to match")
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToMatchFragment(it)
+                )
+                viewModel.navigateToMatch()
+            }
+
+        }
+
 
 
 
         return binding.root
     }
-
 
 
     private fun shadowOnFragment(binding: FragmentHomeBinding, hint: String) {

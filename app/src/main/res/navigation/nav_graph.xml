@@ -9,6 +9,9 @@
         tools:layout="@layout/fragment_home"
         android:name="com.example.reclaim.home.HomeFragment"
         android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_matchFragment"
+            app:destination="@id/matchFragment" />
     </fragment>
 
     <fragment
@@ -44,5 +47,15 @@
         <action
             android:id="@+id/action_alreadySignUpProfileFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/matchFragment"
+        android:name="com.example.reclaim.match.MatchFragment"
+        tools:layout="@layout/fragment_match"
+        android:label="MatchFragment" >
+        <argument
+            android:name="chatRoom"
+            app:argType="com.example.reclaim.data.ChatRoom" />
+
     </fragment>
 </navigation>

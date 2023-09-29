@@ -5,6 +5,9 @@
         android:color="@color/myPrimary"
         android:width="@dimen/standard_margin_one_forth"
         />
+    <solid
+        android:color="@color/myPrimary"
+        />
     <corners android:radius="50dp"/>
 
 </shape>
