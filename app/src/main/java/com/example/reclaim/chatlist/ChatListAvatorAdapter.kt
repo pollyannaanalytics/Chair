@@ -7,15 +7,16 @@ import android.view.ViewGroup
 import android.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.reclaim.data.ChatRoom
 import com.example.reclaim.data.Friends
 import com.example.reclaim.databinding.ChatlistItemBinding
 import com.example.reclaim.profile.ImageAdapter
 
-class ChatListAvatorAdapter(private val onClickListener: OnClickListener):androidx.recyclerview.widget.ListAdapter<Friends, ChatListAvatorAdapter.ImageViewHolder>(DiffCallback){
+class ChatListAvatorAdapter(private val onClickListener: OnClickListener):androidx.recyclerview.widget.ListAdapter<ChatRoom, ChatListAvatorAdapter.ImageViewHolder>(DiffCallback){
 
     class ImageViewHolder(private val binding: ChatlistItemBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(friends: Friends){
-            binding.friend = friends
+        fun bind(chatroom: ChatRoom){
+            binding.chatRoom = chatroom
             binding.executePendingBindings()
         }
     }
@@ -35,18 +36,18 @@ class ChatListAvatorAdapter(private val onClickListener: OnClickListener):androi
         }
     }
 
-    class OnClickListener(val clickListener: (data: Friends) -> Unit){
-        fun onClick(data: Friends) = clickListener(data)
+    class OnClickListener(val clickListener: (data: ChatRoom) -> Unit){
+        fun onClick(data: ChatRoom) = clickListener(data)
     }
 
 
-    companion object DiffCallback : DiffUtil.ItemCallback<Friends>() {
-        override fun areItemsTheSame(oldItem: Friends, newItem: Friends): Boolean {
+    companion object DiffCallback : DiffUtil.ItemCallback<ChatRoom>() {
+        override fun areItemsTheSame(oldItem: ChatRoom, newItem: ChatRoom): Boolean {
             return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: Friends, newItem: Friends): Boolean {
-            return oldItem.userId == newItem.userId
+        override fun areContentsTheSame(oldItem: ChatRoom, newItem: ChatRoom): Boolean {
+            return oldItem.key == newItem.key
         }
     }
 }

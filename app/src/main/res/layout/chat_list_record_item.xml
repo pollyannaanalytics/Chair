@@ -3,6 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <variable
+            name="chatRoomRecord"
+            type="com.example.reclaim.data.ChatRoom" />
 
     </data>
 
@@ -20,6 +23,9 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
+                android:id="@+id/other_avatar"
+                android:scaleType="centerCrop"
+                imageUri="@{chatRoomRecord.otherImage}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_launcher_foreground" />
@@ -32,7 +38,7 @@
             app:layout_constraintStart_toEndOf="@id/card_avator_img"
 
             app:layout_constraintTop_toTopOf="parent"
-            android:text="UserName"
+            android:text="@{chatRoomRecord.otherName}"
             android:textSize="20dp"
             android:textFontWeight="500" />
 
@@ -47,6 +53,7 @@
             android:id="@+id/record_content"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:text="@{chatRoomRecord.lastSentence}"
             app:layout_constraintStart_toStartOf="@id/user_name"
             app:layout_constraintTop_toBottomOf="@id/user_name"
             app:layout_constraintBottom_toBottomOf="parent" />

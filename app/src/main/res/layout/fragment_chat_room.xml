@@ -46,7 +46,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        imageUri="@{viewModel.friend.imageUri}"
+                        imageUri="@{viewModel.friendImage}"
                         android:src="@mipmap/ic_launcher"/>
 
                 </androidx.cardview.widget.CardView>
@@ -55,7 +55,7 @@
                     android:id="@+id/user_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@{viewModel.friend.userName}"
+                    android:text="@{viewModel.friendName}"
                     android:gravity="center"
                     android:textSize="40sp"
                     app:layout_constraintEnd_toStartOf="@id/video_button"

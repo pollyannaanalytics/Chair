@@ -27,15 +27,17 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
     val recordList: LiveData<MutableList<ChatRoom>>
         get() = _recordList
 
-    private var _navigateToChatRoom = MutableLiveData<Friends?>()
-    val navigateToChatRoom: LiveData<Friends?>
+    private var _navigateToChatRoom = MutableLiveData<ChatRoom?>()
+    val navigateToChatRoom: LiveData<ChatRoom?>
         get() = _navigateToChatRoom
+
+    val userManager = UserManager
 
     init {
         _friendsList.value = emptyList<Friends>().toMutableList()
         _recordList.value = emptyList<ChatRoom>().toMutableList()
-        loadAllMatch()
-//        loadAllRecords()
+
+        loadAllRecords()
     }
 
     fun loadAllRecords() {
@@ -44,139 +46,93 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
                 Filter.equalTo("user_a_name", UserManager.userName),
                 Filter.equalTo("user_b_name", UserManager.userName)
             )
-        ).whereNotEqualTo("last_sentence", "")
+        )
             .orderBy("last_sentence", Query.Direction.ASCENDING)
-            .orderBy("sent_time", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, error ->
-                if (error != null){
+                if (error != null) {
                     Log.e(TAG, "cannot load record: $error")
                     return@addSnapshotListener
                 }
 
-                if(snapshot != null){
-                    var currentChatRoom = emptyList<ChatRoom>().toMutableList()
-                    for (query in snapshot){
-                        Log.i(TAG, "total record: " + snapshot.size().toString())
-                        val key = query.data.get("key").toString()
-                        val userAId = query.data.get("user_a_id").toString()
-                        val userBId = query.data.get("user_b_id").toString()
-                        val userAName = query.data.get("user_a_name").toString()
-                        val userBName = query.data.get("user_b_name").toString()
-                        val lastSentence = query.data.get("last_sentence").toString()
-                        val sendById = query.data.get("send_by_id").toString()
-                        val userAImg = query.data.get("send_by_img").toString()
-                        val userBImg = query.data.get("userBImg").toString()
+                if (snapshot != null) {
+                    if (!snapshot.isEmpty) {
 
-                        val newRecord = ChatRoom(key, userAId, userBId, userAName, userBName, lastSentence, sendById, userAImg, userBImg)
-                        currentChatRoom.add(newRecord)
-                        _recordList.value = currentChatRoom
-                        Log.i(TAG, "new record is $newRecord")
-                    }
+                        for (query in snapshot) {
+                            var currentChatRoom = emptyList<ChatRoom>().toMutableList()
+                            Log.i(TAG, "total record: " + snapshot.size().toString())
 
+                            val key = query.data.get("key").toString()
 
-                    Log.i(TAG, "current list is ${_recordList.value}")
-                }
+                            var selfId = ""
+                            var selfName = ""
+                            var selfImage = ""
 
+                            var otherId = ""
+                            var otherName = ""
+                            var otherImage = ""
 
-            }
+                            var lastSentence = ""
+                            var sendById = ""
 
+                            lastSentence = query.data.get("last_sentence").toString()
+                            sendById = query.data.get("send_by_id").toString()
 
-    }
+                            if(query.data.get("user_a_id").toString() == UserManager.userId){
+                                selfId = query.data.get("user_a_id").toString()
+                                otherId = query.data.get("user_b_id").toString()
+                                selfName = query.data.get("user_a_name").toString()
+                                otherName = query.data.get("user_b_name").toString()
+                                selfImage = query.data.get("user_a_img").toString()
+                                otherImage = query.data.get("user_b_img").toString()
 
-    fun loadAllMatch() {
+                            }else{
+                                otherId = query.data.get("user_a_id").toString()
+                                selfId = query.data.get("user_b_id").toString()
 
-        try {
-            var currentFriendsList = emptyList<String>().toMutableList()
-            Log.i(TAG, UserManager.userId)
+                                otherName = query.data.get("user_a_name").toString()
+                                selfName = query.data.get("user_b_name").toString()
 
-            val allMatchDocument = db.collection("relationship").where(
-                Filter.or(
-                    Filter.equalTo("receiver_id", UserManager.userId),
-                    Filter.equalTo("sender_id", UserManager.userId)
-                )
-            )
-                .whereEqualTo("current_relationship", "Like")
-                .orderBy("sender_id", Query.Direction.DESCENDING)
+                                otherImage = query.data.get("user_a_img").toString()
+                                selfImage = query.data.get("user_b_img").toString()
+                            }
 
-            allMatchDocument.addSnapshotListener { querySnapshot, e ->
-                if (e != null) {
-                    Log.e(TAG, "error: $e")
-                }
+                            val newRecord = ChatRoom(
+                                key,
+                                selfId,
+                                otherId,
+                                selfName,
+                                otherName,
+                                lastSentence,
+                                sendById,
+                                selfImage,
+                                otherImage
+                            )
 
-                if (querySnapshot != null && !querySnapshot.isEmpty) {
-                    for (document in querySnapshot) {
-                        Log.i(TAG, "document number is ${document.data.get("receiver_id")}")
-                        val senderId = document.data.get("sender_id")
-                        val receiverId = document.data.get("receiver_id")
-                        val chatRoomKey = document.data.get("chat_room_key").toString()
-                        if (senderId == UserManager.userId) {
-                            val newFriend = receiverId
-                            Log.i(TAG, "new friend is $newFriend")
-                            currentFriendsList.add(newFriend.toString())
-                            searchFriendsInfoFromFirebase(newFriend.toString(), chatRoomKey)
-                            Log.i(TAG, "friends include $currentFriendsList")
-                        } else {
-                            val newFriend = senderId
-                            Log.i(TAG, "new friend is $newFriend")
-                            currentFriendsList.add(newFriend.toString())
-                            searchFriendsInfoFromFirebase(newFriend.toString(), chatRoomKey)
-                            Log.i(TAG, "friends include ${currentFriendsList}")
+                            currentChatRoom.add(newRecord)
+                            _recordList.value = currentChatRoom
+                            Log.i(TAG, "new record is $newRecord")
                         }
+
+
+                        Log.i(TAG, "current list is ${_recordList.value}")
+                    }else{
+                        Log.i(TAG, "chat room is empty")
                     }
-
-
-                } else {
-                    Log.i(TAG, "no one add this person")
                 }
-            }
-        } catch (e: Exception) {
 
-        }
+
+            }
 
 
     }
 
 
-    private fun searchFriendsInfoFromFirebase(friendId: String, chatRoomKey: String) {
-        val currentFriendList = emptyList<Friends>().toMutableList()
-        val searchFriendProfile = db.collection("user_profile").whereEqualTo("user_id", friendId)
-            .orderBy("user_name", Query.Direction.DESCENDING)
 
-        searchFriendProfile.addSnapshotListener { querySnapShot, error ->
-            if (error != null) {
-                Log.e(TAG, error.toString())
-                return@addSnapshotListener
-            }
-
-            if (querySnapShot != null && !querySnapShot.metadata.hasPendingWrites()) {
-                currentFriendList.clear()
-                for (snapshot in querySnapShot) {
-                    val userId = snapshot.data?.get("user_id").toString()
-                    val userName = snapshot.data?.get("user_name").toString()
-                    val imageInArray = listOf<String>(snapshot.data.get("images").toString())
-                    val mainImage = imageInArray[0].removeSurrounding("[", "]")
-                    val friendInfo = Friends(
-                        userId = userId,
-                        userName = userName,
-                        imageUri = mainImage,
-                        chatRoomKey = chatRoomKey
-                    )
-                    currentFriendList.add(friendInfo)
-                    _friendsList.value = currentFriendList
-                }
-
-                Log.i(TAG, currentFriendList.toString())
-
-            }
-        }
-    }
-
-
-    fun displayChatRoom(data: Friends) {
+    fun displayChatRoom(data: ChatRoom) {
         _navigateToChatRoom.value = data
     }
 
-    fun navigateToRoom(){
+    fun navigateToRoom() {
         _navigateToChatRoom.value = null
     }
 

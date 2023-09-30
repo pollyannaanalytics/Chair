@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavArgs
 import androidx.navigation.fragment.navArgs
@@ -42,13 +43,19 @@ class MatchFragment : Fragment() {
         val leftAvatar = binding.selfContainer
         val rightAvatar = binding.otherContainer
         val matchTitle = binding.matchTitle
+        var message = ""
+
 
         avatarMatchAnimate(leftAvatar, rightAvatar)
         matchTitleAnimate(matchTitle)
 
 
-        binding.goToChat.setOnClickListener {
+        binding.messageInputEdit.doAfterTextChanged {
+            message = it.toString()
+        }
 
+        binding.sendToChatRoom.setOnClickListener {
+         viewModel.sendMessageToChatRoom(message)
         }
 
         return binding.root

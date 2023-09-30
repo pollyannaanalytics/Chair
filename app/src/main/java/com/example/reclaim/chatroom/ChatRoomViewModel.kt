@@ -33,6 +33,8 @@ class ChatRoomViewModel(
 
     private val chatRoomKey = navArgs.chatRoom.key
     val friend = navArgs.chatRoom.key
+    val friendImage = navArgs.chatRoom.otherImage
+    val friendName = navArgs.chatRoom.otherName
 
     private var _recordWithFriend = MutableLiveData<MutableList<ChatRecord>>()
     val recordWithFriend: LiveData<MutableList<ChatRecord>>
@@ -200,8 +202,15 @@ class ChatRoomViewModel(
             "message_type" to type,
             "meeting_id" to meetingId
         )
+        var documentID = ""
+        val chatRoomCollection = db.collection("chat_room").whereEqualTo("key", newRecord.chatRoomKey)
+        chatRoomCollection.get().addOnSuccessListener {
+            documentID = it.documents[0].id
+        }.addOnFailureListener {
+            Log.e(TAG, "cannot add data in chat room")
+        }
 
-        db.collection("chat_room").document(newRecord.chatRoomKey).collection("chat_record")
+        db.collection("chat_room").document(documentID).collection("chat_record")
             .add(data).addOnSuccessListener {
             val currentTime = System.currentTimeMillis().toString()
             updateSentTime(newRecord.chatRoomKey, currentTime, it.id)

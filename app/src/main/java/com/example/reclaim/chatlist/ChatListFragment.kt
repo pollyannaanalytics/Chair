@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.reclaim.R
 import com.example.reclaim.data.ReclaimDatabase
 import com.example.reclaim.databinding.FragmentChatListBinding
 
@@ -35,27 +34,50 @@ class ChatListFragment : Fragment() {
         val viewModel = ViewModelProvider(this, factory).get(ChatListViewModel::class.java)
         val binding = FragmentChatListBinding.inflate(inflater)
         binding.viewModel = viewModel
+        val avatarAdapter = ChatListAvatorAdapter(ChatListAvatorAdapter.OnClickListener{
+            viewModel.displayChatRoom(it)
+            Log.i(TAG, "click on $it")
+        })
+
+        val recordAdapter = ChatListRecordAdapter(ChatListRecordAdapter.OnClickListener{
+            viewModel.displayChatRoom(it)
+            Log.i(TAG, "click on $it")
+        })
+
+        binding.friendsRecylerview.adapter = avatarAdapter
+
+        binding.chatRecordRecyclerview.adapter = recordAdapter
 
 
-
-
-        viewModel.friendsList.observe(viewLifecycleOwner) {
-
-            val adapter = ChatListAvatorAdapter(ChatListAvatorAdapter.OnClickListener {
-                    viewModel.displayChatRoom(it)
-                    Log.i(TAG, "click on $it")
-                })
-                binding.friendsRecylerview.adapter = adapter
+        viewModel.recordList.observe(viewLifecycleOwner){
             if(it != null && it.size != 0){
-                adapter.submitList(it)
+                avatarAdapter.submitList(it)
+                recordAdapter.submitList(it)
                 Log.i(TAG, "friend in recyclerview: $it")
             }
 
-
-
-
-
         }
+
+
+
+
+//        viewModel.friendsList.observe(viewLifecycleOwner) {
+//
+//            val adapter = ChatListAvatorAdapter(ChatListAvatorAdapter.OnClickListener {
+//                    viewModel.displayChatRoom(it)
+//                    Log.i(TAG, "click on $it")
+//                })
+//                binding.friendsRecylerview.adapter = adapter
+//            if(it != null && it.size != 0){
+//                adapter.submitList(it)
+//
+//            }
+//
+//
+//
+//
+//
+//        }
 
         viewModel.navigateToChatRoom.observe(viewLifecycleOwner) {
             if(it != null){

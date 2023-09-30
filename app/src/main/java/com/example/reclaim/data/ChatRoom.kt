@@ -6,12 +6,12 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class ChatRoom (
     val key: String,
-    val userAId: String,
-    val userBId: String,
-    val userAName: String,
-    val userBName: String,
+    val selfId: String,
+    val otherId: String,
+    val selfName: String,
+    val otherName: String,
     val lastSentence: String,
     val sendById: String,
-    val userAImg: String,
-    val userBImg: String
+    val selfImage: String,
+    val otherImage: String
     ): Parcelable
