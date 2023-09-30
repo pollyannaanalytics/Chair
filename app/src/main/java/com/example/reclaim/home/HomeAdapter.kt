@@ -2,9 +2,11 @@ package com.example.reclaim.home
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reclaim.bindImage
+import com.example.reclaim.data.UserManager
 import com.example.reclaim.data.UserProfile
 import com.example.reclaim.databinding.HomeItemBinding
 
@@ -18,6 +20,13 @@ class HomeAdapter(val context: Context, val list: List<UserProfile>, val onClick
             binding.worryType.text = item.worryType
             binding.worriesDescription.setText(item.worriesDescription)
             binding.userTag.text = item.gender + "， 30"
+            if(item.worryType == UserManager.userType){
+                binding.sameTypeTag.visibility = View.VISIBLE
+                binding.sameTypeContainer.visibility = View.VISIBLE
+            }else{
+                binding.sameTypeTag.visibility = View.GONE
+                binding.sameTypeContainer.visibility = View.GONE
+            }
         }
     }
 
