@@ -60,6 +60,7 @@ class ProfileFragment : Fragment() {
         binding = FragmentProfileBinding.inflate(inflater)
 
 //        viewPager = binding.chooseImgContent
+        var userId = ""
         var username = ""
         var gender = ""
         var worriesDescription = ""
@@ -69,18 +70,19 @@ class ProfileFragment : Fragment() {
 
 
         binding.viewModel = viewModel
+        binding.userManager = UserManager
 
         binding.idEdit.doAfterTextChanged {
-//            UserManager.userId = it.toString()
+            userId = it.toString()
         }
 
 
         binding.usernameEdit.doAfterTextChanged {
-//            username = it.toString()
+            username = it.toString()
         }
 
         binding.worriesEdit.doAfterTextChanged {
-//            worriesDescription = it.toString()
+            worriesDescription = it.toString()
         }
 
         binding.chooseImgBtn.setOnClickListener {
@@ -102,15 +104,14 @@ class ProfileFragment : Fragment() {
 
 
         binding.submitBtn.setOnClickListener {
-            if (UserManager.userId != null && UserManager.userType != null && UserManager.userName != null && imageUri != null) {
+
+                UserManager.userId = userId
+                UserManager.userName = username
+                UserManager.gender = gender
+                UserManager.worriesDescription = worriesDescription
                 UserManager.userImage = imageUri.toString()
+
                 viewModel.sendDescriptionToGPT(worriesDescription)
-            } else {
-                Toast.makeText(requireActivity(), "很抱歉，您的訊息尚未填妥!", Toast.LENGTH_SHORT)
-                    .show()
-            }
-
-
         }
 
         viewModel.messageList.observe(viewLifecycleOwner) {
@@ -130,7 +131,7 @@ class ProfileFragment : Fragment() {
             if (it != false) {
                 viewModel.uploadImageToFireStorage(imageUri.toString())
                 findNavController().navigate(
-                    ProfileFragmentDirections.actionProfileFragmentToHomeFragment()
+                    ProfileFragmentDirections.actionProfileFragmentToAlreadySignUpProfileFragment()
                 )
             }
         }

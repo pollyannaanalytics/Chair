@@ -65,6 +65,8 @@ class MainActivity : AppCompatActivity() {
                     binding.fragmentTitle.visibility = View.GONE
                 }
 
+                R.id.profileFragment -> showToolBar(false, "編輯個人檔案")
+
             }
         }
 
