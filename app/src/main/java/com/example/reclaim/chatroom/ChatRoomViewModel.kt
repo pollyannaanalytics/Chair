@@ -88,6 +88,26 @@ class ChatRoomViewModel(
                         val type = document.get("message_type").toString()
                         val meetingId = document.get("meeting_id").toString()
 
+                        var selfImage = ""
+                        var selfName = ""
+
+                        var otherImage = ""
+                        var otherName = ""
+
+
+                        if (document.get("user_a_name").toString() == UserManager.userName){
+                            selfImage = document.get("user_a_img").toString()
+                            selfName =  document.get("user_a_name").toString()
+
+                            otherImage = document.get("user_b_img").toString()
+                            otherName = document.get("user_b_name").toString()
+                        }else{
+                            otherImage = document.get("user_a_img").toString()
+                            otherName =  document.get("user_a_name").toString()
+
+                            selfImage = document.get("user_b_img").toString()
+                            selfName = document.get("user_b_name").toString()
+                        }
 
 
 
@@ -98,7 +118,11 @@ class ChatRoomViewModel(
                             sendTime = timeStamp,
                             sender = sender,
                             type = type,
-                            meetingId = meetingId
+                            meetingId = meetingId,
+                            otherImage,
+                            selfImage,
+                            selfName,
+                            otherName
                         )
 
 
@@ -190,7 +214,11 @@ class ChatRoomViewModel(
             sendTime = sendTimeInTaiwan,
             sender = UserManager.userName,
             type = type,
-            meetingId = meetingId
+            meetingId = meetingId,
+            otherImage = friendImage,
+            selfImage = UserManager.userImage,
+            selfName = UserManager.userName,
+            otherName = friendName
         )
 
         val data = hashMapOf(
@@ -200,7 +228,11 @@ class ChatRoomViewModel(
             "sender_name" to newRecord.sender,
             "id" to newRecord.id,
             "message_type" to type,
-            "meeting_id" to meetingId
+            "meeting_id" to meetingId,
+            "user_b_img" to newRecord.otherImage,
+            "user_a_img" to newRecord.otherImage,
+            "user_a_name" to newRecord.selfName,
+            "user_b_name" to newRecord.otherImage
         )
         var documentID = ""
         val chatRoomCollection = db.collection("chat_room").whereEqualTo("key", newRecord.chatRoomKey)

@@ -16,9 +16,10 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/send_by_me_card"
             android:minWidth="50dp"
-            app:cardCornerRadius="5dp"
+            app:cardCornerRadius="15dp"
             app:cardBackgroundColor="@color/white"
             android:layout_width="wrap_content"
+            android:background="@color/skyblue"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_height="wrap_content">
@@ -26,6 +27,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_margin="4dp"
+                android:background="@color/skyblue"
                 android:layout_height="wrap_content">
 
                 <TextView

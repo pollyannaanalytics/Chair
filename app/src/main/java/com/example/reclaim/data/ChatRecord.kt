@@ -25,5 +25,14 @@ data class ChatRecord(
 
     val type: String,
 
-    val meetingId: String
+    val meetingId: String,
+
+    val otherImage : String,
+
+    val selfImage: String,
+
+    val selfName : String,
+
+    val otherName: String
+
 )
