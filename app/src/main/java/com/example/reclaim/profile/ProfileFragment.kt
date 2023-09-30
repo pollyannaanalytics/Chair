@@ -130,11 +130,15 @@ class ProfileFragment : Fragment() {
         viewModel.readyToUploadOnFirebase.observe(viewLifecycleOwner) {
             if (it != false) {
                 viewModel.uploadImageToFireStorage(imageUri.toString())
+                binding.finishLottie.playAnimation()
+
                 findNavController().navigate(
                     ProfileFragmentDirections.actionProfileFragmentToAlreadySignUpProfileFragment()
                 )
             }
         }
+
+
 
 
 
