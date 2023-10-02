@@ -1,5 +1,10 @@
 package com.example.reclaim
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -49,6 +54,8 @@ class MainViewModel: ViewModel() {
         setToolBar(showToolbar)
 
     }
+
+
 
 
 

@@ -1,6 +1,7 @@
 package com.example.reclaim.chatlist
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -11,6 +12,14 @@ class ChatListRecordAdapter(private val onClickListener: OnClickListener): ListA
     class RecordViewHolder(private val binding: ChatListRecordItemBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(chatRoom: ChatRoom){
             binding.chatRoomRecord = chatRoom
+
+            if (chatRoom.lastSentence == ""){
+                binding.newInTagContainer.visibility = View.VISIBLE
+                binding.newInTagImg.visibility = View.VISIBLE
+            }else{
+                binding.newInTagContainer.visibility = View.GONE
+                binding.newInTagImg.visibility = View.GONE
+            }
         }
     }
 

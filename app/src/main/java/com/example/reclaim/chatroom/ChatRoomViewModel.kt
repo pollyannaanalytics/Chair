@@ -23,7 +23,7 @@ import kotlin.random.Random
 const val TAG = "ChatRoomViewModel"
 
 class ChatRoomViewModel(
-    reclaimDatabaseDao: ReclaimDatabaseDao,
+    private val reclaimDatabaseDao: ReclaimDatabaseDao,
     private val navArgs: ChatRoomFragmentArgs
 ) :
     ViewModel() {
@@ -58,7 +58,6 @@ class ChatRoomViewModel(
         get() = _joinMeetingId
 
 
-
     init {
         _onDestroyed.value = false
         _recordWithFriend.value = emptyList<ChatRecord>().toMutableList()
@@ -69,14 +68,17 @@ class ChatRoomViewModel(
     private fun getAllRecordFromRoom(room: DocumentSnapshot) {
         Log.i(TAG, "start to get data")
         val regitration = room.reference.collection("chat_record")
-            .orderBy("send_time", Query.Direction.ASCENDING)
+            .orderBy("sent_time", Query.Direction.ASCENDING)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     Log.e(TAG, "this is error: ${error.message}")
+
+
                     return@addSnapshotListener
                 }
                 if (snapshot != null) {
                     val currentRecord = emptyList<ChatRecord>().toMutableList()
+                    Log.i(TAG, "record includes: ${snapshot.documents.size}")
 
                     for (document in snapshot) {
 
@@ -95,20 +97,19 @@ class ChatRoomViewModel(
                         var otherName = ""
 
 
-                        if (document.get("user_a_name").toString() == UserManager.userName){
+                        if (document.get("user_a_name").toString() == UserManager.userName) {
                             selfImage = document.get("user_a_img").toString()
-                            selfName =  document.get("user_a_name").toString()
+                            selfName = document.get("user_a_name").toString()
 
                             otherImage = document.get("user_b_img").toString()
                             otherName = document.get("user_b_name").toString()
-                        }else{
+                        } else {
                             otherImage = document.get("user_a_img").toString()
-                            otherName =  document.get("user_a_name").toString()
+                            otherName = document.get("user_a_name").toString()
 
                             selfImage = document.get("user_b_img").toString()
                             selfName = document.get("user_b_name").toString()
                         }
-
 
 
                         val newRecord = ChatRecord(
@@ -132,6 +133,8 @@ class ChatRoomViewModel(
                     }
                     Log.i(TAG, "current record: $currentRecord")
                     _recordWithFriend.value = currentRecord
+
+
                 } else {
                     Log.i(TAG, "record is null")
                 }
@@ -143,27 +146,31 @@ class ChatRoomViewModel(
         }
     }
 
+    private fun saveDataInLocal(record: ChatRecord) {
+        reclaimDatabaseDao.insertChatRecord(record)
+    }
+
     private fun changeTimeStampToHHMMFormat(timeStamp: String): String {
-            val timeStampToLong = timeStamp.toLong()
-            val minuteInt = ((timeStampToLong / (1000 * 60)) % 60)
-            val hourInt = ((timeStampToLong / (1000 * 60 * 60)) % 24)
-            var minutString = ""
-            var hourString = ""
+        val timeStampToLong = timeStamp.toLong()
+        val minuteInt = ((timeStampToLong / (1000 * 60)) % 60)
+        val hourInt = ((timeStampToLong / (1000 * 60 * 60)) % 24)
+        var minutString = ""
+        var hourString = ""
 
-            minutString = if (minuteInt < 10) {
-                "0$minuteInt"
-            } else {
-                minuteInt.toString()
-            }
-            hourString = if(hourInt < 10){
-                "0$hourInt"
-            }else{
-                hourInt.toString()
-            }
+        minutString = if (minuteInt < 10) {
+            "0$minuteInt"
+        } else {
+            minuteInt.toString()
+        }
+        hourString = if (hourInt < 10) {
+            "0$hourInt"
+        } else {
+            hourInt.toString()
+        }
 
-            val timeFormatResult = "$hourString : $minutString"
+        val timeFormatResult = "$hourString : $minutString"
 
-            return timeFormatResult
+        return timeFormatResult
 
     }
 
@@ -171,6 +178,7 @@ class ChatRoomViewModel(
 
         val registration = chatRoom.addSnapshotListener { rooms, error ->
             if (error != null) {
+                _recordWithFriend.value = reclaimDatabaseDao.loadAllRecord().toMutableList()
                 return@addSnapshotListener
             }
 
@@ -187,14 +195,14 @@ class ChatRoomViewModel(
 
         registration
 
-        if (_onDestroyed.value == true){
+        if (_onDestroyed.value == true) {
             registration.remove()
         }
 
     }
 
 
-    private fun updateSentTime(chatRoomKey: String, currentTime: String, documentId: String){
+    private fun updateSentTime(chatRoomKey: String, currentTime: String, documentId: String) {
         val updateDocument =
             db.collection("chat_room").document(chatRoomKey).collection("chat_record")
                 .document(documentId)
@@ -235,18 +243,24 @@ class ChatRoomViewModel(
             "user_b_name" to newRecord.otherImage
         )
         var documentID = ""
-        val chatRoomCollection = db.collection("chat_room").whereEqualTo("key", newRecord.chatRoomKey)
+        val chatRoomCollection =
+            db.collection("chat_room").whereEqualTo("key", newRecord.chatRoomKey)
         chatRoomCollection.get().addOnSuccessListener {
             documentID = it.documents[0].id
+            Log.e(TAG, "document ID : $documentID")
+
+            Log.i(TAG, "current document ID: $documentID")
+            db.collection("chat_room").document(documentID).collection("chat_record")
+                .add(data).addOnSuccessListener {
+                    val currentTime = System.currentTimeMillis().toString()
+                    updateSentTime(documentID, sendTimeInTaiwan, it.id)
+                    updateOnFriendList(text, documentID, sendTimeInTaiwan)
+
+                }.addOnFailureListener {
+                    Log.e(TAG, "error: $it")
+                }
         }.addOnFailureListener {
             Log.e(TAG, "cannot add data in chat room")
-        }
-
-        db.collection("chat_room").document(documentID).collection("chat_record")
-            .add(data).addOnSuccessListener {
-            val currentTime = System.currentTimeMillis().toString()
-            updateSentTime(newRecord.chatRoomKey, currentTime, it.id)
-                updateOnFriendList(text, chatRoomKey, currentTime)
         }
 
 
@@ -269,13 +283,13 @@ class ChatRoomViewModel(
         val chatRoom = FirebaseFirestore.getInstance().collection("chat_room").document(chatRoomKey)
         chatRoom.update("last_sentence", text)
         chatRoom.update("send_by_id", UserManager.userId)
-        chatRoom.update("sent_time",currentTime )
+        chatRoom.update("sent_time", currentTime)
 
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun sendVideoCallMessage(meetingId: String){
-        val text = "我開啟了視訊，一起加入吧! Meeting ID: $meetingId"
+    fun sendVideoCallMessage(meetingId: String) {
+        val text = "我開啟了視訊，一起加入吧!"
         val type = "videocall"
         sendMessage(text, type, meetingId)
 
@@ -285,7 +299,7 @@ class ChatRoomViewModel(
         _joinMeetingId.value = meetingId
     }
 
-    fun removeListener(){
+    fun removeListener() {
         _onDestroyed.value = true
     }
 

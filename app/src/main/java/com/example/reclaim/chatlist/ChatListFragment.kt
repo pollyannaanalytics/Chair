@@ -1,11 +1,16 @@
 package com.example.reclaim.chatlist
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.reclaim.data.ReclaimDatabase
@@ -23,6 +28,7 @@ class ChatListFragment : Fragment() {
     private val TAG = "ChatListFragment"
 
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,7 +36,7 @@ class ChatListFragment : Fragment() {
         // Inflate the layout for this fragment
         val application = requireNotNull(this.activity).application
         val databaseDao = ReclaimDatabase.getInstance(application).reclaimDao()
-        val factory = ChatListFactory(databaseDao)
+        val factory = ChatListFactory(databaseDao, requireActivity())
         val viewModel = ViewModelProvider(this, factory).get(ChatListViewModel::class.java)
         val binding = FragmentChatListBinding.inflate(inflater)
         binding.viewModel = viewModel
@@ -89,5 +95,7 @@ class ChatListFragment : Fragment() {
 
         return binding.root
     }
+
+
 
 }

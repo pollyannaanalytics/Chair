@@ -11,23 +11,24 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/standard_margin"
+        android:layout_marginTop="@dimen/standard_margin"
+        >
 
         <androidx.cardview.widget.CardView
             android:id="@+id/send_by_me_card"
-            android:minWidth="50dp"
-            app:cardCornerRadius="15dp"
-            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/standard_margin"
+            app:cardBackgroundColor="@color/skyblue"
             android:layout_width="wrap_content"
-            android:background="@color/skyblue"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_margin="4dp"
-                android:background="@color/skyblue"
+                android:layout_margin="@dimen/standard_margin_half"
+
                 android:layout_height="wrap_content">
 
                 <TextView
@@ -35,8 +36,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{chatRecord.content}"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="15sp"
+
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

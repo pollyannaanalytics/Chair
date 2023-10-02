@@ -16,6 +16,10 @@ interface ReclaimDatabaseDao {
     suspend fun insertUserProfile(userProfile: UserProfile)
 
     @Insert
+    suspend fun insertChatRoom(chatRoom: ChatRoomLocal)
+
+
+    @Insert
     fun insertFriends(relationship: Relationship)
 
     @Insert
@@ -29,6 +33,12 @@ interface ReclaimDatabaseDao {
 
     @Update
     fun changeUserProfile(userProfile: UserProfile)
+
+    @Query("SELECT * from chat_record")
+    fun loadAllRecord(): List<ChatRecord>
+
+    @Query("SELECT * from chat_room")
+    fun loadAllChatRoom(): List<ChatRoomLocal>
 
 
 //    @Query("DELETE from relationship WHERE friend_user_id = :id")

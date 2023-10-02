@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         navBottomView.setupWithNavController(navController)
 
         fun showToolBar(showLogo: Boolean, titleText: String) {
+            binding.toolbar.visibility = View.VISIBLE
             if (showLogo) {
                 binding.toolbarLogo.visibility = View.VISIBLE
                 binding.fragmentTitle.visibility = View.GONE

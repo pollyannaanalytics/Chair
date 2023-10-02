@@ -30,7 +30,7 @@ class RTCActivity : AppCompatActivity() {
     }
 
     private lateinit var rtcClient: RTCClient
-    private lateinit var signallingClient: SignalingClient
+    private var signallingClient: SignalingClient? = null
 
     private val audioManager by lazy { RTCAudioManager.create(this) }
 
@@ -42,7 +42,7 @@ class RTCActivity : AppCompatActivity() {
     private lateinit var micButton: ImageView
     private lateinit var endCallButton: ImageView
 
-    private var meetingID : String = "test-call"
+    private var meetingID: String = "test-call"
 
     private var isJoin = false
 
@@ -71,14 +71,14 @@ class RTCActivity : AppCompatActivity() {
         if (intent.hasExtra("meetingID"))
             meetingID = intent.getStringExtra("meetingID")!!
         if (intent.hasExtra("isJoin"))
-            isJoin = intent.getBooleanExtra("isJoin",false)
+            isJoin = intent.getBooleanExtra("isJoin", false)
 
         checkCameraAndAudioPermission()
         audioManager.selectAudioDevice(RTCAudioManager.AudioDevice.SPEAKER_PHONE)
         switchCameraButton.setOnClickListener {
             rtcClient.switchCamera()
         }
-            audioOutputButton.setOnClickListener {
+        audioOutputButton.setOnClickListener {
             if (inSpeakerMode) {
                 inSpeakerMode = false
                 audioOutputButton.setImageResource(R.drawable.ic_baseline_hearing_24)
@@ -121,8 +121,9 @@ class RTCActivity : AppCompatActivity() {
     private fun checkCameraAndAudioPermission() {
         if ((ContextCompat.checkSelfPermission(this, CAMERA_PERMISSION)
                     != PackageManager.PERMISSION_GRANTED) &&
-            (ContextCompat.checkSelfPermission(this,AUDIO_PERMISSION)
-                    != PackageManager.PERMISSION_GRANTED)) {
+            (ContextCompat.checkSelfPermission(this, AUDIO_PERMISSION)
+                    != PackageManager.PERMISSION_GRANTED)
+        ) {
             requestCameraAndAudioPermission()
         } else {
             onCameraAndAudioPermissionGranted()
@@ -136,14 +137,20 @@ class RTCActivity : AppCompatActivity() {
             object : PeerConnectionObserver() {
                 override fun onIceCandidate(p0: IceCandidate?) {
                     super.onIceCandidate(p0)
-                    signallingClient.sendIceCandidate(p0, isJoin)
-                    rtcClient.addIceCandidate(p0)
+
+                    signallingClient?.let {
+                        it.sendIceCandidate(p0, isJoin)
+                        rtcClient.addIceCandidate(p0)
+                    }
+
+
                 }
 
                 override fun onAddStream(p0: MediaStream?) {
                     super.onAddStream(p0)
                     Log.e(TAG, "onAddStream: ${p0?.id}")
-                    p0?.videoTracks?.get(0)?.addSink(findViewById<SurfaceViewRenderer>(R.id.remote_view))
+                    p0?.videoTracks?.get(0)
+                        ?.addSink(findViewById<SurfaceViewRenderer>(R.id.remote_view))
                 }
 
                 override fun onIceConnectionChange(p0: PeerConnection.IceConnectionState?) {
@@ -171,7 +178,7 @@ class RTCActivity : AppCompatActivity() {
                 }
 
                 override fun onTrack(transceiver: RtpTransceiver?) {
-                    Log.e(TAG, "onTrack: $transceiver" )
+                    Log.e(TAG, "onTrack: $transceiver")
                 }
             }
         )
@@ -179,9 +186,9 @@ class RTCActivity : AppCompatActivity() {
         rtcClient.initSurfaceView(findViewById(R.id.remote_view))
         rtcClient.initSurfaceView(findViewById<SurfaceViewRenderer>(R.id.local_view))
         rtcClient.startLocalVideoCapture(findViewById<SurfaceViewRenderer>(R.id.local_view))
-        signallingClient =  SignalingClient(meetingID,createSignallingClientListener())
+        signallingClient = SignalingClient(meetingID, createSignallingClientListener())
         if (!isJoin)
-            rtcClient.call(sdpObserver,meetingID)
+            rtcClient.call(sdpObserver, meetingID)
     }
 
     private fun createSignallingClientListener() = object : SignalingClientListener {
@@ -193,7 +200,7 @@ class RTCActivity : AppCompatActivity() {
         override fun onOfferReceived(description: SessionDescription) {
             rtcClient.onRemoteSessionReceived(description)
             Constants.isIntiatedNow = false
-            rtcClient.answer(sdpObserver,meetingID)
+            rtcClient.answer(sdpObserver, meetingID)
             findViewById<ProgressBar>(R.id.remote_view_loading).isGone = true
             Log.i(TAG, "onOfferReceived")
         }
@@ -224,10 +231,15 @@ class RTCActivity : AppCompatActivity() {
     private fun requestCameraAndAudioPermission(dialogShown: Boolean = false) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, CAMERA_PERMISSION) &&
             ActivityCompat.shouldShowRequestPermissionRationale(this, AUDIO_PERMISSION) &&
-            !dialogShown) {
+            !dialogShown
+        ) {
             showPermissionRationaleDialog()
         } else {
-            ActivityCompat.requestPermissions(this, arrayOf(CAMERA_PERMISSION, AUDIO_PERMISSION), CAMERA_AUDIO_PERMISSION_REQUEST_CODE)
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(CAMERA_PERMISSION, AUDIO_PERMISSION),
+                CAMERA_AUDIO_PERMISSION_REQUEST_CODE
+            )
         }
     }
 
@@ -246,7 +258,11 @@ class RTCActivity : AppCompatActivity() {
             .show()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == CAMERA_AUDIO_PERMISSION_REQUEST_CODE && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
             onCameraAndAudioPermissionGranted()
@@ -260,7 +276,7 @@ class RTCActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        signallingClient.destroy()
+        signallingClient?.destroy()
         super.onDestroy()
     }
 }

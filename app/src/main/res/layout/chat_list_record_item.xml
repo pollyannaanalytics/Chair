@@ -13,12 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
         <androidx.cardview.widget.CardView
+
             android:id="@+id/card_avator_img"
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:cardCornerRadius="250dp"
+            android:layout_marginVertical="@dimen/standard_margin_half"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -36,9 +37,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/card_avator_img"
-
+            android:layout_marginLeft="@dimen/standard_margin_one_forth"
             app:layout_constraintTop_toTopOf="parent"
             android:text="@{chatRoomRecord.otherName}"
+            android:layout_marginVertical="@dimen/standard_margin_half"
             android:textSize="20dp"
             android:textFontWeight="500" />
 
@@ -46,16 +48,40 @@
             android:id="@+id/date_time"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:text="@{chatRoomRecord.sentTime}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/user_name" />
+            app:layout_constraintTop_toTopOf="@id/user_name"
+            android:layout_marginVertical="@dimen/standard_margin_half"
+            />
 
         <TextView
             android:id="@+id/record_content"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:text="@{chatRoomRecord.lastSentence}"
+            android:layout_marginVertical="@dimen/standard_margin_half"
             app:layout_constraintStart_toStartOf="@id/user_name"
             app:layout_constraintTop_toBottomOf="@id/user_name"
             app:layout_constraintBottom_toBottomOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/new_in_tag_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/standard_margin"
+            app:layout_constraintStart_toEndOf="@id/user_name"
+            app:layout_constraintTop_toTopOf="@id/user_name"
+            >
+            <TextView
+                android:id="@+id/new_in_tag_img"
+                android:background="@drawable/gradient_gold"
+                android:textColor="@color/white"
+                android:padding="@dimen/standard_margin_one_forth"
+                android:text="New"
+                android:textSize="@dimen/standard_margin_half"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </androidx.cardview.widget.CardView>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

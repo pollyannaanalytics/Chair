@@ -1,6 +1,8 @@
 package com.example.reclaim.home
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,6 +18,10 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.yuyakaido.android.cardstackview.Direction
+import java.time.Clock
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 private const val TAG = "HOMEVIEWMODEL"
 
@@ -48,19 +54,21 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
 
     private var currentFriends = emptyList<String>().toMutableList()
 
+
     init {
         Log.i(TAG, "viewModel start")
         _onDestroyed.value = false
         _otherProfileList.value = emptyList<UserProfile>().toMutableList()
         currentFriends = loadWhoLikeMe(UserManager.userId)
-        loadOtherProfile()
+
     }
 
     private fun loadOtherProfile() {
         if (currentFriends.size != 0) {
+            Log.i(TAG, "currentFriend: $currentFriends")
             try {
                 val otherResultDocument =
-                    db.collection("user_profile").whereNotEqualTo("user_id", UserManager.userId)
+                    db.collection("user_profile")
                         .whereEqualTo("worries_type", UserManager.userType)
                         .whereNotIn("user_id", currentFriends)
                         .orderBy("user_id", Query.Direction.DESCENDING)
@@ -95,6 +103,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
 
         } else {
             try {
+                Log.i(TAG, "currentFriend: $currentFriends")
                 val otherResultDocument =
                     db.collection("user_profile").whereNotEqualTo("user_id", UserManager.userId)
                         .whereEqualTo("worries_type", UserManager.userType)
@@ -176,12 +185,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         if (currentFriends.size != 0) {
 
             otherProfileResult =
-                db.collection("user_profile").where(
-                    Filter.and(
-                        Filter.notEqualTo("user_id", UserManager.userId),
-                        Filter.notInArray("user_id", currentFriends)
-                    )
-                )
+                db.collection("user_profile").whereNotIn("user_id", currentFriends)
                     .orderBy("user_id", Query.Direction.DESCENDING)
                     .orderBy("profile_time", Query.Direction.DESCENDING)
 
@@ -247,13 +251,21 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         Log.i(TAG, "start to load who is friend currently")
         var shouldRemove = false
         val currentFriendList = emptyList<String>().toMutableList()
+
+        currentFriendList.add(UserManager.userId)
+        currentFriends.add(UserManager.userId)
         val registration = db.collection("relationship")
             .where(
                 Filter.or(
                     Filter.equalTo("receiver_id", UserManager.userId),
                     Filter.equalTo("sender_id", UserManager.userId)
                 )
-            ).whereEqualTo("current_relationship", "Like")
+            ).where(
+                Filter.or(
+                    Filter.equalTo("current_relationship", "Like"),
+                    Filter.equalTo("current_relationship", "Dislike")
+                )
+            )
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     Log.e(TAG, "cannot load current friend: $error")
@@ -270,14 +282,18 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                         }
                         Log.i(TAG, "currentFriendList: $currentFriendList")
                         shouldRemove = true
+
                     }
+                    loadOtherProfile()
                 } else {
                     Log.e("findFriends", "no friends")
+                    loadOtherProfile()
                 }
 
 
             }
         registration
+
 
         if (shouldRemove) {
             registration.remove()
@@ -319,6 +335,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         }
     }
 
+
+
     private fun createAChatRoom(
         friendId: String,
         friendName: String,
@@ -327,7 +345,6 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
     ): String {
         val chatRoom = FirebaseFirestore.getInstance().collection("chat_room")
 
-
         val data = hashMapOf(
             "key" to friendId + UserManager.userId,
             "user_a_id" to UserManager.userId,
@@ -335,6 +352,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
             "user_b_id" to friendId,
             "user_b_name" to friendName,
             "last_sentence" to "",
+            "sent_time" to "",
             "send_by_id" to "",
             "user_a_img" to UserManager.userImage,
             "user_b_img" to friendImg
@@ -354,7 +372,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                 "",
                 "",
                 UserManager.userImage,
-                friendImg
+                friendImg,
+                ""
             )
 
         }.addOnFailureListener {
@@ -443,8 +462,9 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
             "sender_id" to UserManager.userId,
             "sender_name" to UserManager.userName,
             "current_relationship" to relationship,
-            "chat_room_key" to "null"
-        )
+            "chat_room_key" to "null",
+
+            )
 
         friends.add(data)
             .addOnSuccessListener {
@@ -480,7 +500,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         _onDestroyed.value = true
     }
 
-    fun navigateToMatch(){
+    fun navigateToMatch() {
         _matchToChatRoom.value = null
     }
 }

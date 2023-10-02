@@ -1,11 +1,19 @@
 package com.example.reclaim.chatlist
 
+import android.app.Activity
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.example.reclaim.data.ChatRoom
+import com.example.reclaim.data.ChatRoomLocal
 import com.example.reclaim.data.Friends
 import com.example.reclaim.data.ReclaimDatabaseDao
 import com.example.reclaim.data.UserManager
@@ -13,11 +21,13 @@ import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
 
 
 private const val TAG = "ChatListViewModel"
 
-class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
+@RequiresApi(Build.VERSION_CODES.M)
+class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity: Activity) : ViewModel() {
     private var _friendsList = MutableLiveData<MutableList<Friends>>()
     val friendsList: LiveData<MutableList<Friends>>
         get() = _friendsList
@@ -36,11 +46,28 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
     init {
         _friendsList.value = emptyList<Friends>().toMutableList()
         _recordList.value = emptyList<ChatRoom>().toMutableList()
-
-        loadAllRecords()
+        loadAllRecordsFromFirebase()
     }
 
-    fun loadAllRecords() {
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun checkNetworkConnection(){
+        val hasInternetConnection = hasInternetConnection()
+        if (hasInternetConnection){
+            loadAllRecordsFromFirebase()
+        }else{
+//            loadAllRecordFromLocal()
+        }
+    }
+
+//    private fun loadAllRecordFromLocal() {
+//        viewModelScope.launch {
+//            _recordList.value = reclaimDao.loadAllChatRoom().toMutableList()
+//        }
+//    }
+
+
+    private fun loadAllRecordsFromFirebase() {
         db.collection("chat_room").where(
             Filter.or(
                 Filter.equalTo("user_a_name", UserManager.userName),
@@ -56,12 +83,13 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
 
                 if (snapshot != null) {
                     if (!snapshot.isEmpty) {
-
+                        var currentChatRoom = emptyList<ChatRoom>().toMutableList()
                         for (query in snapshot) {
-                            var currentChatRoom = emptyList<ChatRoom>().toMutableList()
+
                             Log.i(TAG, "total record: " + snapshot.size().toString())
 
                             val key = query.data.get("key").toString()
+                            val sentTime = query.data.get("sent_time").toString()
 
                             var selfId = ""
                             var selfName = ""
@@ -77,7 +105,8 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
                             lastSentence = query.data.get("last_sentence").toString()
                             sendById = query.data.get("send_by_id").toString()
 
-                            if(query.data.get("user_a_id").toString() == UserManager.userId){
+
+                            if (query.data.get("user_a_id").toString() == UserManager.userId) {
                                 selfId = query.data.get("user_a_id").toString()
                                 otherId = query.data.get("user_b_id").toString()
                                 selfName = query.data.get("user_a_name").toString()
@@ -85,7 +114,7 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
                                 selfImage = query.data.get("user_a_img").toString()
                                 otherImage = query.data.get("user_b_img").toString()
 
-                            }else{
+                            } else {
                                 otherId = query.data.get("user_a_id").toString()
                                 selfId = query.data.get("user_b_id").toString()
 
@@ -105,17 +134,33 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
                                 lastSentence,
                                 sendById,
                                 selfImage,
-                                otherImage
+                                otherImage,
+                                sentTime
                             )
 
                             currentChatRoom.add(newRecord)
-                            _recordList.value = currentChatRoom
-                            Log.i(TAG, "new record is $newRecord")
-                        }
 
+
+                            val saveChatRoomInLocal = ChatRoomLocal(
+                                selfId = newRecord.selfId,
+                                otherId = newRecord.otherId,
+                                selfName = newRecord.selfName,
+                                otherName = newRecord.otherName,
+                                lastSentence = newRecord.lastSentence,
+                                sendById = newRecord.sendById,
+                                selfImage = newRecord.selfImage,
+                                otherImage = newRecord.otherImage
+                            )
+                            viewModelScope.launch {
+                                reclaimDao.insertChatRoom(saveChatRoomInLocal)
+                                Log.i(TAG, "new record is $newRecord")
+                            }
+
+                        }
+                        _recordList.value = currentChatRoom
 
                         Log.i(TAG, "current list is ${_recordList.value}")
-                    }else{
+                    } else {
                         Log.i(TAG, "chat room is empty")
                     }
                 }
@@ -127,13 +172,31 @@ class ChatListViewModel(private val dao: ReclaimDatabaseDao) : ViewModel() {
     }
 
 
-
     fun displayChatRoom(data: ChatRoom) {
         _navigateToChatRoom.value = data
     }
 
     fun navigateToRoom() {
         _navigateToChatRoom.value = null
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun hasInternetConnection(): Boolean{
+        val connectivityManager = activity.application.getSystemService(
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
+
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+
+        val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+
+        return when{
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+
+            else -> false
+        }
     }
 
 
