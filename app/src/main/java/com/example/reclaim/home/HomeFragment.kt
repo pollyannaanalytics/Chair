@@ -2,7 +2,9 @@ package com.example.reclaim.home
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.drawable.RippleDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import android.opengl.Visibility
@@ -12,14 +14,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
+import com.example.reclaim.R
 import com.example.reclaim.data.ReclaimDatabase
 import com.example.reclaim.databinding.FragmentHomeBinding
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.Direction
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 /**
@@ -120,14 +127,20 @@ class HomeFragment : Fragment() {
         viewModel.firebaseDisconnect.observe(viewLifecycleOwner) {
             if (it == true) {
                 val hint = "加載好友失敗，請檢查你的網路連線狀況"
-                shadowOnFragment(binding, hint)
+                lifecycleScope.launch {
+                    shadowOnFragment(binding, hint)
+                }
+
             }
         }
 
         viewModel.noFriends.observe(viewLifecycleOwner) {
             if (it == true) {
                 val hint = "目前沒有跟你類似的朋友了!"
-                shadowOnFragment(binding, hint)
+                lifecycleScope.launch {
+                    shadowOnFragment(binding, hint)
+                }
+
             }
 
         }
@@ -266,17 +279,33 @@ class HomeFragment : Fragment() {
     }
 
 
-    private fun shadowOnFragment(binding: FragmentHomeBinding, hint: String) {
-        val shadowDrawable = ShapeDrawable()
-        val rectDrawable = RectShape()
+    private suspend fun shadowOnFragment(binding: FragmentHomeBinding, hint: String) {
+        val selfAvatar = binding.selfWrapperImg
+        val scaleUpX = ObjectAnimator.ofFloat(selfAvatar, "scaleX", 1.0f, 1.2f, 1.0f, 1.2f, 1.0f)
+        val scaleUpY = ObjectAnimator.ofFloat(selfAvatar, "scaleY", 1.0f, 1.2f, 1.0f, 1.2f, 1.0f)
 
-        shadowDrawable.shape = rectDrawable
-        shadowDrawable.paint.color = Color.parseColor("#3A3A3A")
-        shadowDrawable.paint.alpha = 100
+        val alphaChange = ObjectAnimator.ofFloat(selfAvatar,"alpha", 0f, 1f, 0f, 1f, 0f)
 
-        binding.homeHint.text = hint
-        binding.homeLayout.background = shadowDrawable
 
+        val scaleAnim = AnimatorSet()
+        scaleAnim.playTogether(scaleUpX, scaleUpY, alphaChange)
+        scaleAnim.duration = 5000
+
+        val translateY = ObjectAnimator.ofFloat(selfAvatar, "translationY", 0f, -20f, 0f)
+        translateY.interpolator = AccelerateDecelerateInterpolator()
+        translateY.duration = 5000
+
+
+
+
+        val animatorSet = AnimatorSet()
+        animatorSet.playTogether(scaleAnim, translateY)
+
+        animatorSet.start()
+        delay(5500).let {
+            binding.loadingText.text = hint
+            binding.loadingText.setTextColor(resources.getColor(R.color.myPrimary))
+        }
 
     }
 

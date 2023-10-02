@@ -54,6 +54,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
 
     private var currentFriends = emptyList<String>().toMutableList()
 
+    val userManager = UserManager
+
 
     init {
         Log.i(TAG, "viewModel start")

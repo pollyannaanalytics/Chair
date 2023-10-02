@@ -39,6 +39,56 @@
             />
 
 
+            <ImageView
+                android:id="@+id/self_wrapper_img"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintWidth_percent="0.3"
+                app:layout_constraintDimensionRatio="1"
+                app:layout_constraintStart_toStartOf="@id/self_avatar_loading_container"
+                app:layout_constraintEnd_toEndOf="@id/self_avatar_loading_container"
+                app:layout_constraintTop_toTopOf="@id/self_avatar_loading_container"
+                app:layout_constraintBottom_toBottomOf="@id/self_avatar_loading_container"
+                android:src="@drawable/ripple_effect"
+                />
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/self_avatar_loading_container"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintWidth_percent="0.2"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:cardCornerRadius="250dp"
+
+            >
+            <ImageView
+                android:id="@+id/self_avatar_loading_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+              android:scaleType="centerCrop"
+
+                imageUri="@{viewModel.userManager.userImage}"
+                />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/loading_text"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/standard_margin"
+            android:text="我們正在精密計算與你相像的朋友..."
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/self_wrapper_img"
+            />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
