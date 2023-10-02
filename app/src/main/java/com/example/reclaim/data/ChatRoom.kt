@@ -8,6 +8,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ChatRoom(
+    val id: String,
     val key: String,
     val selfId: String,
     val otherId: String,

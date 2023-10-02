@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.room.util.query
 import com.example.reclaim.data.ChatRecord
 import com.example.reclaim.data.ReclaimDatabaseDao
 import com.example.reclaim.data.UserManager
@@ -89,6 +90,7 @@ class ChatRoomViewModel(
                         val sender = document.get("sender_name").toString()
                         val type = document.get("message_type").toString()
                         val meetingId = document.get("meeting_id").toString()
+                        val isSeen = document.get("is_seen").toString().toBoolean()
 
                         var selfImage = ""
                         var selfName = ""
@@ -123,12 +125,12 @@ class ChatRoomViewModel(
                             otherImage,
                             selfImage,
                             selfName,
-                            otherName
+                            otherName,
+                            isSeen
                         )
 
-
-
                         currentRecord.add(newRecord)
+                        updateSeenStatus(room.id, document.id)
                         Log.i(TAG, "get record: ${room.id}")
                     }
                     Log.i(TAG, "current record: $currentRecord")
@@ -144,6 +146,12 @@ class ChatRoomViewModel(
         if (_onDestroyed.value == true) {
             regitration.remove()
         }
+    }
+
+    private fun updateSeenStatus(chatRoomID: String, documentID: String) {
+        db.collection("chat_room").document(chatRoomID).collection("chat_record")
+            .document(documentID).update("is_seen", true)
+
     }
 
     private fun saveDataInLocal(record: ChatRecord) {
@@ -186,7 +194,6 @@ class ChatRoomViewModel(
                 val room = rooms.documents.get(0)
                 getAllRecordFromRoom(room)
                 Log.i(TAG, room.id.toString())
-
             } else {
                 _noRecord.value = true
                 Log.i(TAG, "this room is null")
@@ -226,7 +233,8 @@ class ChatRoomViewModel(
             otherImage = friendImage,
             selfImage = UserManager.userImage,
             selfName = UserManager.userName,
-            otherName = friendName
+            otherName = friendName,
+            isSeen = false
         )
 
         val data = hashMapOf(
@@ -236,6 +244,7 @@ class ChatRoomViewModel(
             "sender_name" to newRecord.sender,
             "id" to newRecord.id,
             "message_type" to type,
+            "is_seen" to newRecord.isSeen,
             "meeting_id" to meetingId,
             "user_b_img" to newRecord.otherImage,
             "user_a_img" to newRecord.otherImage,
@@ -264,8 +273,6 @@ class ChatRoomViewModel(
         }
 
 
-
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -284,6 +291,7 @@ class ChatRoomViewModel(
         chatRoom.update("last_sentence", text)
         chatRoom.update("send_by_id", UserManager.userId)
         chatRoom.update("sent_time", currentTime)
+        chatRoom.update("unread_times", + 1)
 
     }
 
@@ -302,5 +310,6 @@ class ChatRoomViewModel(
     fun removeListener() {
         _onDestroyed.value = true
     }
+
 
 }

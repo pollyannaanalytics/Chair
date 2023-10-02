@@ -27,7 +27,8 @@ import kotlinx.coroutines.launch
 private const val TAG = "ChatListViewModel"
 
 @RequiresApi(Build.VERSION_CODES.M)
-class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity: Activity) : ViewModel() {
+class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity: Activity) :
+    ViewModel() {
     private var _friendsList = MutableLiveData<MutableList<Friends>>()
     val friendsList: LiveData<MutableList<Friends>>
         get() = _friendsList
@@ -51,11 +52,11 @@ class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity
 
 
     @RequiresApi(Build.VERSION_CODES.M)
-    fun checkNetworkConnection(){
+    fun checkNetworkConnection() {
         val hasInternetConnection = hasInternetConnection()
-        if (hasInternetConnection){
+        if (hasInternetConnection) {
             loadAllRecordsFromFirebase()
-        }else{
+        } else {
 //            loadAllRecordFromLocal()
         }
     }
@@ -90,6 +91,7 @@ class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity
 
                             val key = query.data.get("key").toString()
                             val sentTime = query.data.get("sent_time").toString()
+                            val id = query.id
 
                             var selfId = ""
                             var selfName = ""
@@ -135,7 +137,8 @@ class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity
                                 sendById,
                                 selfImage,
                                 otherImage,
-                                sentTime
+                                sentTime,
+                                id
                             )
 
                             currentChatRoom.add(newRecord)
@@ -174,6 +177,7 @@ class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity
 
     fun displayChatRoom(data: ChatRoom) {
         _navigateToChatRoom.value = data
+        clearUnreadTimes(documentID = data.id)
     }
 
     fun navigateToRoom() {
@@ -181,7 +185,7 @@ class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    private fun hasInternetConnection(): Boolean{
+    private fun hasInternetConnection(): Boolean {
         val connectivityManager = activity.application.getSystemService(
             Context.CONNECTIVITY_SERVICE
         ) as ConnectivityManager
@@ -190,13 +194,21 @@ class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity
 
         val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
 
-        return when{
+        return when {
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
 
             else -> false
         }
+    }
+
+    private fun clearUnreadTimes(documentID: String) {
+        db.collection("chat_room")
+            .document(documentID).update(
+            "is_seen", 0
+        )
+
     }
 
 

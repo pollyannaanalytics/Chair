@@ -33,6 +33,8 @@ data class ChatRecord(
 
     val selfName : String,
 
-    val otherName: String
+    val otherName: String,
+
+    val isSeen: Boolean
 
 )

@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.compose.ui.text.font.Typeface
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -305,6 +306,7 @@ class HomeFragment : Fragment() {
         delay(5500).let {
             binding.loadingText.text = hint
             binding.loadingText.setTextColor(resources.getColor(R.color.myPrimary))
+            binding.loadingText.setTypeface(null, android.graphics.Typeface.BOLD)
         }
 
     }

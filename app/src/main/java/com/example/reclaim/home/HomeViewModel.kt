@@ -357,7 +357,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
             "sent_time" to "",
             "send_by_id" to "",
             "user_a_img" to UserManager.userImage,
-            "user_b_img" to friendImg
+            "user_b_img" to friendImg,
+            "unread_times" to 0
 
         )
         var currentRoomKey = friendId + UserManager.userId
