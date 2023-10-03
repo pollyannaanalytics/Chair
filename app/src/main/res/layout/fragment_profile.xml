@@ -47,18 +47,19 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_launcher_foreground"
                  />
-            </androidx.cardview.widget.CardView>
 
-            <Button
+
+            </androidx.cardview.widget.CardView>
+            <ImageView
                 android:id="@+id/choose_img_btn"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/standard_margin"
-                android:text="從相簿請選擇圖片"
-                android:background="@drawable/stroke_shape"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintWidth_percent="0.1"
+                app:layout_constraintDimensionRatio="1"
+                android:translationZ="@dimen/standard_margin"
                 app:layout_constraintEnd_toEndOf="@id/user_image_container"
-                app:layout_constraintStart_toStartOf="@id/user_image_container"
-                app:layout_constraintTop_toBottomOf="@id/user_image_container" />
+                app:layout_constraintBottom_toBottomOf="@id/user_image_container"
+                android:src="@drawable/camera_add"/>
 
             <TextView
                 android:id="@+id/id_title"
@@ -71,7 +72,7 @@
                 android:textSize="@dimen/detail_text_size"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/choose_img_btn" />
+                app:layout_constraintTop_toBottomOf="@id/user_image_container" />
 
 
             <com.google.android.material.textfield.TextInputLayout
