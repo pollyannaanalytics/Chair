@@ -18,12 +18,13 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/standard_margin"
+
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:background="@color/white"
             android:layout_margin="@dimen/standard_margin"
+            android:paddingBottom="@dimen/standard_margin"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -33,19 +34,19 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:cardCornerRadius="250dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                app:layout_constraintWidth_percent="0.3"
+                app:layout_constraintDimensionRatio="1"
+                android:layout_width="0dp"
+                android:layout_height="0dp">
 
             <ImageView
                 imageUri="@{userManager.userImage}"
                 android:id="@+id/user_image"
-                android:layout_width="300dp"
-                android:layout_height="300dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_launcher_foreground"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                 />
             </androidx.cardview.widget.CardView>
 
             <Button
@@ -54,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/standard_margin"
                 android:text="從相簿請選擇圖片"
-                android:background="@drawable/shallow_background"
+                android:background="@drawable/stroke_shape"
                 app:layout_constraintEnd_toEndOf="@id/user_image_container"
                 app:layout_constraintStart_toStartOf="@id/user_image_container"
                 app:layout_constraintTop_toBottomOf="@id/user_image_container" />
@@ -64,22 +65,30 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/standard_margin"
-                android:text="你的ID"
+                android:text="你的用戶名稱"
                 android:textColor="@color/shadow"
                 android:fontFamily="@font/noto_sans"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="@id/user_image_container"
+                android:textSize="@dimen/detail_text_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/choose_img_btn" />
 
-            <EditText
-                android:id="@+id/id_edit"
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/id_edit_container"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@{userManager.userId}"
                 android:textColor="@color/myPrimary"
-                app:layout_constraintEnd_toEndOf="@id/user_image_container"
-                app:layout_constraintStart_toStartOf="@id/user_image_container"
-                app:layout_constraintTop_toBottomOf="@id/id_title" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/id_title" >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/id_edit"
+                    android:layout_width="match_parent"
+                    android:currentTab=""
+                    android:layout_height="match_parent"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/username_title"
@@ -89,19 +98,25 @@
                 android:fontFamily="@font/noto_sans"
                 android:textColor="@color/shadow"
                 android:layout_marginTop="@dimen/standard_margin_one_forth"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="@id/user_image_container"
-                app:layout_constraintTop_toBottomOf="@id/id_edit" />
+                android:textSize="@dimen/detail_text_size"
+                app:layout_constraintStart_toStartOf="@id/id_title"
+                app:layout_constraintTop_toBottomOf="@id/id_edit_container" />
 
-            <EditText
-                android:id="@+id/username_edit"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/username_edit_container"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@{userManager.userName}"
                 android:textColor="@color/myPrimary"
-                app:layout_constraintEnd_toEndOf="@id/user_image_container"
-                app:layout_constraintStart_toStartOf="@id/user_image_container"
-                app:layout_constraintTop_toBottomOf="@id/username_title" />
+                app:layout_constraintEnd_toEndOf="@id/id_title"
+                app:layout_constraintStart_toStartOf="@id/username_title"
+                app:layout_constraintTop_toBottomOf="@id/username_title" >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/username_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/gender_title"
@@ -110,15 +125,17 @@
                 android:layout_marginTop="@dimen/standard_margin_one_forth"
                 android:text="你的性別"
                 android:textColor="@color/shadow"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="@id/user_image_container"
-                app:layout_constraintTop_toBottomOf="@id/username_edit" />
+                android:textSize="@dimen/detail_text_size"
+                app:layout_constraintStart_toStartOf="@id/id_title"
+                app:layout_constraintEnd_toEndOf="@id/id_title"
+                app:layout_constraintTop_toBottomOf="@id/username_edit_container" />
 
             <RadioGroup
                 android:id="@+id/gender_group"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/user_image_container"
+                app:layout_constraintStart_toStartOf="@id/id_title"
+                app:layout_constraintEnd_toEndOf="@id/id_title"
                 app:layout_constraintTop_toBottomOf="@id/gender_title">
 
                 <RadioButton
@@ -143,32 +160,43 @@
                     android:text="非二元性別" />
 
             </RadioGroup>
-
             <TextView
                 android:id="@+id/worries_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/gender_group"
+                app:layout_constraintStart_toStartOf="@id/gender_title"
+                android:text="煩惱"
+                android:textColor="@color/shadow"
+                android:textSize="@dimen/detail_text_size"
+
+                />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/worries_container"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="輸入你的煩惱，讓AI 幫你尋找類似煩惱的對象"
                 android:textColor="@color/shadow"
                 android:textStyle="bold"
                 android:layout_marginTop="@dimen/standard_margin_one_forth"
-                android:textSize="@dimen/detail_text_size"
-                app:layout_constraintStart_toStartOf="@id/user_image_container"
-                app:layout_constraintEnd_toEndOf="@id/user_image_container"
-                app:layout_constraintTop_toBottomOf="@id/gender_group" />
 
-            <EditText
+                android:textSize="@dimen/detail_text_size"
+                app:layout_constraintStart_toStartOf="@id/id_title"
+                app:layout_constraintEnd_toEndOf="@id/id_title"
+                app:layout_constraintTop_toBottomOf="@id/worries_title" >
+
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/worries_edit"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:autofillHints=""
                 android:text="@{userManager.worriesDescription}"
+                android:layout_marginBottom="@dimen/standard_margin_half"
                 android:textColor="@color/myPrimary"
                 android:inputType=""
-                android:lines="8"
-                app:layout_constraintEnd_toEndOf="@id/user_image_container"
-                app:layout_constraintStart_toStartOf="@id/user_image_container"
-                app:layout_constraintTop_toBottomOf="@id/worries_title" />
+                android:lines="8" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/submit_btn"
@@ -179,7 +207,7 @@
                 android:layout_marginBottom="@dimen/standard_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/cancel_edit_btn"
-                app:layout_constraintTop_toBottomOf="@id/worries_edit"
+                app:layout_constraintTop_toBottomOf="@id/worries_container"
                 app:layout_constraintBottom_toBottomOf="parent"
                 />
 
@@ -192,6 +220,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/submit_btn"
                 app:layout_constraintEnd_toStartOf="@id/submit_btn"
+                android:layout_marginBottom="@dimen/standard_margin"
+                app:layout_constraintBottom_toBottomOf="parent"
                 />
 
             <com.airbnb.lottie.LottieAnimationView
