@@ -350,6 +350,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
     ): String {
         val chatRoom = FirebaseFirestore.getInstance().collection("chat_room")
         var currentRoomKey = friendId + UserManager.userId
+        val sentTime = System.currentTimeMillis().toString()
         val data = hashMapOf(
             "key" to currentRoomKey,
             "user_a_id" to UserManager.userId,
@@ -357,7 +358,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
             "user_b_id" to friendId,
             "user_b_name" to friendName,
             "last_sentence" to "",
-            "sent_time" to "",
+            "sent_time" to sentTime,
             "send_by_id" to "",
             "user_a_img" to UserManager.userImage,
             "user_b_img" to friendImg,
@@ -380,7 +381,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                 sendById = "",
                 selfImage = UserManager.userImage,
                 otherImage = friendImg,
-                sentTime = "",
+                sentTime = sentTime,
                 unreadTimes = "0"
             )
 

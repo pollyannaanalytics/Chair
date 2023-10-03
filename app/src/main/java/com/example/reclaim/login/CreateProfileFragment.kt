@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,13 +19,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.reclaim.R
+import com.example.reclaim.data.UserManager
 import com.example.reclaim.databinding.FragmentCreateProfileBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -34,15 +34,21 @@ private const val ARG_PARAM2 = "param2"
 class CreateProfileFragment : Fragment() {
 
     val TAG = "CREATE_PROFILE_PAGE"
-    var imageUri : Uri? = null
+    var imageUri: Uri? = null
     lateinit var binding: FragmentCreateProfileBinding
+
+    private val viewModel : CreateProfileViewModel by lazy {
+        ViewModelProvider(this).get(CreateProfileViewModel::class.java)
+    }
+
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-         binding = FragmentCreateProfileBinding.inflate(inflater)
+        binding = FragmentCreateProfileBinding.inflate(inflater)
+        binding.viewModel = viewModel
 
         var userId = ""
         var username = ""
@@ -56,22 +62,38 @@ class CreateProfileFragment : Fragment() {
 
         binding.idEdit.doAfterTextChanged {
             userId = it.toString()
-            Log.i(TAG,"userId: $it")
-            binding.progressBar.progress = 20
+            Log.i(TAG, "userId: $it")
+            binding.progressBar.progress = 40
         }
 
 
         binding.usernameEdit.doAfterTextChanged {
             username = it.toString()
-            Log.i(TAG,"userId: $it")
-            binding.progressBar.progress = 40
+            Log.i(TAG, "userId: $it")
+            binding.progressBar.progress += 60
         }
 
 
         binding.chooseImgBtn.setOnClickListener {
             checkImagePermission()
             pickImageFromGallery()
-            binding.progressBar.progress = 60
+            binding.progressBar.progress += 20
+
+        }
+        binding.nextMove.setOnClickListener {
+
+
+            UserManager.userId = userId
+            UserManager.userName = username
+            UserManager.gender = gender
+
+
+            viewModel.uploadImageToFireStorage(imageUri.toString())
+
+            Log.i(TAG, "$imageUri")
+
+            findNavController().navigate(CreateProfileFragmentDirections.actionCreateProfileFragmentToWorriesInputFragment())
+
         }
 
 
@@ -88,6 +110,7 @@ class CreateProfileFragment : Fragment() {
 
         return binding!!.root
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {

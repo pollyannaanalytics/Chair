@@ -67,9 +67,18 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-587" />
-                            <option name="y" value="-200" />
+                            <option name="x" value="-585" />
+                            <option name="y" value="-188" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_createProfileFragment_to_worriesInputFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -79,8 +88,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-89" />
-                            <option name="y" value="96" />
+                            <option name="x" value="-461" />
+                            <option name="y" value="465" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -103,6 +112,15 @@
                             <option name="x" value="-322" />
                             <option name="y" value="-66" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_loginFragment_to_createProfileFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -140,6 +158,27 @@
                         <option name="myPositions">
                           <map>
                             <entry key="action_profileFragment_to_alreadySignUpProfileFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="worriesInputFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-589" />
+                            <option name="y" value="-539" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_worriesInputFragment_to_homeFragment">
                               <value>
                                 <LayoutPositions />
                               </value>

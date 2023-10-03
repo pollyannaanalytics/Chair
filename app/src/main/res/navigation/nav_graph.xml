@@ -76,5 +76,17 @@
     <fragment
         android:id="@+id/createProfileFragment"
         android:name="com.example.reclaim.login.CreateProfileFragment"
-        android:label="CreateProfileFragment" />
+        android:label="CreateProfileFragment" >
+        <action
+            android:id="@+id/action_createProfileFragment_to_worriesInputFragment"
+            app:destination="@id/worriesInputFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/worriesInputFragment"
+        android:name="com.example.reclaim.login.WorriesInputFragment"
+        android:label="WorriesInputFragment" >
+        <action
+            android:id="@+id/action_worriesInputFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>

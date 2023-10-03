@@ -109,7 +109,7 @@
                     android:layout_height="wrap_content"
                     android:text="gender"
                     android:textColor="@color/white"
-                    android:textSize="25dp"
+                    android:textSize="20sp"
                     android:layout_marginBottom="@dimen/standard_margin"
                     app:layout_constraintBottom_toTopOf="@id/dislike_btn"
                     app:layout_constraintStart_toStartOf="@id/user_name_title"
