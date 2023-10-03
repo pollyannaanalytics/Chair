@@ -128,6 +128,7 @@ class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity
                             }
 
                             val newRecord = ChatRoom(
+                                id,
                                 key,
                                 selfId,
                                 otherId,
@@ -137,8 +138,7 @@ class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity
                                 sendById,
                                 selfImage,
                                 otherImage,
-                                sentTime,
-                                id
+                                sentTime
                             )
 
                             currentChatRoom.add(newRecord)

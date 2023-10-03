@@ -7,12 +7,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavArgs
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.reclaim.R
 import com.example.reclaim.chatroom.ChatRoomFragmentArgs
@@ -26,12 +29,12 @@ class MatchFragment : Fragment() {
 
     private lateinit var viewModel: MatchViewModel
     private val navArgs by navArgs<MatchFragmentArgs>()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
         val application = requireActivity().application
         val reclaimDatabaseDao = ReclaimDatabase.getInstance(application).reclaimDao()
@@ -46,6 +49,7 @@ class MatchFragment : Fragment() {
         var message = ""
 
 
+
         avatarMatchAnimate(leftAvatar, rightAvatar)
         matchTitleAnimate(matchTitle)
 
@@ -55,8 +59,15 @@ class MatchFragment : Fragment() {
         }
 
         binding.sendToChatRoom.setOnClickListener {
-         viewModel.sendMessageToChatRoom(message)
+            if (binding.messageInputEdit.text.toString() != ""){
+                viewModel.sendMessageToChatRoom(message)
+                binding.messageInputEdit.setText("")
+                findNavController().navigate(MatchFragmentDirections.actionMatchFragmentToHomeFragment())
+            }
+        }
 
+        binding.laterChatBtn.setOnClickListener {
+            findNavController().navigate(MatchFragmentDirections.actionMatchFragmentToHomeFragment())
         }
 
         return binding.root
@@ -144,7 +155,8 @@ class MatchFragment : Fragment() {
 
     }
 
-
-
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+    }
 }

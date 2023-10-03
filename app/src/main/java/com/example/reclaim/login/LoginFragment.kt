@@ -38,14 +38,17 @@ class LoginFragment : Fragment() {
 
         val avatarBackground = binding.backgroundImageAvatar
 
-        val scaleUpX = ObjectAnimator.ofFloat(avatarBackground, "scaleX", 1.0f, 1.2f)
-        val scaleUpY = ObjectAnimator.ofFloat(avatarBackground, "scaleY", 1.0f, 1.2f)
+        val scaleUpX = ObjectAnimator.ofFloat(avatarBackground, "scaleX", 1.0f, 1.15f)
+        val scaleUpY = ObjectAnimator.ofFloat(avatarBackground, "scaleY", 1.0f, 1.15f)
+
+
 
 
         val alphaChange = ObjectAnimator.ofFloat(avatarBackground, "alpha", 0f, 1f)
         val scaleAnim = AnimatorSet()
 
         scaleAnim.playTogether(scaleUpX, scaleUpY, alphaChange)
+        scaleAnim.duration = 5000
 
         scaleAnim.addListener(object : AnimatorListenerAdapter(){
             override fun onAnimationEnd(animation: Animator, isReverse: Boolean) {

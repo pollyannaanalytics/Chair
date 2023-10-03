@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         fun showToolBar(showLogo: Boolean, titleText: String) {
             binding.toolbar.visibility = View.VISIBLE
+            binding.bottomNavigation.visibility = View.VISIBLE
             if (showLogo) {
                 binding.toolbarLogo.visibility = View.VISIBLE
                 binding.fragmentTitle.visibility = View.GONE
@@ -67,7 +68,12 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.profileFragment -> showToolBar(false, "編輯個人檔案")
-
+                R.id.matchFragment -> {
+                    binding.toolbar.visibility = View.GONE
+                    binding.toolbarLogo.visibility = View.GONE
+                    binding.fragmentTitle.visibility = View.GONE
+                    binding.bottomNavigation.visibility = View.GONE
+                }
             }
         }
 

@@ -13,6 +13,7 @@ import java.util.UUID
 import kotlin.random.Random
 
 private const val TAG = "MatchViewModel"
+
 class MatchViewModel(
     private val navArgs: MatchFragmentArgs,
     private val reclaimDatabaseDao: ReclaimDatabaseDao
@@ -38,10 +39,10 @@ class MatchViewModel(
         )
             .get()
             .addOnSuccessListener {
-                if (it.isEmpty || it == null){
+                if (it.isEmpty || it == null) {
                     Log.e(TAG, "chat room is empty")
 
-                }else{
+                } else {
                     documentId = it.documents.get(0).id
 
                     val data = hashMapOf(
@@ -56,6 +57,12 @@ class MatchViewModel(
 
                     FirebaseFirestore.getInstance().collection("chat_room").document(documentId)
                         .collection("chat_record").add(data).addOnSuccessListener {
+                            val chatRoom = FirebaseFirestore.getInstance().collection("chat_room")
+                                .document(documentId)
+                            chatRoom.update("last_sentence", text)
+                            chatRoom.update("send_by_id", UserManager.userId)
+                            chatRoom.update("sent_time", System.currentTimeMillis())
+                            chatRoom.update("unread_times", + 1)
                             Log.i(TAG, "add chat message successfully")
                         }
                         .addOnFailureListener {

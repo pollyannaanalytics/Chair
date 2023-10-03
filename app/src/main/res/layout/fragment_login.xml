@@ -55,9 +55,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@color/myPrimary"
-            android:textSize="@dimen/title_text_size"
+            android:textSize="20dp"
             android:layout_marginTop="@dimen/standard_margin"
             app:layout_constraintTop_toBottomOf="@id/user_image_container"
+            android:gravity="center"
+
             android:text="@{`你之前曾以 `+ usermanager.userName + ` 的方式登入`}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

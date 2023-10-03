@@ -1,5 +1,7 @@
 package com.example.reclaim.home
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.res.ColorStateList
@@ -16,6 +18,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.compose.ui.text.font.Typeface
+import androidx.core.animation.addListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -96,11 +99,18 @@ class HomeFragment : Fragment() {
 
 
 
-
             val animatorSet = AnimatorSet()
             animatorSet.playTogether(scaleAnim, translateY)
-
             animatorSet.start()
+
+            animatorSet.addListener(object: AnimatorListenerAdapter(){
+                override fun onAnimationEnd(animation: Animator, isReverse: Boolean) {
+                    super.onAnimationEnd(animation, isReverse)
+                    animation.start()
+                }
+            })
+
+
 
         }
 
