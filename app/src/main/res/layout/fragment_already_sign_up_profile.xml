@@ -7,6 +7,9 @@
         <variable
             name="usermanager"
             type="com.example.reclaim.data.UserManager" />
+        <variable
+            name="viewModel"
+            type="com.example.reclaim.alreadysignup.AlreadySignUpViewModel" />
 
     </data>
 
@@ -15,7 +18,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/primary_background"
 
-        tools:context=".profile.AlreadySignUpProfileFragment">
+        tools:context=".alreadysignup.AlreadySignUpProfileFragment">
         <androidx.cardview.widget.CardView
             android:id="@+id/self_avator_container"
             android:layout_width="150dp"
@@ -30,6 +33,7 @@
                 android:id="@+id/self_avator_img"
                 android:layout_width="match_parent"
                 imageUri="@{usermanager.userImage}"
+                android:scaleType="centerCrop"
                 android:layout_height="match_parent"
                 />
         </androidx.cardview.widget.CardView>
@@ -52,7 +56,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:gravity="center"
+            android:fontFamily="@font/noto_sans"
             android:textSize="@dimen/title_text_size"
+            android:textColor="@color/black"
             />
         <TextView
             android:id="@+id/self_tag"
@@ -61,6 +67,7 @@
             android:textColor="@color/shadow"
             android:gravity="center"
             android:textSize="@dimen/detail_text_size"
+            android:fontFamily="@font/noto_sans"
             app:layout_constraintStart_toStartOf="@id/self_username"
             app:layout_constraintEnd_toEndOf="@id/self_username"
             app:layout_constraintTop_toBottomOf="@id/self_username"
@@ -71,6 +78,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="@dimen/detail_text_size"
+            android:fontFamily="@font/noto_sans"
             app:layout_constraintTop_toBottomOf="@id/self_tag"
             app:layout_constraintStart_toStartOf="@id/self_tag"
             app:layout_constraintEnd_toEndOf="@id/self_tag"
@@ -79,6 +87,7 @@
         <Button
             android:id="@+id/edit_profile"
             android:text="Edit Profile"
+            android:fontFamily="@font/noto_sans"
             app:layout_constraintTop_toBottomOf="@id/self_description"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -128,6 +137,7 @@
                    android:layout_height="wrap_content"
                    android:layout_marginLeft="@dimen/standard_margin"
                    android:textColor="@color/white"
+                   android:fontFamily="@font/noto_sans"
                    android:textSize="@dimen/detail_text_size"
                    app:layout_constraintBottom_toBottomOf="@id/friend_icon"
                    app:layout_constraintEnd_toEndOf="parent"

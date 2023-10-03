@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+        navBottomView.getOrCreateBadge(R.id.chatListFragment)
 
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -69,6 +70,13 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.profileFragment -> showToolBar(false, "編輯個人檔案")
                 R.id.matchFragment -> {
+                    binding.toolbar.visibility = View.GONE
+                    binding.toolbarLogo.visibility = View.GONE
+                    binding.fragmentTitle.visibility = View.GONE
+                    binding.bottomNavigation.visibility = View.GONE
+                }
+
+                R.id.loginFragment -> {
                     binding.toolbar.visibility = View.GONE
                     binding.toolbarLogo.visibility = View.GONE
                     binding.fragmentTitle.visibility = View.GONE

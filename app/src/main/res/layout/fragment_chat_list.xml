@@ -31,6 +31,7 @@
                     android:id="@+id/self_avatar"
                     imageUri="@{viewModel.userManager.userImage}"
                     android:layout_width="100dp"
+                    android:scaleType="centerCrop"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"

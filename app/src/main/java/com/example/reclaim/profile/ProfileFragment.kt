@@ -18,6 +18,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -41,7 +42,7 @@ class ProfileFragment : Fragment() {
     val TAG = "PROFILE_PAGE"
 
 
-    private var imageUri: Uri? = null
+    private var imageUri: Uri? = UserManager.contentImage.toUri()
 
     lateinit var binding: FragmentProfileBinding
     lateinit var viewModel: ProfileViewModel
@@ -107,7 +108,7 @@ class ProfileFragment : Fragment() {
 
 
         binding.submitBtn.setOnClickListener {
-
+            Log.i(TAG, "imageURI: $imageUri")
                 UserManager.userId = userId
                 UserManager.userName = username
                 UserManager.gender = gender
@@ -115,6 +116,10 @@ class ProfileFragment : Fragment() {
                 UserManager.userImage = imageUri.toString()
 
                 viewModel.sendDescriptionToGPT(worriesDescription)
+        }
+
+        binding.cancelEditBtn.setOnClickListener {
+            findNavController().navigateUp()
         }
 
         viewModel.messageList.observe(viewLifecycleOwner) {

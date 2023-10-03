@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.navigation.fragment.findNavController
 import com.example.reclaim.R
 import com.example.reclaim.data.UserManager
@@ -35,7 +36,7 @@ class LoginFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding = FragmentLoginBinding.inflate(inflater)
         binding.usermanager = UserManager
-
+        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         val avatarBackground = binding.backgroundImageAvatar
 
         val scaleUpX = ObjectAnimator.ofFloat(avatarBackground, "scaleX", 1.0f, 1.15f)
@@ -71,6 +72,10 @@ class LoginFragment : Fragment() {
         }
 
         return binding.root
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
     }
 
 

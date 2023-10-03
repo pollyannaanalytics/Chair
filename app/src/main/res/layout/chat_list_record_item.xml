@@ -37,10 +37,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/card_avator_img"
-            android:layout_marginLeft="@dimen/standard_margin_one_forth"
+
+            android:layout_marginLeft="@dimen/standard_margin"
             app:layout_constraintTop_toTopOf="parent"
             android:text="@{chatRoomRecord.otherName}"
-            android:layout_marginVertical="@dimen/standard_margin_half"
+            android:layout_marginBottom="@dimen/standard_margin_half"
             android:textSize="20dp"
             android:textFontWeight="500" />
 
@@ -50,7 +51,7 @@
             android:layout_height="0dp"
             android:text="@{chatRoomRecord.sentTime}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/user_name"
+           app:layout_constraintBottom_toTopOf="@id/unread_times"
             android:layout_marginVertical="@dimen/standard_margin_half"
             />
 
@@ -69,6 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:cardCornerRadius="@dimen/standard_margin"
+
             app:layout_constraintStart_toEndOf="@id/user_name"
             app:layout_constraintTop_toTopOf="@id/user_name"
             >
@@ -82,6 +84,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/unread_times"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintWidth_percent="0.05"
+            app:layout_constraintDimensionRatio="1"
+            android:textSize="10dp"
+            android:textColor="@color/white"
+            android:text="@{chatRoomRecord.unreadTimes}"
+            android:gravity="center"
+            android:layout_marginRight="@dimen/standard_margin"
+            android:background="@drawable/avatar_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

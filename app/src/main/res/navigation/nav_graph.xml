@@ -44,7 +44,7 @@
     </fragment>
     <fragment
         android:id="@+id/alreadySignUpProfileFragment"
-        android:name="com.example.reclaim.profile.AlreadySignUpProfileFragment"
+        android:name="com.example.reclaim.alreadysignup.AlreadySignUpProfileFragment"
         tools:layout="@layout/fragment_already_sign_up_profile"
         android:label="AlreadySignUpProfileFragment" >
         <action

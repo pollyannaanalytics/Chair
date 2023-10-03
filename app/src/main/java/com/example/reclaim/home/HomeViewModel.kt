@@ -380,7 +380,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                 sendById = "",
                 selfImage = UserManager.userImage,
                 otherImage = friendImg,
-                sentTime = ""
+                sentTime = "",
+                unreadTimes = "0"
             )
 
         }.addOnFailureListener {
@@ -492,7 +493,9 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
     ) {
         Log.i(TAG, "friendId is $friendId")
         when (direction) {
-            Direction.Left -> likeOrDislike(friendId, friendName, friendImg, "Dislike", documentId)
+            Direction.Left ->
+                likeOrDislike(friendId, friendName, friendImg, "Dislike", documentId)
+
             Direction.Right -> {
                 likeOrDislike(friendId, friendName, friendImg, "Like", documentId)
                 Log.i(TAG, "Liked friendId is $friendId")

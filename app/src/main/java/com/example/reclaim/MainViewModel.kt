@@ -8,6 +8,8 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.Filter
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainViewModel: ViewModel() {
 
@@ -53,6 +55,12 @@ class MainViewModel: ViewModel() {
         setElementVisibility(fragmentId, showElement)
         setToolBar(showToolbar)
 
+    }
+
+    fun loadUnreadMessage(){
+        FirebaseFirestore.getInstance().collection("chat_room").where(
+            Filter.or()
+        )
     }
 
 

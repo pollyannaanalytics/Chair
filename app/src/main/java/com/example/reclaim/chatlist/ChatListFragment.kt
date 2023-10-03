@@ -62,6 +62,8 @@ class ChatListFragment : Fragment() {
                 Log.i(TAG, "friend in recyclerview: $it")
             }
 
+
+
         }
 
 

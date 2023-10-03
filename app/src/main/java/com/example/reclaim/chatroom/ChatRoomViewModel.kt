@@ -15,10 +15,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.text.SimpleDateFormat
 import java.time.Clock
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.TimeZone
 import kotlin.random.Random
 
 const val TAG = "ChatRoomViewModel"
@@ -113,19 +116,24 @@ class ChatRoomViewModel(
                             selfName = document.get("user_b_name").toString()
                         }
 
+                        val timeFormatter = SimpleDateFormat("HH:mm")
+
+                        timeFormatter.timeZone = TimeZone.getTimeZone("Asia/Taipei")
+                        val date = Date(timeStamp.toLong())
+                        val taiwanTime = timeFormatter.format(date)
 
                         val newRecord = ChatRecord(
                             id = id.toLong(),
                             chatRoomKey = chatRoomKey,
                             content = content,
-                            sendTime = timeStamp,
+                            sendTime = taiwanTime,
                             sender = sender,
                             type = type,
                             meetingId = meetingId,
-                            otherImage,
-                            selfImage,
-                            selfName,
-                            otherName,
+                            otherImage = otherImage,
+                            selfImage = selfImage,
+                            selfName = selfName,
+                            otherName = otherName,
                             isSeen
                         )
 
@@ -149,8 +157,9 @@ class ChatRoomViewModel(
     }
 
     private fun updateSeenStatus(chatRoomID: String, documentID: String) {
-        db.collection("chat_room").document(chatRoomID).collection("chat_record")
-            .document(documentID).update("is_seen", true)
+        val chatRoomIsSeenOrNot = db.collection("chat_room").document(chatRoomID).collection("chat_record")
+            .document(documentID)
+        chatRoomIsSeenOrNot.update("is_seen", true)
 
     }
 
@@ -226,7 +235,7 @@ class ChatRoomViewModel(
             id = Random.nextLong(),
             chatRoomKey = chatRoomKey,
             content = text,
-            sendTime = sendTimeInTaiwan,
+            sendTime = System.currentTimeMillis().toString(),
             sender = UserManager.userName,
             type = type,
             meetingId = meetingId,
@@ -247,9 +256,9 @@ class ChatRoomViewModel(
             "is_seen" to newRecord.isSeen,
             "meeting_id" to meetingId,
             "user_b_img" to newRecord.otherImage,
-            "user_a_img" to newRecord.otherImage,
+            "user_a_img" to UserManager.userImage,
             "user_a_name" to newRecord.selfName,
-            "user_b_name" to newRecord.otherImage
+            "user_b_name" to newRecord.otherName
         )
         var documentID = ""
         val chatRoomCollection =
@@ -262,8 +271,8 @@ class ChatRoomViewModel(
             db.collection("chat_room").document(documentID).collection("chat_record")
                 .add(data).addOnSuccessListener {
                     val currentTime = System.currentTimeMillis().toString()
-                    updateSentTime(documentID, sendTimeInTaiwan, it.id)
-                    updateOnFriendList(text, documentID, sendTimeInTaiwan)
+                    updateSentTime(documentID, newRecord.sendTime, it.id)
+                    updateOnFriendList(text, documentID, newRecord.sendTime)
 
                 }.addOnFailureListener {
                     Log.e(TAG, "error: $it")
@@ -280,7 +289,7 @@ class ChatRoomViewModel(
         val taipeiClock = Clock.system(ZoneId.of("Asia/Taipei"))
         val localTimeNow = LocalTime.now(taipeiClock)
 
-        val formatter = DateTimeFormatter.ofPattern("HH:mm")
+        val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
 
         return localTimeNow.format(formatter)
 

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reclaim.data.ChatRoom
+import com.example.reclaim.data.UserManager
 import com.example.reclaim.databinding.ChatListRecordItemBinding
 
 class ChatListRecordAdapter(private val onClickListener: OnClickListener): ListAdapter<ChatRoom, ChatListRecordAdapter.RecordViewHolder>(ChatListAvatorAdapter.DiffCallback){
@@ -19,6 +20,13 @@ class ChatListRecordAdapter(private val onClickListener: OnClickListener): ListA
             }else{
                 binding.newInTagContainer.visibility = View.GONE
                 binding.newInTagImg.visibility = View.GONE
+            }
+
+
+            if (chatRoom.unreadTimes.toInt() == 0 || chatRoom.sendById == UserManager.userId){
+                binding.unreadTimes.visibility = View.GONE
+            }else{
+                binding.unreadTimes.visibility = View.VISIBLE
             }
         }
     }

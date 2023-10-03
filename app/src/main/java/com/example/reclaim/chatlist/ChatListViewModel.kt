@@ -22,6 +22,9 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.TimeZone
 
 
 private const val TAG = "ChatListViewModel"
@@ -92,6 +95,7 @@ class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity
                             val key = query.data.get("key").toString()
                             val sentTime = query.data.get("sent_time").toString()
                             val id = query.id
+                            val unreadTimes = query.data.get("unread_times").toString()
 
                             var selfId = ""
                             var selfName = ""
@@ -106,6 +110,13 @@ class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity
 
                             lastSentence = query.data.get("last_sentence").toString()
                             sendById = query.data.get("send_by_id").toString()
+
+
+                            val timeFormatter = SimpleDateFormat("HH:mm")
+
+                            timeFormatter.timeZone = TimeZone.getTimeZone("Asia/Taipei")
+                            val date = Date(sentTime.toLong())
+                            val taiwanTime = timeFormatter.format(date)
 
 
                             if (query.data.get("user_a_id").toString() == UserManager.userId) {
@@ -138,7 +149,8 @@ class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity
                                 sendById,
                                 selfImage,
                                 otherImage,
-                                sentTime
+                                taiwanTime,
+                                unreadTimes
                             )
 
                             currentChatRoom.add(newRecord)
@@ -204,11 +216,15 @@ class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity
     }
 
     private fun clearUnreadTimes(documentID: String) {
-        db.collection("chat_room")
-            .document(documentID).update(
-            "is_seen", 0
-        )
-
+        val chatRoom = db.collection("chat_room")
+            .document(documentID)
+        chatRoom.get().addOnSuccessListener {
+            if (it.get("send_by_id").toString() != UserManager.userId){
+                chatRoom.update("unread_times", 0)
+            }else{
+                Log.i(TAG, "newest message is send by me")
+            }
+        }
     }
 
 

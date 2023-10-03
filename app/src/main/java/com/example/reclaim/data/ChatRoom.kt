@@ -18,7 +18,8 @@ data class ChatRoom(
     val sendById: String,
     val selfImage: String,
     val otherImage: String,
-    val sentTime: String
+    val sentTime: String,
+    val unreadTimes: String
 ) : Parcelable
 
 @Entity(tableName = "chat_room")
