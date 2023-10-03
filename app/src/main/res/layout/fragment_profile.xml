@@ -79,15 +79,15 @@
                 android:id="@+id/id_edit_container"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{userManager.userId}"
+
                 android:textColor="@color/myPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/id_title" >
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/id_edit"
+                    android:text="@{userManager.userId}"
                     android:layout_width="match_parent"
-                    android:currentTab=""
                     android:layout_height="match_parent"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -107,13 +107,14 @@
                 android:id="@+id/username_edit_container"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{userManager.userName}"
+
                 android:textColor="@color/myPrimary"
                 app:layout_constraintEnd_toEndOf="@id/id_title"
                 app:layout_constraintStart_toStartOf="@id/username_title"
                 app:layout_constraintTop_toBottomOf="@id/username_title" >
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/username_edit"
+                    android:text="@{userManager.userName}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 

@@ -70,10 +70,11 @@
         tools:layout="@layout/fragment_login"
         android:label="LoginFragment" >
         <action
-            android:id="@+id/action_loginFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
-        <action
-            android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            android:id="@+id/action_loginFragment_to_createProfileFragment"
+            app:destination="@id/createProfileFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/createProfileFragment"
+        android:name="com.example.reclaim.login.CreateProfileFragment"
+        android:label="CreateProfileFragment" />
 </navigation>
