@@ -26,6 +26,7 @@
             android:layout_marginTop="@dimen/standard_margin"
             android:layout_marginBottom="@dimen/standard_margin"
             android:gravity="center"
+
             android:src="@drawable/match_primary"
             android:text="It's a Match"
             android:textColor="@color/white"
@@ -113,10 +114,13 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+
+            >
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/message_input_container"
+                android:background="@drawable/stroke_shape"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -138,9 +142,8 @@
                 android:background="@color/myPrimary"
                 app:layout_constraintStart_toEndOf="@id/message_input_container"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginLeft="@dimen/standard_margin_one_forth"
-                app:layout_constraintTop_toTopOf="@id/message_input_container"
-                app:layout_constraintBottom_toBottomOf="@id/message_input_container"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:text="傳送"
                  />
         </androidx.constraintlayout.widget.ConstraintLayout>

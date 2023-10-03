@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/loginFragment">
     <fragment
         android:id="@+id/homeFragment"
         tools:layout="@layout/fragment_home"
@@ -17,6 +17,7 @@
     <fragment
         android:id="@+id/chatRoomFragment"
         android:name="com.example.reclaim.chatroom.ChatRoomFragment"
+        tools:layout="@layout/fragment_chat_room"
         android:label="ChatRoomFragment" >
     <argument
         android:name="chatRoom"
@@ -34,6 +35,7 @@
     <fragment
         android:id="@+id/chatListFragment"
         android:name="com.example.reclaim.chatlist.ChatListFragment"
+        tools:layout="@layout/fragment_chat_list"
         android:label="ChatListFragment" >
         <action
             android:id="@+id/action_chatListFragment_to_chatRoomFragment"
@@ -43,6 +45,7 @@
     <fragment
         android:id="@+id/alreadySignUpProfileFragment"
         android:name="com.example.reclaim.profile.AlreadySignUpProfileFragment"
+        tools:layout="@layout/fragment_already_sign_up_profile"
         android:label="AlreadySignUpProfileFragment" >
         <action
             android:id="@+id/action_alreadySignUpProfileFragment_to_profileFragment"
@@ -56,6 +59,21 @@
         <argument
             android:name="chatRoom"
             app:argType="com.example.reclaim.data.ChatRoom" />
+        <action
+            android:id="@+id/action_matchFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
 
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.reclaim.login.LoginFragment"
+        tools:layout="@layout/fragment_login"
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_loginFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

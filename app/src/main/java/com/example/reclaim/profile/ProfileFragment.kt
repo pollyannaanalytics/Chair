@@ -74,15 +74,18 @@ class ProfileFragment : Fragment() {
 
         binding.idEdit.doAfterTextChanged {
             userId = it.toString()
+            Log.i(TAG,"userId: $it")
         }
 
 
         binding.usernameEdit.doAfterTextChanged {
             username = it.toString()
+            Log.i(TAG,"userId: $it")
         }
 
         binding.worriesEdit.doAfterTextChanged {
             worriesDescription = it.toString()
+            Log.i(TAG,"userId: $it")
         }
 
         binding.chooseImgBtn.setOnClickListener {

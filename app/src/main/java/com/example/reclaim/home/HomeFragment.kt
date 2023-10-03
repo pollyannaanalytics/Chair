@@ -22,12 +22,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.example.reclaim.R
 import com.example.reclaim.data.ReclaimDatabase
+import com.example.reclaim.data.UserManager
 import com.example.reclaim.databinding.FragmentHomeBinding
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.Direction
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Timer
+import kotlin.concurrent.schedule
 
 
 /**
@@ -70,6 +73,37 @@ class HomeFragment : Fragment() {
         binding.viewModel = viewModel
 
 
+        fun loadingAvatar(){
+            binding.selfAvatarLoadingContainer.visibility = View.VISIBLE
+            binding.selfAvatarLoadingImg.visibility = View.VISIBLE
+            binding.loadingText.visibility = View.VISIBLE
+            binding.selfWrapperImg.visibility = View.VISIBLE
+            val selfAvatar = binding.selfWrapperImg
+
+            val scaleUpX = ObjectAnimator.ofFloat(selfAvatar, "scaleX", 1.0f, 1.2f, 1.0f, 1.2f, 1.0f)
+            val scaleUpY = ObjectAnimator.ofFloat(selfAvatar, "scaleY", 1.0f, 1.2f, 1.0f, 1.2f, 1.0f)
+
+            val alphaChange = ObjectAnimator.ofFloat(selfAvatar,"alpha", 0f, 1f, 0f, 1f, 0f)
+
+
+            val scaleAnim = AnimatorSet()
+            scaleAnim.playTogether(scaleUpX, scaleUpY, alphaChange)
+            scaleAnim.duration = 5000
+
+            val translateY = ObjectAnimator.ofFloat(selfAvatar, "translationY", 0f, -20f, 0f)
+            translateY.interpolator = AccelerateDecelerateInterpolator()
+            translateY.duration = 5000
+
+
+
+
+            val animatorSet = AnimatorSet()
+            animatorSet.playTogether(scaleAnim, translateY)
+
+            animatorSet.start()
+
+        }
+
         fun init() {
             var counter = 0
             manager = CardStackLayoutManager(requireContext(), object : CardStackListener {
@@ -88,6 +122,7 @@ class HomeFragment : Fragment() {
                                 currentFriend.friendImg!!,
                                 direction
                             )
+                            UserManager.touchNumber ++
                         } else {
                             Log.i(TAG, "friends is null")
                         }
@@ -123,7 +158,10 @@ class HomeFragment : Fragment() {
             manager!!.setMaxDegree(20.0f)
             manager!!.setDirections(Direction.HORIZONTAL)
         }
+
         init()
+
+
 
         viewModel.firebaseDisconnect.observe(viewLifecycleOwner) {
             if (it == true) {
@@ -135,10 +173,12 @@ class HomeFragment : Fragment() {
             }
         }
 
+
         viewModel.noFriends.observe(viewLifecycleOwner) {
             if (it == true) {
                 val hint = "目前沒有跟你類似的朋友了!"
                 lifecycleScope.launch {
+                    loadingAvatar()
                     shadowOnFragment(binding, hint)
                 }
 
@@ -210,6 +250,7 @@ class HomeFragment : Fragment() {
 
         }
 
+
         viewModel.otherProfileList.observe(viewLifecycleOwner) { userProfileList ->
             userProfileList.forEach { userProfile ->
                 val currentFriend =
@@ -218,6 +259,12 @@ class HomeFragment : Fragment() {
                 Log.i(TAG, "all friendInfoList is ${OtherInfoList.toString()}")
             }
             OtherUserNumber = OtherInfoList.size
+            if (OtherUserNumber != 0){
+                binding.selfWrapperImg.visibility = View.GONE
+                binding.selfAvatarLoadingContainer.visibility = View.GONE
+                binding.selfAvatarLoadingImg.visibility = View.GONE
+                binding.loadingText.visibility = View.GONE
+            }
             Log.i(TAG, "all friendnumber is ${OtherUserNumber.toString()}")
             val clickListener = HomeAdapter.OnClickListener(
                 dislistener = { position ->
@@ -276,33 +323,14 @@ class HomeFragment : Fragment() {
 
 
 
+
         return binding.root
     }
 
 
     private suspend fun shadowOnFragment(binding: FragmentHomeBinding, hint: String) {
-        val selfAvatar = binding.selfWrapperImg
-        val scaleUpX = ObjectAnimator.ofFloat(selfAvatar, "scaleX", 1.0f, 1.2f, 1.0f, 1.2f, 1.0f)
-        val scaleUpY = ObjectAnimator.ofFloat(selfAvatar, "scaleY", 1.0f, 1.2f, 1.0f, 1.2f, 1.0f)
-
-        val alphaChange = ObjectAnimator.ofFloat(selfAvatar,"alpha", 0f, 1f, 0f, 1f, 0f)
 
 
-        val scaleAnim = AnimatorSet()
-        scaleAnim.playTogether(scaleUpX, scaleUpY, alphaChange)
-        scaleAnim.duration = 5000
-
-        val translateY = ObjectAnimator.ofFloat(selfAvatar, "translationY", 0f, -20f, 0f)
-        translateY.interpolator = AccelerateDecelerateInterpolator()
-        translateY.duration = 5000
-
-
-
-
-        val animatorSet = AnimatorSet()
-        animatorSet.playTogether(scaleAnim, translateY)
-
-        animatorSet.start()
         delay(5500).let {
             binding.loadingText.text = hint
             binding.loadingText.setTextColor(resources.getColor(R.color.myPrimary))

@@ -56,6 +56,7 @@ class MatchFragment : Fragment() {
 
         binding.sendToChatRoom.setOnClickListener {
          viewModel.sendMessageToChatRoom(message)
+
         }
 
         return binding.root

@@ -12,4 +12,6 @@ object UserManager {
     var gender = "女"
     var age = "24"
     var worriesDescription = "一個很焦慮的人，總是擔心自己的作業做不完"
+    var friendNumber = 0
+    var touchNumber = 0
 }

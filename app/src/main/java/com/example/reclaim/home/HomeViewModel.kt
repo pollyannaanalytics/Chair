@@ -86,6 +86,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
 
 
                     if (querysnapshot!!.documents.size != 0) {
+
                         Log.i(TAG, "current all profile size: ${querysnapshot.documents.size}")
                         Log.i(TAG, "querysnapshot is not empty, start to get firebase")
                         getFieldFromFirebase(querysnapshot)
@@ -286,6 +287,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                         shouldRemove = true
 
                     }
+                    UserManager.friendNumber = currentFriendList.size
                     loadOtherProfile()
                 } else {
                     Log.e("findFriends", "no friends")
@@ -327,6 +329,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                 if (currentRelationship == "Pending") {
                     Log.i(TAG, "like, to create room")
                     reference.update("current_relationship", likeOrDislike)
+                    Log.i(TAG, "friendId is: $friendId")
                     createAChatRoom(friendId, friendName, friendImg, documentId)
                 } else {
                     Log.i(TAG, "another user dislike, not to create room")
@@ -346,9 +349,9 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         documentId: String
     ): String {
         val chatRoom = FirebaseFirestore.getInstance().collection("chat_room")
-
+        var currentRoomKey = friendId + UserManager.userId
         val data = hashMapOf(
-            "key" to friendId + UserManager.userId,
+            "key" to currentRoomKey,
             "user_a_id" to UserManager.userId,
             "user_a_name" to UserManager.userName,
             "user_b_id" to friendId,
@@ -361,22 +364,23 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
             "unread_times" to 0
 
         )
-        var currentRoomKey = friendId + UserManager.userId
+
 
 
         chatRoom.add(data).addOnSuccessListener {
             updateChatRoomKeyInRelationship(currentRoomKey, documentId)
             _matchToChatRoom.value = ChatRoom(
-                currentRoomKey,
-                UserManager.userId,
-                friendId,
-                UserManager.userName,
-                friendName,
-                "",
-                "",
-                UserManager.userImage,
-                friendImg,
-                ""
+                id = it.id,
+                key = currentRoomKey,
+                selfId = UserManager.userId,
+                otherId = friendId,
+                selfName = UserManager.userName,
+                otherName = friendName,
+                lastSentence = "",
+                sendById = "",
+                selfImage = UserManager.userImage,
+                otherImage = friendImg,
+                sentTime = ""
             )
 
         }.addOnFailureListener {
