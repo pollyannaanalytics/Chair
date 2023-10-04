@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                     binding.bottomNavigation.visibility = View.GONE
                 }
 
-                R.id.loginFragment -> {
+                R.id.agreementFragment -> {
                     binding.toolbar.visibility = View.GONE
                     binding.toolbarLogo.visibility = View.GONE
                     binding.fragmentTitle.visibility = View.GONE

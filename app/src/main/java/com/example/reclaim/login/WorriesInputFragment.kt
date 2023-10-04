@@ -1,11 +1,14 @@
 package com.example.reclaim.login
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -34,6 +37,11 @@ class WorriesInputFragment : Fragment() {
         binding.viewModel = viewModel
         var worriesDescription = ""
 
+        fun hideKeyboard() {
+            val imm = this.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(binding.worriesEdit.windowToken, 0)
+        }
+
         binding.progressBar.apply {
             max = 100
             progress = 80
@@ -41,6 +49,15 @@ class WorriesInputFragment : Fragment() {
         binding.worriesEdit.doAfterTextChanged {
             worriesDescription = it.toString()
             binding.progressBar.progress += 20
+        }
+
+        binding.worriesEdit.setOnKeyListener{ _, keyCode, keyEvent ->
+            if(keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN) {
+
+                hideKeyboard()
+                return@setOnKeyListener true
+            }
+            false
         }
 
         binding.finishBtn.setOnClickListener {

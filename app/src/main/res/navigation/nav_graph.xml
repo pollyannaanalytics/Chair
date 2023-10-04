@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/agreementFragment">
     <fragment
         android:id="@+id/homeFragment"
         tools:layout="@layout/fragment_home"
@@ -65,15 +65,6 @@
 
     </fragment>
     <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.example.reclaim.login.LoginFragment"
-        tools:layout="@layout/fragment_login"
-        android:label="LoginFragment" >
-        <action
-            android:id="@+id/action_loginFragment_to_createProfileFragment"
-            app:destination="@id/createProfileFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/createProfileFragment"
         android:name="com.example.reclaim.login.CreateProfileFragment"
         android:label="CreateProfileFragment" >
@@ -88,5 +79,13 @@
         <action
             android:id="@+id/action_worriesInputFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/agreementFragment"
+        android:name="com.example.reclaim.login.AgreementFragment"
+        android:label="AgreementFragment" >
+        <action
+            android:id="@+id/action_agreementFragment_to_createProfileFragment"
+            app:destination="@id/createProfileFragment" />
     </fragment>
 </navigation>
