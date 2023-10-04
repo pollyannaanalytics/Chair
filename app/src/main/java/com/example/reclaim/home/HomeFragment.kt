@@ -268,6 +268,9 @@ class HomeFragment : Fragment() {
 
 
         viewModel?.otherProfileList?.observe(viewLifecycleOwner) { userProfileList ->
+            OtherUserNumber = 0
+            OtherInfoList.clear()
+
             userProfileList.forEach { userProfile ->
                 val currentFriend =
                     FriendInfo(userProfile.userId, userProfile.userName, userProfile.imageUri)

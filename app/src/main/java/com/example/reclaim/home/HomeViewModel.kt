@@ -72,7 +72,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                 val otherResultDocument =
                     db.collection("user_profile")
                         .whereEqualTo("worries_type", UserManager.userType)
-                        .whereNotIn("user_id", currentFriends)
+                        .whereNotEqualTo("user_id", UserManager.userId)
                         .orderBy("user_id", Query.Direction.DESCENDING)
                         .orderBy("profile_time", Query.Direction.DESCENDING)
 
@@ -153,6 +153,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
 
     private fun getFieldFromFirebase(querysnapshot: QuerySnapshot?) {
         val currentList = emptyList<UserProfile>().toMutableList()
+        _otherProfileList.value?.clear()
         try {
             Log.i(TAG, querysnapshot!!.documents.size.toString())
             _noFriends.value = false
