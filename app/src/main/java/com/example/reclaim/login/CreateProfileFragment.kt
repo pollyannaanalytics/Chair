@@ -2,6 +2,7 @@ package com.example.reclaim.login
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -9,21 +10,25 @@ import android.os.Build
 import android.os.Bundle
 
 import android.util.Log
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.reclaim.R
 import com.example.reclaim.data.UserManager
 import com.example.reclaim.databinding.FragmentCreateProfileBinding
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 
 
 /**
@@ -55,6 +60,8 @@ class CreateProfileFragment : Fragment() {
         var gender = ""
         var worriesDescription = ""
 
+
+
         binding.progressBar.apply {
             max = 100
             progress = 0
@@ -66,23 +73,39 @@ class CreateProfileFragment : Fragment() {
             binding.progressBar.progress = 40
         }
 
+        binding.idEdit.setOnKeyListener { _, keyCode, keyEvent ->
+            if(keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN) {
+                binding.progressBar.progress = 20
+                val imm = this.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.idEdit.windowToken, 0)
+                return@setOnKeyListener true
+            }
+            false
+        }
+
 
         binding.usernameEdit.doAfterTextChanged {
             username = it.toString()
             Log.i(TAG, "userId: $it")
-            binding.progressBar.progress = 60
         }
 
+        binding.usernameEdit.setOnKeyListener{ _, keyCode, keyEvent ->
+            if(keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN) {
+                binding.progressBar.progress = 40
+                val imm = this.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.usernameEdit.windowToken, 0)
+                return@setOnKeyListener true
+            }
+            false
+        }
 
         binding.chooseImgBtn.setOnClickListener {
             checkImagePermission()
             pickImageFromGallery()
-            binding.progressBar.progress = 20
+
 
         }
         binding.nextMove.setOnClickListener {
-
-
             UserManager.userId = userId
             UserManager.userName = username
             UserManager.gender = gender
