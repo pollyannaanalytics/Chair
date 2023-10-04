@@ -264,17 +264,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         currentFriendList.add(UserManager.userId)
         currentFriends.add(UserManager.userId)
         val registration = db.collection("relationship")
-            .where(
-                Filter.or(
-                    Filter.equalTo("receiver_id", UserManager.userId),
-                    Filter.equalTo("sender_id", UserManager.userId)
-                )
-            ).where(
-                Filter.or(
-                    Filter.equalTo("current_relationship", "Like"),
-                    Filter.equalTo("current_relationship", "Dislike")
-                )
-            )
+            .whereEqualTo("sender_id", UserManager.userId)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     Log.e(TAG, "cannot load current friend: $error")
