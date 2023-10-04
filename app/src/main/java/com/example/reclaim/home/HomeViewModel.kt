@@ -72,27 +72,27 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                 val otherResultDocument =
                     db.collection("user_profile")
                         .whereEqualTo("worries_type", UserManager.userType)
-                        .whereNotEqualTo("user_id", UserManager.userId)
+                        .whereNotIn("user_id", currentFriends)
                         .orderBy("user_id", Query.Direction.ASCENDING)
                         .orderBy("profile_time", Query.Direction.DESCENDING)
 
 
                 val registration =
-                    otherResultDocument?.get()?.addOnSuccessListener { querysnapshot->
+                    otherResultDocument?.get()?.addOnSuccessListener { querysnapshot ->
 
-                        _otherProfileList.value?.clear()
+                        if (querysnapshot != null && querysnapshot!!.documents.size != 0) {
 
-
-                        if (querysnapshot != null && querysnapshot!!.documents.size != 0 ) {
-
-                            Log.i(TAG, "current all profile size: ${querysnapshot?.documents?.size}")
+                            Log.i(
+                                TAG,
+                                "current all profile size: ${querysnapshot?.documents?.size}"
+                            )
                             Log.i(TAG, "querysnapshot is not empty, start to get firebase")
                             getFieldFromFirebase(querysnapshot)
                         } else {
-                            if (querysnapshot == null){
+                            if (querysnapshot == null) {
                                 Log.i(TAG, "currently is null")
                                 _noFriends.value = true
-                            }else{
+                            } else {
                                 loadAllUsers()
                                 Log.i(TAG, "no similar, start to load all")
                             }
@@ -103,9 +103,6 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                     }
                 registration
 
-                if (_onDestroyed.value == true) {
-//                    registration?.remove()
-                }
 
             } catch (e: Exception) {
                 Log.e(TAG, e.toString())
@@ -117,29 +114,27 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                 val otherResultDocument =
                     db.collection("user_profile").whereNotEqualTo("user_id", UserManager.userId)
                         .whereEqualTo("worries_type", UserManager.userType)
+                        .whereNotIn("user_id", currentFriends)
                         .orderBy("user_id", Query.Direction.DESCENDING)
                         .orderBy("profile_time", Query.Direction.DESCENDING)
 
 
-                val registration = otherResultDocument?.get()?.addOnSuccessListener{ querysnapshot ->
+                val registration =
+                    otherResultDocument?.get()?.addOnSuccessListener { querysnapshot ->
 
-                    _otherProfileList.value?.clear()
 
-
-                    if (querysnapshot!!.documents.size != 0) {
-                        Log.i(TAG, "querysnapshot is not empty, start to get firebase")
-                        Log.i(TAG, "current all size: ${querysnapshot.documents.size}")
-                        getFieldFromFirebase(querysnapshot)
-                    } else {
-                        loadAllUsers()
-                        Log.i(TAG, "no similar, start to load all")
+                        if (querysnapshot!!.documents.size != 0) {
+                            Log.i(TAG, "querysnapshot is not empty, start to get firebase")
+                            Log.i(TAG, "current all size: ${querysnapshot.documents.size}")
+                            getFieldFromFirebase(querysnapshot)
+                        } else {
+                            loadAllUsers()
+                            Log.i(TAG, "no similar, start to load all")
+                        }
+                    }?.addOnFailureListener {
+                     Log.i(TAG, "load all users: $it")
                     }
-                }
                 registration
-
-                if (_onDestroyed.value == true) {
-//                    registration?.remove()
-                }
 
             } catch (e: Exception) {
                 Log.e(TAG, e.toString())
@@ -174,12 +169,12 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                 )
 
                 currentList.add(newUser)
-                _otherProfileList.value = currentList
+
 
 
                 Log.i(TAG, "newUser is $newUser")
             }
-
+            _otherProfileList.value = currentList
             _firebaseDisconnect.value = false
 
         } catch (e: Exception) {
@@ -198,11 +193,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                     .orderBy("user_id", Query.Direction.DESCENDING)
                     .orderBy("profile_time", Query.Direction.DESCENDING)
 
-
-            val registration = otherProfileResult.addSnapshotListener { querySnapshot, e ->
-                if (e != null) {
-                    _firebaseDisconnect.value = true
-                }
+            val registration = otherProfileResult.get().addOnSuccessListener { querySnapshot ->
                 if (querySnapshot != null) {
                     if (querySnapshot.documents.size != 0) {
                         getFieldFromFirebase(querySnapshot)
@@ -214,12 +205,11 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                     Log.i(TAG, "no user")
                 }
 
-
+            }.addOnFailureListener {
+                Log.e(TAG, "no user when load all users: $it")
             }
 
-            if (_onDestroyed.value == true) {
-                registration.remove()
-            }
+            registration
 
 
         } else {
@@ -228,11 +218,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                     .orderBy("user_id", Query.Direction.DESCENDING)
 
 
-            val registration = otherProfileResult.addSnapshotListener { querySnapshot, e ->
-                if (e != null) {
-                    _firebaseDisconnect.value = true
-                    Log.e(TAG, "load all fail: $e")
-                }
+            val registration = otherProfileResult.get().addOnSuccessListener { querySnapshot->
+
                 if (querySnapshot != null) {
                     if (querySnapshot.documents.size != 0) {
                         getFieldFromFirebase(querySnapshot)
@@ -245,12 +232,10 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                 }
 
 
+            }.addOnFailureListener {
+                Log.e(TAG, "current friends get failed: $it")
             }
             registration
-
-            if (_onDestroyed.value == true) {
-                registration.remove()
-            }
         }
 
 
@@ -272,6 +257,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                 }
 
                 if (snapshot != null && !snapshot.isEmpty) {
+                    currentFriendList.clear()
                     for (shot in snapshot) {
                         if (shot.data["receiver_id"].toString() == UserManager.userId) {
                             Log.i(TAG, "current receiver: ${UserManager.userId}")
@@ -335,7 +321,6 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
             }
         }
     }
-
 
 
     private fun createAChatRoom(

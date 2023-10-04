@@ -117,29 +117,24 @@ class HomeFragment : Fragment() {
         }
 
         fun init() {
-            var counter = 0
             manager = CardStackLayoutManager(requireContext(), object : CardStackListener {
                 override fun onCardDragging(direction: Direction?, ratio: Float) {
 
                 }
 
                 override fun onCardSwiped(direction: Direction?) {
-                    if (counter < OtherUserNumber!!) {
-                        val currentFriend = OtherInfoList.get(counter)
-                        if (direction != null) {
-                            Log.i(TAG, "current user is ${currentFriend.friendName}")
-                            viewModel?.findRelationship(
-                                currentFriend.friendId!!,
-                                currentFriend.friendName!!,
-                                currentFriend.friendImg!!,
-                                direction
-                            )
-                            UserManager.touchNumber++
-                        } else {
-                            Log.i(TAG, "friends is null")
-                        }
-                        counter++
-
+                    val currentFriend = OtherInfoList[manager.let { it!!.topPosition } - 1]
+                    if (direction != null) {
+                        Log.i(TAG, "current user is ${currentFriend.friendName}")
+                        viewModel?.findRelationship(
+                            currentFriend.friendId!!,
+                            currentFriend.friendName!!,
+                            currentFriend.friendImg!!,
+                            direction
+                        )
+                        UserManager.touchNumber++
+                    } else {
+                        Log.i(TAG, "friends is null")
                     }
 
 
@@ -268,15 +263,18 @@ class HomeFragment : Fragment() {
 
 
         viewModel?.otherProfileList?.observe(viewLifecycleOwner) { userProfileList ->
+
             OtherUserNumber = 0
             OtherInfoList.clear()
-
+            var currentFriendList  = emptyList<FriendInfo>().toMutableList()
             userProfileList.forEach { userProfile ->
+
                 val currentFriend =
                     FriendInfo(userProfile.userId, userProfile.userName, userProfile.imageUri)
-                OtherInfoList?.add(currentFriend)
-                Log.i(TAG, "all friendInfoList is ${OtherInfoList.toString()}")
+                currentFriendList.add(currentFriend)
+
             }
+            OtherInfoList = currentFriendList
             OtherUserNumber = OtherInfoList.size
             if (OtherUserNumber != 0) {
                 binding.selfWrapperImg.visibility = View.GONE
@@ -285,6 +283,7 @@ class HomeFragment : Fragment() {
                 binding.loadingText.visibility = View.GONE
             }
             Log.i(TAG, "all friendnumber is ${OtherUserNumber.toString()}")
+            Log.i(TAG, "all friendInfoList is ${OtherInfoList.toString()}")
             val clickListener = HomeAdapter.OnClickListener(
                 dislistener = { position ->
                     Log.i(TAG, "dislike btn is clicked")
