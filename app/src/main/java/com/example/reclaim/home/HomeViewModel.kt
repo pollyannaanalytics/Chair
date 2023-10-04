@@ -13,8 +13,7 @@ import com.example.reclaim.data.UserProfile
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QueryDocumentSnapshot
-import com.google.firebase.firestore.QuerySnapshot
+
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.yuyakaido.android.cardstackview.Direction
@@ -52,8 +51,6 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         get() = _onDestroyed
 
 
-    private var currentFriends = emptyList<String>().toMutableList()
-
     val userManager = UserManager
 
 
@@ -61,12 +58,12 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         Log.i(TAG, "viewModel start")
         _onDestroyed.value = false
         _otherProfileList.value = emptyList<UserProfile>().toMutableList()
-        currentFriends = loadWhoLikeMe(UserManager.userId)
+        loadWhoLikeMe(UserManager.userId)
 
     }
 
-    private fun loadOtherProfile() {
-        if (currentFriends.size != 0) {
+    private fun loadOtherProfile(currentFriends: List<String>) {
+        if (currentFriends.isNotEmpty()) {
             Log.i(TAG, "currentFriend: $currentFriends")
             try {
                 val otherResultDocument =
@@ -81,19 +78,42 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                     otherResultDocument?.get()?.addOnSuccessListener { querysnapshot ->
 
                         if (querysnapshot != null && querysnapshot!!.documents.size != 0) {
+                            val currentList = emptyList<UserProfile>().toMutableList()
 
                             Log.i(
                                 TAG,
                                 "current all profile size: ${querysnapshot?.documents?.size}"
                             )
                             Log.i(TAG, "querysnapshot is not empty, start to get firebase")
-                            getFieldFromFirebase(querysnapshot)
+                            for (snapshot in querysnapshot) {
+
+                                val gender = snapshot.get("gender").toString()
+                                val images = snapshot.get("images").toString()
+                                val profileTime = snapshot.get("profile_time").toString()
+                                val userId = snapshot.get("user_id").toString()
+                                val userName = snapshot.get("user_name").toString()
+                                val worriesDescription =
+                                    snapshot.get("worries_description").toString()
+                                val worriesType = snapshot.get("worries_type").toString()
+
+                                val newUserProfile = UserProfile(
+                                    userId = userId,
+                                    userName = userName,
+                                    gender = gender,
+                                    worryType = worriesType,
+                                    worriesDescription = worriesDescription,
+                                    imageUri = images
+                                )
+                                currentList.add(newUserProfile)
+                            }
+                            _otherProfileList.value = currentList
+
                         } else {
                             if (querysnapshot == null) {
                                 Log.i(TAG, "currently is null")
                                 _noFriends.value = true
                             } else {
-                                loadAllUsers()
+                                loadAllUsers(currentFriends)
                                 Log.i(TAG, "no similar, start to load all")
                             }
 
@@ -104,6 +124,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                 registration
 
 
+
             } catch (e: Exception) {
                 Log.e(TAG, e.toString())
             }
@@ -111,6 +132,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         } else {
             try {
                 Log.i(TAG, "currentFriend: $currentFriends")
+                val currentList = emptyList<UserProfile>().toMutableList()
                 val otherResultDocument =
                     db.collection("user_profile").whereNotEqualTo("user_id", UserManager.userId)
                         .whereEqualTo("worries_type", UserManager.userType)
@@ -122,17 +144,38 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                 val registration =
                     otherResultDocument?.get()?.addOnSuccessListener { querysnapshot ->
 
-
                         if (querysnapshot!!.documents.size != 0) {
                             Log.i(TAG, "querysnapshot is not empty, start to get firebase")
                             Log.i(TAG, "current all size: ${querysnapshot.documents.size}")
-                            getFieldFromFirebase(querysnapshot)
+
+                            for (snapshot in querysnapshot) {
+                                val gender = snapshot.get("gender").toString()
+                                val images = snapshot.get("images").toString()
+                                val profileTime = snapshot.get("profile_time").toString()
+                                val userId = snapshot.get("user_id").toString()
+                                val userName = snapshot.get("user_name").toString()
+                                val worriesDescription =
+                                    snapshot.get("worries_description").toString()
+                                val worriesType = snapshot.get("worries_type").toString()
+
+                                val newUserProfile = UserProfile(
+                                    userId = userId,
+                                    userName = userName,
+                                    gender = gender,
+                                    worryType = worriesType,
+                                    worriesDescription = worriesDescription,
+                                    imageUri = images
+                                )
+                                currentList.add(newUserProfile)
+                            }
+                            _otherProfileList.value = currentList
+
                         } else {
-                            loadAllUsers()
+                            loadAllUsers(currentFriends)
                             Log.i(TAG, "no similar, start to load all")
                         }
                     }?.addOnFailureListener {
-                     Log.i(TAG, "load all users: $it")
+                        Log.i(TAG, "load all users failed: $it")
                     }
                 registration
 
@@ -145,48 +188,32 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
 
     }
 
-    private fun getFieldFromFirebase(querysnapshot: QuerySnapshot?) {
-        val currentList = emptyList<UserProfile>().toMutableList()
-        _otherProfileList.value?.clear()
-        try {
-            Log.i(TAG, querysnapshot!!.documents.size.toString())
-            _noFriends.value = false
-            for (snapshot in querysnapshot.documents) {
-                val userId = snapshot.data?.get("user_id").toString()
-                val userName = snapshot.data?.get("user_name").toString()
-                val userGender = snapshot.data?.get("gender").toString()
-                val worriesDescription = snapshot.data?.get("worries_description").toString()
-                val worriesType = snapshot.data?.get("worries_type").toString()
-                val images = snapshot.data?.get("images").toString()
+//    private fun getFieldFromFirebase(documentId: String, currentList: MutableList<UserProfile>) {
+//        try {
+//            db.collection("user_profile").document(documentId).get().addOnSuccessListener {
+//                val gender = it.get("gender").toString()
+//                val images = it.get("images").toString()
+//                val profileTime = it.get("profile_time").toString()
+//                val userId = it.get("user_id").toString()
+//                val userName = it.get("user_name").toString()
+//                val worriesDescription = it.get("worries_description").toString()
+//                val worriesType = it.get("worries_type").toString()
+//
+//                val newUserProfile = UserProfile(userId = userId, userName = userName, gender = gender, worryType = worriesType, worriesDescription = worriesDescription, imageUri = images)
+//                currentList.add(newUserProfile)
+//            }
+//
+//
+//        } catch (e: Exception) {
+//            Log.e(TAG, e.toString())
+//            _firebaseDisconnect.value = true
+//        }
+//    }
 
-                val newUser = UserProfile(
-                    userId = userId,
-                    userName = userName,
-                    gender = userGender,
-                    worriesDescription = worriesDescription,
-                    worryType = worriesType,
-                    imageUri = images
-                )
-
-                currentList.add(newUser)
-
-
-
-                Log.i(TAG, "newUser is $newUser")
-            }
-            _otherProfileList.value = currentList
-            _firebaseDisconnect.value = false
-
-        } catch (e: Exception) {
-            Log.e(TAG, e.toString())
-            _firebaseDisconnect.value = true
-        }
-    }
-
-    private fun loadAllUsers() {
+    private fun loadAllUsers(currentFriends: List<String>) {
         var otherProfileResult: Query? = null
 
-        if (currentFriends.size != 0) {
+        if (currentFriends.isNotEmpty()) {
 
             otherProfileResult =
                 db.collection("user_profile").whereNotIn("user_id", currentFriends)
@@ -194,9 +221,30 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                     .orderBy("profile_time", Query.Direction.DESCENDING)
 
             val registration = otherProfileResult.get().addOnSuccessListener { querySnapshot ->
+                val currentList = emptyList<UserProfile>().toMutableList()
                 if (querySnapshot != null) {
                     if (querySnapshot.documents.size != 0) {
-                        getFieldFromFirebase(querySnapshot)
+                        for (snapshot in querySnapshot) {
+                            val gender = snapshot.get("gender").toString()
+                            val images = snapshot.get("images").toString()
+                            val profileTime = snapshot.get("profile_time").toString()
+                            val userId = snapshot.get("user_id").toString()
+                            val userName = snapshot.get("user_name").toString()
+                            val worriesDescription =
+                                snapshot.get("worries_description").toString()
+                            val worriesType = snapshot.get("worries_type").toString()
+
+                            val newUserProfile = UserProfile(
+                                userId = userId,
+                                userName = userName,
+                                gender = gender,
+                                worryType = worriesType,
+                                worriesDescription = worriesDescription,
+                                imageUri = images
+                            )
+                            currentList.add(newUserProfile)
+                        }
+                        _otherProfileList.value = currentList
                     } else {
                         _noFriends.value = true
                     }
@@ -218,11 +266,32 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                     .orderBy("user_id", Query.Direction.DESCENDING)
 
 
-            val registration = otherProfileResult.get().addOnSuccessListener { querySnapshot->
+            val registration = otherProfileResult.get().addOnSuccessListener { querySnapshot ->
 
                 if (querySnapshot != null) {
+                    val currentList = emptyList<UserProfile>().toMutableList()
                     if (querySnapshot.documents.size != 0) {
-                        getFieldFromFirebase(querySnapshot)
+                        for (snapshot in querySnapshot) {
+                            val gender = snapshot.get("gender").toString()
+                            val images = snapshot.get("images").toString()
+                            val profileTime = snapshot.get("profile_time").toString()
+                            val userId = snapshot.get("user_id").toString()
+                            val userName = snapshot.get("user_name").toString()
+                            val worriesDescription =
+                                snapshot.get("worries_description").toString()
+                            val worriesType = snapshot.get("worries_type").toString()
+
+                            val newUserProfile = UserProfile(
+                                userId = userId,
+                                userName = userName,
+                                gender = gender,
+                                worryType = worriesType,
+                                worriesDescription = worriesDescription,
+                                imageUri = images
+                            )
+                            currentList.add(newUserProfile)
+                        }
+                        _otherProfileList.value = currentList
                     } else {
                         _noFriends.value = true
                     }
@@ -241,23 +310,18 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
 
     }
 
-    private fun loadWhoLikeMe(userId: String): MutableList<String> {
+    private fun loadWhoLikeMe(userId: String) {
         Log.i(TAG, "start to load who is friend currently")
-        var shouldRemove = false
         val currentFriendList = emptyList<String>().toMutableList()
 
-        currentFriendList.add(UserManager.userId)
-        currentFriends.add(UserManager.userId)
         val registration = db.collection("relationship")
             .whereEqualTo("sender_id", UserManager.userId)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    Log.e(TAG, "cannot load current friend: $error")
-                    return@addSnapshotListener
-                }
-
+            .get()
+            .addOnSuccessListener { snapshot ->
+                currentFriendList.clear()
+                currentFriendList.add(UserManager.userId)
                 if (snapshot != null && !snapshot.isEmpty) {
-                    currentFriendList.clear()
+
                     for (shot in snapshot) {
                         if (shot.data["receiver_id"].toString() == UserManager.userId) {
                             Log.i(TAG, "current receiver: ${UserManager.userId}")
@@ -266,28 +330,20 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                             currentFriendList.add(shot.data["receiver_id"].toString())
                         }
                         Log.i(TAG, "currentFriendList: $currentFriendList")
-                        shouldRemove = true
 
                     }
                     UserManager.friendNumber = currentFriendList.size
-                    loadOtherProfile()
+                    loadOtherProfile(currentFriendList)
                 } else {
-                    Log.e("findFriends", "no friends")
-                    loadOtherProfile()
+                    Log.e(TAG, "no friends")
+                    loadOtherProfile(currentFriendList)
                 }
 
 
+            }.addOnFailureListener {
+                Log.e(TAG, "cannot load friend list")
             }
         registration
-
-
-        if (shouldRemove) {
-            registration.remove()
-        }
-
-
-
-        return currentFriendList
 
     }
 
@@ -397,16 +453,12 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         Log.i(TAG, "start to find relationship")
 
         db.collection("relationship").where(
-            Filter.or(
-                Filter.and(
-                    Filter.equalTo("sender_id", UserManager.userId),
-                    Filter.equalTo("receiver_id", friendId)
-                ),
-                Filter.and(
-                    Filter.equalTo("sender_id", friendId),
-                    Filter.equalTo("receiver_id", UserManager.userId)
-                )
+
+            Filter.and(
+                Filter.equalTo("sender_id", friendId),
+                Filter.equalTo("receiver_id", UserManager.userId)
             )
+
         ).orderBy("receiver_id", Query.Direction.DESCENDING).get().addOnSuccessListener {
             if (!it.isEmpty) {
                 Log.i(TAG, "relationship is not null")
@@ -488,11 +540,18 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
     }
 
 
-    fun removeProfileListener() {
-        _onDestroyed.value = true
-    }
 
     fun navigateToMatch() {
         _matchToChatRoom.value = null
     }
+
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.i(TAG, "home viewModel is dead")
+    }
+
+
+
+
 }

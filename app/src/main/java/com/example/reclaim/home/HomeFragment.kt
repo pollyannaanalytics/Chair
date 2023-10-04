@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import com.example.reclaim.R
 import com.example.reclaim.data.ReclaimDatabase
 import com.example.reclaim.data.UserManager
+import com.example.reclaim.data.UserProfile
 import com.example.reclaim.databinding.FragmentHomeBinding
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
@@ -133,8 +134,13 @@ class HomeFragment : Fragment() {
                             direction
                         )
                         UserManager.touchNumber++
+
                     } else {
                         Log.i(TAG, "friends is null")
+                    }
+
+                    if (manager.let { it!!.topPosition == OtherInfoList.size }){
+                        loadingAvatar()
                     }
 
 
@@ -260,10 +266,12 @@ class HomeFragment : Fragment() {
 
 
         }
-
+        var currentProfileList = emptyList<UserProfile>()
 
         viewModel?.otherProfileList?.observe(viewLifecycleOwner) { userProfileList ->
-
+            currentProfileList = userProfileList
+            Log.i(TAG, "profile part is triggered")
+            Log.i(TAG, "list into adapter is : $currentProfileList")
             OtherUserNumber = 0
             OtherInfoList.clear()
             var currentFriendList  = emptyList<FriendInfo>().toMutableList()
@@ -281,6 +289,12 @@ class HomeFragment : Fragment() {
                 binding.selfAvatarLoadingContainer.visibility = View.GONE
                 binding.selfAvatarLoadingImg.visibility = View.GONE
                 binding.loadingText.visibility = View.GONE
+            }else{
+                binding.selfWrapperImg.visibility = View.VISIBLE
+                binding.selfAvatarLoadingContainer.visibility = View.VISIBLE
+                binding.selfAvatarLoadingImg.visibility = View.VISIBLE
+                binding.loadingText.visibility = View.VISIBLE
+                loadingAvatar()
             }
             Log.i(TAG, "all friendnumber is ${OtherUserNumber.toString()}")
             Log.i(TAG, "all friendInfoList is ${OtherInfoList.toString()}")
@@ -313,7 +327,7 @@ class HomeFragment : Fragment() {
             val adapter = this.context?.let { context ->
                 HomeAdapter(
                     context,
-                    userProfileList,
+                    currentProfileList,
                     clickListener
                 )
             }
@@ -360,6 +374,7 @@ class HomeFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.i(TAG, "fragment is dead")
 //        viewModel.let { it!!.removeProfileListener() }
     }
 }
