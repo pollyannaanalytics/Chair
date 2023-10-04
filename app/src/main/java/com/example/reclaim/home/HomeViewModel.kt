@@ -85,14 +85,20 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                     _otherProfileList.value?.clear()
 
 
-                    if (querysnapshot!!.documents.size != 0) {
+                    if (querysnapshot != null && querysnapshot!!.documents.size != 0 ) {
 
-                        Log.i(TAG, "current all profile size: ${querysnapshot.documents.size}")
+                        Log.i(TAG, "current all profile size: ${querysnapshot?.documents?.size}")
                         Log.i(TAG, "querysnapshot is not empty, start to get firebase")
                         getFieldFromFirebase(querysnapshot)
                     } else {
-                        loadAllUsers()
-                        Log.i(TAG, "no similar, start to load all")
+                        if (querysnapshot == null){
+                            Log.i(TAG, "currently is null")
+                            _noFriends.value = true
+                        }else{
+                            loadAllUsers()
+                            Log.i(TAG, "no similar, start to load all")
+                        }
+
                     }
                 }
 

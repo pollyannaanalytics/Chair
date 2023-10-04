@@ -25,7 +25,7 @@ private val TAG = "createprofile"
         uploadTask.addOnSuccessListener { uri ->
             imageRef.downloadUrl.addOnSuccessListener {
                 currentUri = it.toString()
-                UserManager.userImage = currentUri
+                UserManager.userImage = it.toString()
                 Log.i(TAG, "upload successfully, url is $it")
             }
 

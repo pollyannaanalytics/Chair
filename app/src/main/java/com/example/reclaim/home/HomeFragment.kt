@@ -32,8 +32,10 @@ import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.Direction
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Date
 import java.util.Timer
 import kotlin.concurrent.schedule
+import kotlin.concurrent.timerTask
 
 
 /**
@@ -58,7 +60,7 @@ class HomeFragment : Fragment() {
     var OtherInfoList = emptyList<FriendInfo>().toMutableList()
 
 
-    lateinit var viewModel: HomeViewModel
+    private var viewModel: HomeViewModel? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -76,17 +78,19 @@ class HomeFragment : Fragment() {
         binding.viewModel = viewModel
 
 
-        fun loadingAvatar(){
+        fun loadingAvatar() {
             binding.selfAvatarLoadingContainer.visibility = View.VISIBLE
             binding.selfAvatarLoadingImg.visibility = View.VISIBLE
             binding.loadingText.visibility = View.VISIBLE
             binding.selfWrapperImg.visibility = View.VISIBLE
             val selfAvatar = binding.selfWrapperImg
 
-            val scaleUpX = ObjectAnimator.ofFloat(selfAvatar, "scaleX", 1.0f, 1.2f, 1.0f, 1.2f, 1.0f)
-            val scaleUpY = ObjectAnimator.ofFloat(selfAvatar, "scaleY", 1.0f, 1.2f, 1.0f, 1.2f, 1.0f)
+            val scaleUpX =
+                ObjectAnimator.ofFloat(selfAvatar, "scaleX", 1.0f, 1.2f, 1.0f, 1.2f, 1.0f)
+            val scaleUpY =
+                ObjectAnimator.ofFloat(selfAvatar, "scaleY", 1.0f, 1.2f, 1.0f, 1.2f, 1.0f)
 
-            val alphaChange = ObjectAnimator.ofFloat(selfAvatar,"alpha", 0f, 1f, 0f, 1f, 0f)
+            val alphaChange = ObjectAnimator.ofFloat(selfAvatar, "alpha", 0f, 1f, 0f, 1f, 0f)
 
 
             val scaleAnim = AnimatorSet()
@@ -98,18 +102,16 @@ class HomeFragment : Fragment() {
             translateY.duration = 5000
 
 
-
             val animatorSet = AnimatorSet()
             animatorSet.playTogether(scaleAnim, translateY)
             animatorSet.start()
 
-            animatorSet.addListener(object: AnimatorListenerAdapter(){
+            animatorSet.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator, isReverse: Boolean) {
                     super.onAnimationEnd(animation, isReverse)
                     animation.start()
                 }
             })
-
 
 
         }
@@ -126,13 +128,13 @@ class HomeFragment : Fragment() {
                         val currentFriend = OtherInfoList.get(counter)
                         if (direction != null) {
                             Log.i(TAG, "current user is ${currentFriend.friendName}")
-                            viewModel.findRelationship(
+                            viewModel?.findRelationship(
                                 currentFriend.friendId!!,
                                 currentFriend.friendName!!,
                                 currentFriend.friendImg!!,
                                 direction
                             )
-                            UserManager.touchNumber ++
+                            UserManager.touchNumber++
                         } else {
                             Log.i(TAG, "friends is null")
                         }
@@ -173,7 +175,7 @@ class HomeFragment : Fragment() {
 
 
 
-        viewModel.firebaseDisconnect.observe(viewLifecycleOwner) {
+        viewModel?.firebaseDisconnect?.observe(viewLifecycleOwner) {
             if (it == true) {
                 val hint = "加載好友失敗，請檢查你的網路連線狀況"
                 lifecycleScope.launch {
@@ -184,7 +186,7 @@ class HomeFragment : Fragment() {
         }
 
 
-        viewModel.noFriends.observe(viewLifecycleOwner) {
+        viewModel?.noFriends?.observe(viewLifecycleOwner) {
             if (it == true) {
                 val hint = "目前沒有跟你類似的朋友了!"
                 lifecycleScope.launch {
@@ -246,10 +248,13 @@ class HomeFragment : Fragment() {
                         if (!animationSet.isRunning) {
 
                             binding.cardStackview.post {
-                                binding.cardStackview.scrollToPosition(binding.cardStackview.adapter!!.itemCount - 1)
+
                                 binding.cardStackview.alpha = 1.0f
                                 binding.cardStackview.rotation = 0f
                                 binding.cardStackview.translationX = 0f
+
+                                binding.cardStackview.scrollToPosition(binding.cardStackview.adapter!!.itemCount - 1)
+
 
                             }
                             break
@@ -258,10 +263,11 @@ class HomeFragment : Fragment() {
                 }
             ).start()
 
+
         }
 
 
-        viewModel.otherProfileList.observe(viewLifecycleOwner) { userProfileList ->
+        viewModel?.otherProfileList?.observe(viewLifecycleOwner) { userProfileList ->
             userProfileList.forEach { userProfile ->
                 val currentFriend =
                     FriendInfo(userProfile.userId, userProfile.userName, userProfile.imageUri)
@@ -269,7 +275,7 @@ class HomeFragment : Fragment() {
                 Log.i(TAG, "all friendInfoList is ${OtherInfoList.toString()}")
             }
             OtherUserNumber = OtherInfoList.size
-            if (OtherUserNumber != 0){
+            if (OtherUserNumber != 0) {
                 binding.selfWrapperImg.visibility = View.GONE
                 binding.selfAvatarLoadingContainer.visibility = View.GONE
                 binding.selfAvatarLoadingImg.visibility = View.GONE
@@ -280,7 +286,7 @@ class HomeFragment : Fragment() {
                 dislistener = { position ->
                     Log.i(TAG, "dislike btn is clicked")
                     val currentProfile = userProfileList[position]
-                    viewModel.findRelationship(
+                    viewModel?.findRelationship(
                         currentProfile.userId!!,
                         currentProfile.userName!!,
                         currentProfile.imageUri!!,
@@ -293,7 +299,7 @@ class HomeFragment : Fragment() {
                 likeListener = { position ->
                     Log.i(TAG, "like btn is clicked")
                     val currentProfile = userProfileList[position]
-                    viewModel.findRelationship(
+                    viewModel?.findRelationship(
                         currentProfile.userId!!,
                         currentProfile.userName!!,
                         currentProfile.imageUri!!,
@@ -309,7 +315,7 @@ class HomeFragment : Fragment() {
                     clickListener
                 )
             }
-            userProfileList.shuffle()
+//            userProfileList.shuffle()
 
             binding.cardStackview.layoutManager = manager!!
             binding.cardStackview.itemAnimator = DefaultItemAnimator()
@@ -318,14 +324,14 @@ class HomeFragment : Fragment() {
 
         }
 
-        viewModel.matchToChatRoom.observe(viewLifecycleOwner) {
+        viewModel?.matchToChatRoom?.observe(viewLifecycleOwner) {
             Log.i(TAG, it.toString())
-            if(it != null){
+            if (it != null) {
                 Log.i(TAG, "like each other, go to match")
                 findNavController().navigate(
                     HomeFragmentDirections.actionHomeFragmentToMatchFragment(it)
                 )
-                viewModel.navigateToMatch()
+                viewModel?.navigateToMatch()
             }
 
         }
@@ -352,6 +358,6 @@ class HomeFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.removeProfileListener()
+        viewModel.let { it!!.removeProfileListener() }
     }
 }
