@@ -70,14 +70,14 @@ class CreateProfileFragment : Fragment() {
         binding.usernameEdit.doAfterTextChanged {
             username = it.toString()
             Log.i(TAG, "userId: $it")
-            binding.progressBar.progress += 60
+            binding.progressBar.progress = 60
         }
 
 
         binding.chooseImgBtn.setOnClickListener {
             checkImagePermission()
             pickImageFromGallery()
-            binding.progressBar.progress += 20
+            binding.progressBar.progress = 20
 
         }
         binding.nextMove.setOnClickListener {

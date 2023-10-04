@@ -73,37 +73,38 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                     db.collection("user_profile")
                         .whereEqualTo("worries_type", UserManager.userType)
                         .whereNotEqualTo("user_id", UserManager.userId)
-                        .orderBy("user_id", Query.Direction.DESCENDING)
+                        .orderBy("user_id", Query.Direction.ASCENDING)
                         .orderBy("profile_time", Query.Direction.DESCENDING)
 
 
-                val registration = otherResultDocument?.addSnapshotListener { querysnapshot, e ->
-                    if (e != null) {
-                        _firebaseDisconnect.value = true
-                        Log.i(TAG, e.toString())
-                    }
-                    _otherProfileList.value?.clear()
+                val registration =
+                    otherResultDocument?.get()?.addOnSuccessListener { querysnapshot->
+
+                        _otherProfileList.value?.clear()
 
 
-                    if (querysnapshot != null && querysnapshot!!.documents.size != 0 ) {
+                        if (querysnapshot != null && querysnapshot!!.documents.size != 0 ) {
 
-                        Log.i(TAG, "current all profile size: ${querysnapshot?.documents?.size}")
-                        Log.i(TAG, "querysnapshot is not empty, start to get firebase")
-                        getFieldFromFirebase(querysnapshot)
-                    } else {
-                        if (querysnapshot == null){
-                            Log.i(TAG, "currently is null")
-                            _noFriends.value = true
-                        }else{
-                            loadAllUsers()
-                            Log.i(TAG, "no similar, start to load all")
+                            Log.i(TAG, "current all profile size: ${querysnapshot?.documents?.size}")
+                            Log.i(TAG, "querysnapshot is not empty, start to get firebase")
+                            getFieldFromFirebase(querysnapshot)
+                        } else {
+                            if (querysnapshot == null){
+                                Log.i(TAG, "currently is null")
+                                _noFriends.value = true
+                            }else{
+                                loadAllUsers()
+                                Log.i(TAG, "no similar, start to load all")
+                            }
+
                         }
-
+                    }?.addOnFailureListener {
+                        Log.i(TAG, it.toString())
                     }
-                }
+                registration
 
                 if (_onDestroyed.value == true) {
-                    registration?.remove()
+//                    registration?.remove()
                 }
 
             } catch (e: Exception) {
@@ -120,11 +121,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                         .orderBy("profile_time", Query.Direction.DESCENDING)
 
 
-                val registration = otherResultDocument?.addSnapshotListener { querysnapshot, e ->
-                    if (e != null) {
-                        _firebaseDisconnect.value = true
-                        Log.i(TAG, e.toString())
-                    }
+                val registration = otherResultDocument?.get()?.addOnSuccessListener{ querysnapshot ->
+
                     _otherProfileList.value?.clear()
 
 
@@ -137,9 +135,10 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                         Log.i(TAG, "no similar, start to load all")
                     }
                 }
+                registration
 
                 if (_onDestroyed.value == true) {
-                    registration?.remove()
+//                    registration?.remove()
                 }
 
             } catch (e: Exception) {

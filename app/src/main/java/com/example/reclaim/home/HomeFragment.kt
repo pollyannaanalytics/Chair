@@ -361,6 +361,6 @@ class HomeFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.let { it!!.removeProfileListener() }
+//        viewModel.let { it!!.removeProfileListener() }
     }
 }
