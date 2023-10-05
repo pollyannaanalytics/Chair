@@ -9,7 +9,7 @@
             type="com.example.reclaim.data.UserManager" />
         <variable
             name="viewModel"
-            type="com.example.reclaim.alreadysignup.ProfileViewModel" />
+            type="com.example.reclaim.profile.ProfileViewModel" />
 
     </data>
 
@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/primary_background"
 
-        tools:context=".alreadysignup.ProfileFragment">
+        tools:context=".profile.ProfileFragment">
         <androidx.cardview.widget.CardView
             android:id="@+id/self_avator_container"
             android:layout_width="150dp"

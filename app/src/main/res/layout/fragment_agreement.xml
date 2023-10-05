@@ -21,10 +21,11 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/standard_margin"
-            app:layout_constraintWidth_percent="0.15"
+            app:layout_constraintWidth_percent="0.2"
             app:layout_constraintDimensionRatio="1"
             android:src="@drawable/chair_9_svgrepo_com"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
 
             />
@@ -33,9 +34,11 @@
             android:id="@+id/welcome_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/login_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:fontFamily="@font/noto_sans"
             android:text="歡迎使用 Reclaim"
+            android:gravity="center"
             android:textColor="@color/myPrimary"
             android:textStyle="bold"
             android:textSize="@dimen/title_text_size"
@@ -47,10 +50,25 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="請遵守以下規則"
-            app:layout_constraintStart_toStartOf="@id/login_title"
+            app:layout_constraintStart_toStartOf="@id/welcome_title"
+            app:layout_constraintEnd_toEndOf="@id/welcome_title"
+            android:gravity="center"
+            android:paddingBottom="@dimen/standard_margin"
             app:layout_constraintTop_toBottomOf="@id/welcome_title"
             android:textSize="@dimen/detail_text_size"
             android:fontFamily="@font/noto_sans"
+            />
+        <ImageView
+            android:id="@+id/step_icon_1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="@id/welcome_title"
+
+            app:layout_constraintWidth_percent="0.07"
+            app:layout_constraintDimensionRatio="1"
+
+            app:layout_constraintTop_toTopOf="@id/rule_1"
+            android:src="@drawable/yes_svgrepo_com"
             />
 
         <TextView
@@ -61,17 +79,31 @@
             android:textStyle="bold"
             android:textColor="@color/myPrimary"
             android:textSize="18sp"
+            android:layout_marginLeft="@dimen/standard_margin_half"
             android:layout_marginTop="@dimen/standard_margin"
             app:layout_constraintTop_toBottomOf="@id/welcome_hint"
-            app:layout_constraintStart_toStartOf="@id/welcome_hint"
+            app:layout_constraintStart_toEndOf="@id/step_icon_1"
             />
         <TextView
             android:id="@+id/rule_1_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/rule_1"
+            android:layout_marginTop="@dimen/standard_margin_half"
+            app:layout_constraintStart_toStartOf="@id/step_icon_1"
             android:text="請確認你的圖片、自介與現實相符"
             app:layout_constraintTop_toBottomOf="@id/rule_1"
+            />
+        <ImageView
+            android:id="@+id/step_icon_2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="@id/welcome_title"
+
+            app:layout_constraintWidth_percent="0.07"
+            app:layout_constraintDimensionRatio="1"
+
+            app:layout_constraintTop_toTopOf="@id/rule_2"
+            android:src="@drawable/yes_svgrepo_com"
             />
 
         <TextView
@@ -83,16 +115,30 @@
             android:textColor="@color/myPrimary"
             android:textSize="18sp"
             android:layout_marginTop="@dimen/standard_margin"
+            android:layout_marginLeft="@dimen/standard_margin_half"
             app:layout_constraintTop_toBottomOf="@id/rule_1_description"
-            app:layout_constraintStart_toStartOf="@id/rule_1_description"
+            app:layout_constraintStart_toEndOf="@id/step_icon_2"
             />
         <TextView
             android:id="@+id/rule_2_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/rule_2"
+            app:layout_constraintStart_toStartOf="@id/step_icon_2"
+            android:layout_marginTop="@dimen/standard_margin_half"
             android:text="尊重他人，將心比心對待所有人"
             app:layout_constraintTop_toBottomOf="@id/rule_2"
+            />
+        <ImageView
+            android:id="@+id/step_icon_3"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="@id/welcome_title"
+
+            app:layout_constraintWidth_percent="0.07"
+            app:layout_constraintDimensionRatio="1"
+
+            app:layout_constraintTop_toTopOf="@id/rule_3"
+            android:src="@drawable/yes_svgrepo_com"
             />
 
         <TextView
@@ -104,15 +150,17 @@
             android:textColor="@color/myPrimary"
             android:textSize="18sp"
             android:layout_marginTop="@dimen/standard_margin"
+            android:layout_marginLeft="@dimen/standard_margin_half"
             app:layout_constraintTop_toBottomOf="@id/rule_2_description"
-            app:layout_constraintStart_toStartOf="@id/rule_2_description"
+            app:layout_constraintStart_toEndOf="@id/step_icon_3"
             />
         <TextView
             android:id="@+id/rule_3_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/rule_3"
-            android:text="難過是正常的情緒，也可以帶領你走向接納你的人群"
+            android:layout_marginTop="@dimen/standard_margin_half"
+            app:layout_constraintStart_toStartOf="@id/step_icon_3"
+            android:text="難過是正常的情緒，也可以帶領你走向接納你的人群，快找張椅子來聊聊吧"
             app:layout_constraintTop_toBottomOf="@id/rule_3"
             />
 

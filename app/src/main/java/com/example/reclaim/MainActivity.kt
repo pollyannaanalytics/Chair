@@ -54,6 +54,13 @@ class MainActivity : AppCompatActivity() {
         }
         navBottomView.getOrCreateBadge(R.id.chatListFragment)
 
+        fun hideToolbarAndBottom(){
+            binding.toolbar.visibility = View.GONE
+            binding.toolbarLogo.visibility = View.GONE
+            binding.fragmentTitle.visibility = View.GONE
+            binding.bottomNavigation.visibility = View.GONE
+        }
+
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
@@ -70,17 +77,16 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.profileFragment -> showToolBar(false, "編輯個人檔案")
                 R.id.matchFragment -> {
-                    binding.toolbar.visibility = View.GONE
-                    binding.toolbarLogo.visibility = View.GONE
-                    binding.fragmentTitle.visibility = View.GONE
-                    binding.bottomNavigation.visibility = View.GONE
+                    hideToolbarAndBottom()
+
                 }
 
                 R.id.agreementFragment -> {
-                    binding.toolbar.visibility = View.GONE
-                    binding.toolbarLogo.visibility = View.GONE
-                    binding.fragmentTitle.visibility = View.GONE
-                    binding.bottomNavigation.visibility = View.GONE
+                    hideToolbarAndBottom()
+                }
+
+                R.id.loadingFragment -> {
+                    hideToolbarAndBottom()
                 }
             }
         }
