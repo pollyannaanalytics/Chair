@@ -15,14 +15,15 @@
         android:layout_height="match_parent"
         android:layout_margin="@dimen/standard_margin"
         android:padding="@dimen/standard_margin"
-        tools:context=".login.AgreementFragment">
+        tools:context=".createprofile.AgreementFragment">
         <ImageView
             android:id="@+id/login_title"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="@dimen/standard_margin"
             app:layout_constraintWidth_percent="0.15"
             app:layout_constraintDimensionRatio="1"
-            android:src="@drawable/setting_svgrepo_com"
+            android:src="@drawable/chair_9_svgrepo_com"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
 
@@ -123,7 +124,7 @@
             android:text="我同意"
             android:textSize="@dimen/detail_text_size"
             android:textStyle="bold"
-            android:layout_marginBottom="@dimen/standard_margin"
+            android:layout_marginBottom="@dimen/title_text_size"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

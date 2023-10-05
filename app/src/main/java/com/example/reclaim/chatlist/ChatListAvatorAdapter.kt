@@ -1,16 +1,11 @@
 package com.example.reclaim.chatlist
 
-import android.content.Context
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reclaim.data.ChatRoom
-import com.example.reclaim.data.Friends
 import com.example.reclaim.databinding.ChatlistItemBinding
-import com.example.reclaim.profile.ImageAdapter
 
 class ChatListAvatorAdapter(private val onClickListener: OnClickListener):androidx.recyclerview.widget.ListAdapter<ChatRoom, ChatListAvatorAdapter.ImageViewHolder>(DiffCallback){
 

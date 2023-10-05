@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.reclaim.editprofile.ProfileViewModel" />
+        <variable
+            name="userManager"
+            type="com.example.reclaim.data.UserManager" />
+
+    </data>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="@color/white"
+            android:layout_margin="@dimen/standard_margin"
+            android:paddingBottom="@dimen/standard_margin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/user_image_container"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:cardCornerRadius="250dp"
+                app:layout_constraintWidth_percent="0.3"
+                app:layout_constraintDimensionRatio="1"
+                android:layout_width="0dp"
+                android:layout_height="0dp">
+
+            <ImageView
+                imageUri="@{userManager.userImage}"
+                android:id="@+id/user_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher_foreground"
+                 />
+
+
+            </androidx.cardview.widget.CardView>
+            <ImageView
+                android:id="@+id/choose_img_btn"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintWidth_percent="0.1"
+                app:layout_constraintDimensionRatio="1"
+                android:translationZ="@dimen/standard_margin"
+                app:layout_constraintEnd_toEndOf="@id/user_image_container"
+                app:layout_constraintBottom_toBottomOf="@id/user_image_container"
+                android:src="@drawable/camera_add"/>
+
+            <TextView
+                android:id="@+id/id_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/standard_margin"
+                android:text="你的用戶名稱"
+                android:textColor="@color/shadow"
+                android:fontFamily="@font/noto_sans"
+                android:textSize="@dimen/detail_text_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/user_image_container" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/id_edit_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:textColor="@color/myPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/id_title" >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/id_edit"
+                    android:text="@{userManager.userId}"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/username_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="你的名字"
+                android:fontFamily="@font/noto_sans"
+                android:textColor="@color/shadow"
+                android:layout_marginTop="@dimen/standard_margin_one_forth"
+                android:textSize="@dimen/detail_text_size"
+                app:layout_constraintStart_toStartOf="@id/id_title"
+                app:layout_constraintTop_toBottomOf="@id/id_edit_container" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/username_edit_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:textColor="@color/myPrimary"
+                app:layout_constraintEnd_toEndOf="@id/id_title"
+                app:layout_constraintStart_toStartOf="@id/username_title"
+                app:layout_constraintTop_toBottomOf="@id/username_title" >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/username_edit"
+                    android:text="@{userManager.userName}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/gender_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/standard_margin_one_forth"
+                android:text="你的性別"
+                android:textColor="@color/shadow"
+                android:textSize="@dimen/detail_text_size"
+                app:layout_constraintStart_toStartOf="@id/id_title"
+                app:layout_constraintEnd_toEndOf="@id/id_title"
+                app:layout_constraintTop_toBottomOf="@id/username_edit_container" />
+
+            <RadioGroup
+                android:id="@+id/gender_group"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/id_title"
+                app:layout_constraintEnd_toEndOf="@id/id_title"
+                app:layout_constraintTop_toBottomOf="@id/gender_title">
+
+                <RadioButton
+                    android:id="@+id/male"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/myPrimary"
+                    android:text="男" />
+
+                <RadioButton
+                    android:id="@+id/female"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/myPrimary"
+                    android:text="女" />
+
+                <RadioButton
+                    android:id="@+id/third_gender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/myPrimary"
+                    android:text="非二元性別" />
+
+            </RadioGroup>
+            <TextView
+                android:id="@+id/worries_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/gender_group"
+                app:layout_constraintStart_toStartOf="@id/gender_title"
+                android:text="煩惱"
+                android:textColor="@color/shadow"
+                android:textSize="@dimen/detail_text_size"
+
+                />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/worries_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/shadow"
+                android:textStyle="bold"
+                android:layout_marginTop="@dimen/standard_margin_one_forth"
+
+                android:textSize="@dimen/detail_text_size"
+                app:layout_constraintStart_toStartOf="@id/id_title"
+                app:layout_constraintEnd_toEndOf="@id/id_title"
+                app:layout_constraintTop_toBottomOf="@id/worries_title" >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/worries_edit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:autofillHints=""
+                android:text="@{userManager.worriesDescription}"
+                android:layout_marginBottom="@dimen/standard_margin_half"
+                android:textColor="@color/myPrimary"
+                android:inputType=""
+                android:lines="8" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/submit_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="儲存我的資料"
+                android:background="@drawable/stroke_shape"
+                android:layout_marginBottom="@dimen/standard_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/cancel_edit_btn"
+                app:layout_constraintTop_toBottomOf="@id/worries_container"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+
+            <Button
+                android:id="@+id/cancel_edit_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="取消目前編輯"
+                android:background="@drawable/stroke_shape"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/submit_btn"
+                app:layout_constraintEnd_toStartOf="@id/submit_btn"
+                android:layout_marginBottom="@dimen/standard_margin"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/finish_lottie"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:lottie_loop="false"
+                app:lottie_rawRes="@raw/animation_ln63w7fn" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

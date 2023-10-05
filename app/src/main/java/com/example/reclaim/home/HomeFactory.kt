@@ -3,7 +3,6 @@ package com.example.reclaim.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.reclaim.data.ReclaimDatabaseDao
-import com.example.reclaim.profile.ProfileViewModel
 
 class HomeFactory(private val dao: ReclaimDatabaseDao): ViewModelProvider.Factory {
     @Suppress("unchecked_cast")

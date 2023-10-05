@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.reclaim.login.CreateProfileViewModel" />
+            type="com.example.reclaim.createprofile.CreateProfileViewModel" />
 
     </data>
 
@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:layout_margin="@dimen/standard_margin"
         android:padding="@dimen/standard_margin"
-        tools:context=".login.CreateProfileFragment">
+        tools:context=".createprofile.CreateProfileFragment">
 
         <ProgressBar
             android:id="@+id/progress_bar"

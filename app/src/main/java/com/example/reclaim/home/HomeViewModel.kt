@@ -310,7 +310,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
 
     }
 
-    private fun loadWhoLikeMe(userId: String) {
+    fun loadWhoLikeMe(userId: String) {
         Log.i(TAG, "start to load who is friend currently")
         val currentFriendList = emptyList<String>().toMutableList()
 

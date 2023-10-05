@@ -7,7 +7,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.reclaim.login.WorriesInputViewModel" />
+            type="com.example.reclaim.createprofile.WorriesInputViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:layout_margin="@dimen/standard_margin"
         android:padding="@dimen/standard_margin"
-        tools:context=".login.WorriesInputFragment">
+        tools:context=".createprofile.WorriesInputFragment">
         <ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="match_parent"

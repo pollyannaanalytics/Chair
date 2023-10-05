@@ -25,9 +25,9 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.reclaim.profile.ProfileFragment"
+        android:name="com.example.reclaim.editprofile.EditProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fragment_profile">
+        tools:layout="@layout/fragment_edit_profile">
         <action
             android:id="@+id/action_profileFragment_to_alreadySignUpProfileFragment"
             app:destination="@id/alreadySignUpProfileFragment" />
@@ -44,8 +44,8 @@
     </fragment>
     <fragment
         android:id="@+id/alreadySignUpProfileFragment"
-        android:name="com.example.reclaim.alreadysignup.AlreadySignUpProfileFragment"
-        tools:layout="@layout/fragment_already_sign_up_profile"
+        android:name="com.example.reclaim.alreadysignup.ProfileFragment"
+        tools:layout="@layout/fragment_profile"
         android:label="AlreadySignUpProfileFragment" >
         <action
             android:id="@+id/action_alreadySignUpProfileFragment_to_profileFragment"
@@ -66,7 +66,7 @@
     </fragment>
     <fragment
         android:id="@+id/createProfileFragment"
-        android:name="com.example.reclaim.login.CreateProfileFragment"
+        android:name="com.example.reclaim.createprofile.CreateProfileFragment"
         android:label="CreateProfileFragment" >
         <action
             android:id="@+id/action_createProfileFragment_to_worriesInputFragment"
@@ -74,7 +74,7 @@
     </fragment>
     <fragment
         android:id="@+id/worriesInputFragment"
-        android:name="com.example.reclaim.login.WorriesInputFragment"
+        android:name="com.example.reclaim.createprofile.WorriesInputFragment"
         android:label="WorriesInputFragment" >
         <action
             android:id="@+id/action_worriesInputFragment_to_homeFragment"
@@ -82,7 +82,7 @@
     </fragment>
     <fragment
         android:id="@+id/agreementFragment"
-        android:name="com.example.reclaim.login.AgreementFragment"
+        android:name="com.example.reclaim.createprofile.AgreementFragment"
         android:label="AgreementFragment" >
         <action
             android:id="@+id/action_agreementFragment_to_createProfileFragment"

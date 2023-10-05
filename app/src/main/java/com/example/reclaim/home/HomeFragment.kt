@@ -78,6 +78,8 @@ class HomeFragment : Fragment() {
 
         binding.viewModel = viewModel
 
+        viewModel?.loadWhoLikeMe(UserManager.userId)
+
 
         fun loadingAvatar() {
             binding.selfAvatarLoadingContainer.visibility = View.VISIBLE
@@ -375,6 +377,6 @@ class HomeFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         Log.i(TAG, "fragment is dead")
-//        viewModel.let { it!!.removeProfileListener() }
+
     }
 }

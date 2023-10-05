@@ -46,6 +46,8 @@ class MatchFragment : Fragment() {
         viewModel = ViewModelProvider(this, factory).get(MatchViewModel::class.java)
         binding.viewModel = viewModel
 
+
+
         val leftAvatar = binding.selfContainer
         val rightAvatar = binding.otherContainer
         val matchTitle = binding.matchTitle
