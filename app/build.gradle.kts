@@ -8,8 +8,9 @@ plugins {
     id("com.google.protobuf")
     id("androidx.navigation.safeargs")
     id("kotlin-parcelize")
+    id("com.google.gms.google-services")
 }
-apply(plugin = "com.google.gms.google-services")
+
 
 
 android {
@@ -97,6 +98,8 @@ dependencies {
     implementation ("com.google.firebase:firebase-auth:22.1.2")
     //Ktor dependencies (you can retrofit instead)
 
+    implementation("com.google.firebase:firebase-auth-ktx")
+
     implementation("io.ktor:ktor-client-android:$ktorVersion")
     implementation("io.ktor:ktor-client-websocket:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
@@ -141,5 +144,7 @@ dependencies {
     implementation ("com.google.android.material:material:1.9.0")
 
     implementation ("com.airbnb.android:lottie:6.1.0")
+
+    implementation ("com.google.android.gms:play-services-auth:20.7.0")
 
 }

@@ -82,7 +82,7 @@
     </fragment>
     <fragment
         android:id="@+id/agreementFragment"
-        android:name="com.example.reclaim.createprofile.AgreementFragment"
+        android:name="com.example.reclaim.loading.AgreementFragment"
         android:label="AgreementFragment" >
         <action
             android:id="@+id/action_agreementFragment_to_createProfileFragment"
@@ -95,5 +95,12 @@
         <action
             android:id="@+id/action_loadingFragment_to_agreementFragment"
             app:destination="@id/agreementFragment" />
+        <action
+            android:id="@+id/action_loadingFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.reclaim.login.LoginFragment"
+        android:label="LoginFragment" />
 </navigation>
