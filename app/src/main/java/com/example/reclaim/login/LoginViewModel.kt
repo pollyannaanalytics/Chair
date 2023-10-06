@@ -1,5 +1,6 @@
 package com.example.reclaim.login
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -45,16 +46,31 @@ class LoginViewModel : ViewModel() {
                         _canFindProfile.value = true
                     }
                 }
+            }.addOnFailureListener {
+                Log.e(TAG, "load failed: $it")
+                _canFindProfile.value = false
             }
     }
 
     fun saveInUserManager(userProfile: UserProfile) {
-        UserManager.userId = userProfile.userId.toString()
-        UserManager.userName = userProfile.userName.toString()
-        UserManager.userImage = userProfile.imageUri.toString()
-        UserManager.userType = userProfile.worryType.toString()
-        UserManager.gender = userProfile.gender.toString()
-        UserManager.worriesDescription = userProfile.worriesDescription.toString()
+        try {
+            UserManager.userId = userProfile.userId.toString()
+            UserManager.userName = userProfile.userName.toString()
+            UserManager.userImage = userProfile.imageUri.toString()
+            UserManager.userType = userProfile.worryType.toString()
+            UserManager.gender = userProfile.gender.toString()
+            UserManager.worriesDescription = userProfile.worriesDescription.toString()
 
+            Log.i(TAG, "user manager: $UserManager")
+
+        }catch (e: Exception){
+            Log.e(TAG, "cannot save in usermanager: $e")
+        }
+
+
+    }
+
+    companion object{
+        const val TAG = "LoginViewModel"
     }
 }

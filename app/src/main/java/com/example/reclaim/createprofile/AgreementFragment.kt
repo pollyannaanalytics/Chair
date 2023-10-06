@@ -29,7 +29,7 @@ class AgreementFragment : Fragment() {
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
         binding.agreeBtn.setOnClickListener {
-            findNavController().navigate(com.example.reclaim.loading.AgreementFragmentDirections.actionAgreementFragmentToCreateProfileFragment())
+            findNavController().navigate(AgreementFragmentDirections.actionAgreementFragmentToCreateProfileFragment())
         }
 
         return binding.root

@@ -141,6 +141,11 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
+                            <entry key="action_loadingFragment_to_homeFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_loadingFragment_to_loginFragment">
                               <value>
                                 <LayoutPositions />
@@ -156,9 +161,23 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-744" />
-                            <option name="y" value="490" />
+                            <option name="x" value="-866" />
+                            <option name="y" value="668" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_loginFragment_to_agreementFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_loginFragment_to_homeFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>

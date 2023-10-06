@@ -40,9 +40,10 @@ class LoginFragment : Fragment() {
     private val loginViewModel: LoginViewModel by lazy {
         ViewModelProvider(this).get(LoginViewModel::class.java)
     }
+    private lateinit var userManagerInSharePreference: String
+    private lateinit var userIdInSharedPreferences: String
 
-    val UserManagerInSharePreference = resources.getString(R.string.usermanager)
-    val UserIdInSharePreference = resources.getString(R.string.userid)
+
 
 
     lateinit var binding: FragmentLoginBinding
@@ -53,8 +54,8 @@ class LoginFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentLoginBinding.inflate(inflater)
         binding.viewModel = loginViewModel
-
-
+        userManagerInSharePreference = resources.getString(R.string.usermanager)
+        userIdInSharedPreferences = resources.getString(R.string.userid)
 
         // test
         // google singIn
@@ -66,24 +67,36 @@ class LoginFragment : Fragment() {
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
-        sharedPreferences = requireActivity().getSharedPreferences(
-            UserManagerInSharePreference, Context.MODE_PRIVATE
+
+        sharedPreferences = requireContext().getSharedPreferences(
+            userManagerInSharePreference, Context.MODE_PRIVATE
         )
 
 
-        loginViewModel.canFindProfile.observe(viewLifecycleOwner){
-            if (it == true){
-                loginViewModel.userProfile.value?.let { userProfile -> loginViewModel.saveInUserManager(userProfile) }
-                findNavController().navigate(
-                    LoginFragmentDirections.actionLoginFragmentToHomeFragment()
-                )
+        loginViewModel.canFindProfile.observe(viewLifecycleOwner) {
+            try {
+                if (it == true) {
+                    loginViewModel.userProfile.value?.let { userProfile ->
+                        loginViewModel.saveInUserManager(
+                            userProfile
+                        )
+                    }
+                    findNavController().navigate(
+                        LoginFragmentDirections.actionLoginFragmentToHomeFragment()
+                    )
 
-            }else{
-                findNavController().navigate(
-                    LoginFragmentDirections.actionLoginFragmentToAgreementFragment()
-                )
+                } else {
 
+                    findNavController().navigate(
+                        LoginFragmentDirections.actionLoginFragmentToAgreementFragment()
+                    )
+
+
+                }
+            }catch (e: Exception){
+                Log.e(TAG, "cannot navigate: $e")
             }
+
         }
 
 
@@ -122,20 +135,7 @@ class LoginFragment : Fragment() {
                 try {
                     val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
                     manageResults(task)
-                    binding.successfullyAnimation.playAnimation()
-                    val editor = sharedPreferences.edit()
-                    editor.putString(UserIdInSharePreference, auth.uid)
-                    Log.i(
-                        TAG,
-                        "share preference: ${
-                            context?.getSharedPreferences(
-                                UserManagerInSharePreference,
-                                Context.MODE_PRIVATE
-                            )?.all
-                        }"
-                    )
 
-                    auth.uid?.let { loginViewModel.findProfileInFirebase(it) }
 
                 } catch (e: Exception) {
                     Log.e(TAG, "write to share preference failed: $e")
@@ -159,9 +159,22 @@ class LoginFragment : Fragment() {
 
                 if (task.isSuccessful) {
 
-                    Toast.makeText(requireContext(), "Account created", Toast.LENGTH_SHORT).show()
-                    Log.i(TAG, "success")
+                    binding.successfullyAnimation.playAnimation()
+                    val editor = sharedPreferences.edit()
+                    editor.putString(userIdInSharedPreferences, auth.uid)
+                    editor.apply()
 
+                    Log.i(
+                        TAG,
+                        "share preference: ${
+                            context?.getSharedPreferences(
+                                userManagerInSharePreference,
+                                Context.MODE_PRIVATE
+                            )?.all
+                        }"
+                    )
+
+                    auth.uid?.let { loginViewModel.findProfileInFirebase(it) }
 
 
                 } else {

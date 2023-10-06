@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.reclaim.R
 import com.example.reclaim.data.UserManager
 import com.example.reclaim.databinding.FragmentWorriesInputBinding
 
@@ -27,6 +28,8 @@ class WorriesInputFragment : Fragment() {
         ViewModelProvider(this).get(WorriesInputViewModel::class.java)
     }
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,6 +37,7 @@ class WorriesInputFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding = FragmentWorriesInputBinding.inflate(inflater)
         binding.viewModel = viewModel
+
         var worriesDescription = ""
 
         fun hideKeyboard() {

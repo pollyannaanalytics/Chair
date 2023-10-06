@@ -1,5 +1,6 @@
 package com.example.reclaim.createprofile
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.reclaim.data.UserManager
@@ -10,8 +11,9 @@ class WorriesInputViewModel: ViewModel() {
 
 
    fun uploadUserProfile() {
-        val profile = FirebaseFirestore.getInstance().collection("user_profile")
-        try {
+       val profile = FirebaseFirestore.getInstance().collection("user_profile")
+
+       try {
             val data = hashMapOf(
                 "user_id" to UserManager.userId,
                 "user_name" to UserManager.userName,
