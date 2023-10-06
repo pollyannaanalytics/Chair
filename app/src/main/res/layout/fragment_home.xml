@@ -45,10 +45,10 @@
                 android:layout_height="0dp"
                 app:layout_constraintWidth_percent="0.4"
                 app:layout_constraintDimensionRatio="1"
-                app:layout_constraintStart_toStartOf="@id/self_avatar_loading_container"
-                app:layout_constraintEnd_toEndOf="@id/self_avatar_loading_container"
-                app:layout_constraintTop_toTopOf="@id/self_avatar_loading_container"
-                app:layout_constraintBottom_toBottomOf="@id/self_avatar_loading_container"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:src="@drawable/ripple_effect"
                 />
 

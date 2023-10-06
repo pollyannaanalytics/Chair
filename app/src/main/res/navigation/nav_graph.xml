@@ -102,5 +102,9 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.reclaim.login.LoginFragment"
-        android:label="LoginFragment" />
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_loginFragment_to_createProfileFragment"
+            app:destination="@id/createProfileFragment" />
+    </fragment>
 </navigation>

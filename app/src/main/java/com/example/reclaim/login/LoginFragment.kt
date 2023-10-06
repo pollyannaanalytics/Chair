@@ -3,6 +3,7 @@ package com.example.reclaim.login
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.navigation.fragment.findNavController
 import com.example.reclaim.R
 import com.example.reclaim.databinding.FragmentLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -33,11 +35,11 @@ class LoginFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
-    var sharePref = requireActivity().getSharedPreferences(
-        "usermanager", Context.MODE_PRIVATE
-    )
 
-lateinit var binding: FragmentLoginBinding
+    lateinit var sharedPreferences: SharedPreferences
+
+
+    lateinit var binding: FragmentLoginBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,13 +57,14 @@ lateinit var binding: FragmentLoginBinding
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
+        sharedPreferences = requireActivity().getSharedPreferences(
+            USER_MANAGER, Context.MODE_PRIVATE
+        )
 
 
         //
         binding.googleBtn.setOnClickListener {
             googleSignIn()
-
-            Log.i(TAG, sharePref.all.toString())
 
 
         }
@@ -72,63 +75,77 @@ lateinit var binding: FragmentLoginBinding
     }
 
 
-
-
     private fun googleSignIn() {
 
         val signInClient = googleSignInClient.signInIntent
         launcher.launch(signInClient)
     }
 
-    private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
-        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-        if (task.isSuccessful) {
-            manageResults(task)
-        } else {
-            val exception = task.exception
-            if (exception is ApiException) {
-                Log.e("GoogleSignIn", "Error code: ${exception.statusCode}")
-            }
-        }
-
-        if (result.resultCode == Activity.RESULT_OK){
+    private val launcher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-            manageResults(task)
-            binding.successfullyAnimation.playAnimation()
-            sharePref.edit().putString("userid", auth.uid)
+            if (task.isSuccessful) {
+                manageResults(task)
+            } else {
+                val exception = task.exception
+                if (exception is ApiException) {
+                    Log.e(TAG, "Error code: ${exception.statusCode}")
+                }
+            }
 
-        }else{
-            Log.e(TAG, "result failed: ${result.resultCode}")
+            if (result.resultCode == Activity.RESULT_OK) {
+                try {
+                    val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                    manageResults(task)
+                    binding.successfullyAnimation.playAnimation()
+                    val editor = sharedPreferences.edit()
+                    editor.putString("userid", auth.uid)
+                    Log.i(
+                        TAG,
+                        "share preference: ${
+                            context?.getSharedPreferences(
+                                USER_MANAGER,
+                                Context.MODE_PRIVATE
+                            )?.all
+                        }"
+                    )
+                    findNavController().navigate(
+                        LoginFragmentDirections.actionLoginFragmentToCreateProfileFragment()
+                    )
+                } catch (e: Exception) {
+                    Log.e(TAG, "write to share preference failed: $e")
+                }
+
+
+            } else {
+                Log.e(TAG, "result failed: ${result.resultCode}")
+
+            }
 
         }
-
-    }
-
-
-
-
 
 
     private fun manageResults(task: Task<GoogleSignInAccount>) {
         val account: GoogleSignInAccount? = task.result
 
-        if (account != null){
+        if (account != null) {
             val credential = GoogleAuthProvider.getCredential(account.idToken, null)
             auth.signInWithCredential(credential).addOnCompleteListener {
 
-                if (task.isSuccessful){
+                if (task.isSuccessful) {
 
                     Toast.makeText(requireContext(), "Account created", Toast.LENGTH_SHORT).show()
                     Log.i(TAG, "success")
 //                    dismissDialog()
 
 
-                }else{
-                    Toast.makeText(requireContext(), task.exception.toString(), Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), task.exception.toString(), Toast.LENGTH_SHORT)
+                        .show()
                     Log.i(TAG, "fail")
                 }
             }
-        }else {
+        } else {
             Toast.makeText(requireContext(), task.exception.toString(), Toast.LENGTH_SHORT).show()
 
             Log.i(TAG, "fail")
@@ -136,7 +153,8 @@ lateinit var binding: FragmentLoginBinding
     }
 
     companion object {
-        const val TAG = "Login"
+        const val TAG = "LoginPage"
         const val SIGN_IN = 100
+        const val USER_MANAGER = "UserManager"
     }
 }

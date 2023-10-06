@@ -88,8 +88,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-585" />
-                            <option name="y" value="-188" />
+                            <option name="x" value="-627" />
+                            <option name="y" value="103" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -141,6 +141,11 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
+                            <entry key="action_loadingFragment_to_loginFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                           </map>
                         </option>
                       </LayoutPositions>
@@ -152,7 +157,7 @@
                         <option name="myPosition">
                           <Point>
                             <option name="x" value="-744" />
-                            <option name="y" value="464" />
+                            <option name="y" value="490" />
                           </Point>
                         </option>
                       </LayoutPositions>
