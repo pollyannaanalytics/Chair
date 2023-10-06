@@ -1,4 +1,4 @@
-package com.example.reclaim.loading
+package com.example.reclaim.createprofile
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -29,7 +29,7 @@ class AgreementFragment : Fragment() {
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
         binding.agreeBtn.setOnClickListener {
-            findNavController().navigate(AgreementFragmentDirections.actionAgreementFragmentToCreateProfileFragment())
+            findNavController().navigate(com.example.reclaim.loading.AgreementFragmentDirections.actionAgreementFragmentToCreateProfileFragment())
         }
 
         return binding.root

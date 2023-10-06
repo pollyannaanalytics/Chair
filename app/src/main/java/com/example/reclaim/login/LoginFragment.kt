@@ -2,7 +2,6 @@ package com.example.reclaim.login
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -13,9 +12,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.fragment.findNavController
-import com.example.reclaim.MainViewModel
 import com.example.reclaim.R
 import com.example.reclaim.databinding.FragmentLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -44,6 +41,9 @@ class LoginFragment : Fragment() {
         ViewModelProvider(this).get(LoginViewModel::class.java)
     }
 
+    val UserManagerInSharePreference = resources.getString(R.string.usermanager)
+    val UserIdInSharePreference = resources.getString(R.string.userid)
+
 
     lateinit var binding: FragmentLoginBinding
     override fun onCreateView(
@@ -53,6 +53,7 @@ class LoginFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentLoginBinding.inflate(inflater)
         binding.viewModel = loginViewModel
+
 
 
         // test
@@ -66,7 +67,7 @@ class LoginFragment : Fragment() {
 
         googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
         sharedPreferences = requireActivity().getSharedPreferences(
-            USER_MANAGER, Context.MODE_PRIVATE
+            UserManagerInSharePreference, Context.MODE_PRIVATE
         )
 
 
@@ -123,12 +124,12 @@ class LoginFragment : Fragment() {
                     manageResults(task)
                     binding.successfullyAnimation.playAnimation()
                     val editor = sharedPreferences.edit()
-                    editor.putString(USER_ID, auth.uid)
+                    editor.putString(UserIdInSharePreference, auth.uid)
                     Log.i(
                         TAG,
                         "share preference: ${
                             context?.getSharedPreferences(
-                                USER_MANAGER,
+                                UserManagerInSharePreference,
                                 Context.MODE_PRIVATE
                             )?.all
                         }"
@@ -179,7 +180,6 @@ class LoginFragment : Fragment() {
     companion object {
         const val TAG = "LoginPage"
         const val SIGN_IN = 100
-        const val USER_MANAGER = "UserManager"
-        const val USER_ID = "userid"
+
     }
 }

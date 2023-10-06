@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:layout_margin="@dimen/standard_margin"
         android:padding="@dimen/standard_margin"
-        tools:context=".loading.AgreementFragment">
+        tools:context=".createprofile.AgreementFragment">
         <ImageView
             android:id="@+id/login_title"
             android:layout_width="0dp"
