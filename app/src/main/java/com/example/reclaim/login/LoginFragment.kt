@@ -12,7 +12,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.fragment.findNavController
+import com.example.reclaim.MainViewModel
 import com.example.reclaim.R
 import com.example.reclaim.databinding.FragmentLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -37,6 +40,9 @@ class LoginFragment : Fragment() {
     private lateinit var googleSignInClient: GoogleSignInClient
 
     lateinit var sharedPreferences: SharedPreferences
+    private val loginViewModel: LoginViewModel by lazy {
+        ViewModelProvider(this).get(LoginViewModel::class.java)
+    }
 
 
     lateinit var binding: FragmentLoginBinding
@@ -46,6 +52,8 @@ class LoginFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentLoginBinding.inflate(inflater)
+        binding.viewModel = loginViewModel
+
 
         // test
         // google singIn
@@ -60,6 +68,22 @@ class LoginFragment : Fragment() {
         sharedPreferences = requireActivity().getSharedPreferences(
             USER_MANAGER, Context.MODE_PRIVATE
         )
+
+
+        loginViewModel.canFindProfile.observe(viewLifecycleOwner){
+            if (it == true){
+                loginViewModel.userProfile.value?.let { userProfile -> loginViewModel.saveInUserManager(userProfile) }
+                findNavController().navigate(
+                    LoginFragmentDirections.actionLoginFragmentToHomeFragment()
+                )
+
+            }else{
+                findNavController().navigate(
+                    LoginFragmentDirections.actionLoginFragmentToAgreementFragment()
+                )
+
+            }
+        }
 
 
         //
@@ -99,7 +123,7 @@ class LoginFragment : Fragment() {
                     manageResults(task)
                     binding.successfullyAnimation.playAnimation()
                     val editor = sharedPreferences.edit()
-                    editor.putString("userid", auth.uid)
+                    editor.putString(USER_ID, auth.uid)
                     Log.i(
                         TAG,
                         "share preference: ${
@@ -109,9 +133,9 @@ class LoginFragment : Fragment() {
                             )?.all
                         }"
                     )
-                    findNavController().navigate(
-                        LoginFragmentDirections.actionLoginFragmentToCreateProfileFragment()
-                    )
+
+                    auth.uid?.let { loginViewModel.findProfileInFirebase(it) }
+
                 } catch (e: Exception) {
                     Log.e(TAG, "write to share preference failed: $e")
                 }
@@ -136,7 +160,7 @@ class LoginFragment : Fragment() {
 
                     Toast.makeText(requireContext(), "Account created", Toast.LENGTH_SHORT).show()
                     Log.i(TAG, "success")
-//                    dismissDialog()
+
 
 
                 } else {
@@ -156,5 +180,6 @@ class LoginFragment : Fragment() {
         const val TAG = "LoginPage"
         const val SIGN_IN = 100
         const val USER_MANAGER = "UserManager"
+        const val USER_ID = "userid"
     }
 }

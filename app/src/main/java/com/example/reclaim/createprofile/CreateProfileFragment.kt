@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -40,6 +41,7 @@ class CreateProfileFragment : Fragment() {
     var imageUri: Uri? = null
     lateinit var binding: FragmentCreateProfileBinding
 
+
     private val viewModel : CreateProfileViewModel by lazy {
         ViewModelProvider(this).get(CreateProfileViewModel::class.java)
     }
@@ -52,6 +54,7 @@ class CreateProfileFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentCreateProfileBinding.inflate(inflater)
         binding.viewModel = viewModel
+
 
         var userId = ""
         var username = ""
@@ -210,7 +213,7 @@ class CreateProfileFragment : Fragment() {
         private const val READ_IMAGE_PERMISSION_REQUEST_CODE = 1
         private const val READ_IMAGE_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
         private const val SELECT_PICTURE = 200
-
+        const val USER_MANAGER = "UserManager"
     }
 
 }
