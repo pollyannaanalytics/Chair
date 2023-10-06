@@ -42,7 +42,7 @@ class CreateProfileFragment : Fragment() {
     lateinit var binding: FragmentCreateProfileBinding
 
 
-    private val viewModel : CreateProfileViewModel by lazy {
+    private val viewModel: CreateProfileViewModel by lazy {
         ViewModelProvider(this).get(CreateProfileViewModel::class.java)
     }
 
@@ -54,12 +54,21 @@ class CreateProfileFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentCreateProfileBinding.inflate(inflater)
         binding.viewModel = viewModel
+        val userManagerInSharedPreferences = resources.getString(R.string.usermanager)
+        val userManagerIdInSharePreferences = resources.getString(R.string.userid)
 
 
-        var userId = ""
         var username = ""
         var gender = ""
         var worriesDescription = ""
+        var userAge = ""
+
+        UserManager.userId =
+            requireActivity().getSharedPreferences(
+                userManagerInSharedPreferences,
+                Context.MODE_PRIVATE
+            ).all.get(userManagerIdInSharePreferences)
+                .toString()
 
 
 
@@ -68,17 +77,18 @@ class CreateProfileFragment : Fragment() {
             progress = 0
         }
 
-        binding.idEdit.doAfterTextChanged {
-            userId = it.toString()
-            Log.i(TAG, "userId: $it")
+        binding.ageEdit.doAfterTextChanged {
+            userAge = it.toString()
+            Log.i(TAG, "userAge: $it")
             binding.progressBar.progress = 40
         }
 
-        binding.idEdit.setOnKeyListener { _, keyCode, keyEvent ->
-            if(keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN) {
+        binding.ageEdit.setOnKeyListener { _, keyCode, keyEvent ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN) {
                 binding.progressBar.progress = 20
-                val imm = this.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(binding.idEdit.windowToken, 0)
+                val imm =
+                    this.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.ageEdit.windowToken, 0)
                 return@setOnKeyListener true
             }
             false
@@ -90,10 +100,11 @@ class CreateProfileFragment : Fragment() {
             Log.i(TAG, "userId: $it")
         }
 
-        binding.usernameEdit.setOnKeyListener{ _, keyCode, keyEvent ->
-            if(keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN) {
+        binding.usernameEdit.setOnKeyListener { _, keyCode, keyEvent ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN) {
                 binding.progressBar.progress = 40
-                val imm = this.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm =
+                    this.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(binding.usernameEdit.windowToken, 0)
                 return@setOnKeyListener true
             }
@@ -107,14 +118,14 @@ class CreateProfileFragment : Fragment() {
 
         }
         binding.nextMove.setOnClickListener {
-            UserManager.userId = userId
+            UserManager.age = userAge
             UserManager.userName = username
             UserManager.gender = gender
 
 
             viewModel.uploadImageToFireStorage(imageUri.toString())
 
-            Log.i(TAG, "$imageUri")
+            Log.i(TAG, "$UserManager")
 
             findNavController().navigate(CreateProfileFragmentDirections.actionCreateProfileFragmentToWorriesInputFragment())
 

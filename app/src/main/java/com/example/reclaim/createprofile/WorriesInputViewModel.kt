@@ -21,6 +21,7 @@ class WorriesInputViewModel: ViewModel() {
                 "worries_description" to UserManager.worriesDescription,
                 "worries_type" to UserManager.userType,
                 "images" to UserManager.userImage,
+                "user_age" to UserManager.age,
                 "profile_time" to Calendar.getInstance().timeInMillis
             )
             Log.i(TAG, "my profile is $data")

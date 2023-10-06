@@ -37,6 +37,7 @@ class LoadingViewModel: ViewModel() {
                         val images = snapshot.data.get("images").toString()
                         val worriesDescription = snapshot.data.get("worries_description").toString()
                         val worriesType = snapshot.data.get("worries_type").toString()
+                        val age = snapshot.data.get("age").toString()
 
                         val newProfile = UserProfile(
                             userId = authId,
@@ -44,7 +45,9 @@ class LoadingViewModel: ViewModel() {
                             gender = gender,
                             imageUri = images,
                             worriesDescription = worriesDescription,
-                            worryType = worriesType
+                            worryType = worriesType,
+                            age = age
+
                         )
 
                         _userProfile.value = newProfile
@@ -69,6 +72,8 @@ class LoadingViewModel: ViewModel() {
         UserManager.userImage = userProfile.let { it!!.imageUri.toString() }
         UserManager.userType = userProfile.let { it!!.worryType.toString() }
         UserManager.gender = userProfile.let { it!!.gender.toString() }
+        UserManager.age = userProfile.let { it!!.age.toString() }
+
         UserManager.worriesDescription = userProfile.let { it!!.worriesDescription.toString() }
     }
 

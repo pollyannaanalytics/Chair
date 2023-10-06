@@ -27,7 +27,9 @@ data class UserProfile(
     var worriesDescription: String? = "",
 
     @ColumnInfo(name = "image_uri")
-    var imageUri: String?
+    var imageUri: String?,
+
+    var age: String?
 
 
 )

@@ -76,11 +76,11 @@
             android:src="@drawable/camera_add"/>
 
         <TextView
-            android:id="@+id/id_title"
+            android:id="@+id/age_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/standard_margin"
-            android:text="你的用戶名稱"
+            android:text="你的年齡"
             android:textColor="@color/shadow"
             android:fontFamily="@font/noto_sans"
             android:textSize="@dimen/detail_text_size"
@@ -90,15 +90,16 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/id_edit_container"
+            android:id="@+id/age_edit_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@color/myPrimary"
+            android:hint="請輸入數字，例如 30 歲，請輸入 30"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/id_title" >
+            app:layout_constraintTop_toBottomOf="@id/age_title" >
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/id_edit"
+                android:id="@+id/age_edit"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -112,15 +113,15 @@
             android:textColor="@color/shadow"
             android:layout_marginTop="@dimen/standard_margin_one_forth"
             android:textSize="@dimen/detail_text_size"
-            app:layout_constraintStart_toStartOf="@id/id_title"
-            app:layout_constraintTop_toBottomOf="@id/id_edit_container" />
+            app:layout_constraintStart_toStartOf="@id/age_title"
+            app:layout_constraintTop_toBottomOf="@id/age_edit_container" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/username_edit_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@color/myPrimary"
-            app:layout_constraintEnd_toEndOf="@id/id_title"
+            app:layout_constraintEnd_toEndOf="@id/age_title"
             app:layout_constraintStart_toStartOf="@id/username_title"
             app:layout_constraintTop_toBottomOf="@id/username_title" >
             <com.google.android.material.textfield.TextInputEditText
@@ -138,16 +139,16 @@
             android:text="你的性別"
             android:textColor="@color/shadow"
             android:textSize="@dimen/detail_text_size"
-            app:layout_constraintStart_toStartOf="@id/id_title"
-            app:layout_constraintEnd_toEndOf="@id/id_title"
+            app:layout_constraintStart_toStartOf="@id/age_title"
+            app:layout_constraintEnd_toEndOf="@id/age_title"
             app:layout_constraintTop_toBottomOf="@id/username_edit_container" />
 
         <RadioGroup
             android:id="@+id/gender_group"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/id_title"
-            app:layout_constraintEnd_toEndOf="@id/id_title"
+            app:layout_constraintStart_toStartOf="@id/age_title"
+            app:layout_constraintEnd_toEndOf="@id/age_title"
             app:layout_constraintTop_toBottomOf="@id/gender_title">
 
             <RadioButton
