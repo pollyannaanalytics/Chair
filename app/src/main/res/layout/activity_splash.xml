@@ -13,22 +13,35 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/myPrimary"
+        android:background="@color/background"
         tools:context=".SplashActivity">
-
-
-
         <ImageView
-            android:id="@+id/app_logo"
+            android:id="@+id/logo_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/chair_9_svgrepo_com"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintBottom_toTopOf="@id/app_logo"
+            app:layout_constraintWidth_percent="0.4"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:src="@drawable/chair_theme_color"
+            android:layout_height="0dp"/>
+
+
+
+        <TextView
+            android:id="@+id/app_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reclaim"
+            android:textStyle="bold"
+            android:textSize="@dimen/padding_swipestack"
+            android:textColor="@color/myPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.5"
-            app:layout_constraintDimensionRatio="1"
+
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/logo_icon" />
 
         <TextView
             android:id="@+id/slogan_splash"

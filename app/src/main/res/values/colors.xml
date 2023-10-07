@@ -2,8 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFF</color>
-    <color name="myPrimary">#252B48</color>
+    <color name="myPrimary">#ffb784</color>
+    <color name="bgPrimary">#954a00</color>
+    <color name="mySecondary">#e4bfa8</color>
+    <color name="tertiary">#c8ca94</color>
+    <color name="outline">#9f8d83</color>
     <color name="shadow">#616060</color>
+    <color name="background">#ece0da</color>
     <color name="red">#CA3030</color>
     <color name="yellow">#DDDC88</color>
     <color name="skyblue">#0A7CFF</color>

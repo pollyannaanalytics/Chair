@@ -69,7 +69,7 @@ class EditProfileFragment : Fragment() {
         binding.viewModel = viewModel
         binding.userManager = UserManager
 
-        binding.idEdit.doAfterTextChanged {
+        binding.ageEdit.doAfterTextChanged {
             userId = it.toString()
             Log.i(TAG,"userId: $it")
         }

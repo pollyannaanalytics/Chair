@@ -104,20 +104,20 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
 
     }
 
-    private fun saveUserProfileInLocal() {
-        val currentUser = UserProfile(
-            userId = UserManager.userId,
-            userName = _userProfile.value?.userName,
-            gender = _userProfile.value?.gender,
-            worryType = _userProfile.value?.worriesType,
-            worriesDescription = _userProfile.value?.worriesDescription,
-            imageUri = _userProfile.value?.images.toString()
-        )
-        viewModelScope.launch {
-            databaseDao.insertUserProfile(currentUser)
-        }
-
-    }
+//    private fun saveUserProfileInLocal() {
+//        val currentUser = UserProfile(
+//            userId = UserManager.userId,
+//            userName = _userProfile.value?.userName,
+//            gender = _userProfile.value?.gender,
+//            worryType = _userProfile.value?.worriesType,
+//            worriesDescription = _userProfile.value?.worriesDescription,
+//            imageUri = _userProfile.value?.images.toString(),
+//        )
+//        viewModelScope.launch {
+//            databaseDao.insertUserProfile(currentUser)
+//        }
+//
+//    }
 
 //    private fun saveImagesInLocal() {
 //        _userProfile.value?.images?.forEach {
@@ -129,12 +129,12 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
 //        }
 //    }
 
-    private fun saveInLocalDB() {
-        viewModelScope.launch {
-            saveUserProfileInLocal()
-//            saveImagesInLocal()
-        }
-    }
+//    private fun saveInLocalDB() {
+//        viewModelScope.launch {
+//            saveUserProfileInLocal()
+////            saveImagesInLocal()
+//        }
+//    }
 
 
     private fun addToChatGPT(message: String, sentBy: String, timestamp: String) {
@@ -183,7 +183,7 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
 //                        addResponse(result)
                         val currentType = result
                         _userProfile.value?.worriesType = currentType
-                        saveInLocalDB()
+//                        saveInLocalDB()
 //                        UserManager.userType = result
                         _readyToUploadOnFirebase.value = true
 

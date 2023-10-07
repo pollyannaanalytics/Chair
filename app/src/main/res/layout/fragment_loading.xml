@@ -12,19 +12,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/background"
         tools:context=".loading.LoadingFragment">
 
-        <ImageView
-            android:id="@+id/app_name"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/loading_animation"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.8"
-            android:src="@drawable/chair_recliam"
-            />
+
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/loading_animation"

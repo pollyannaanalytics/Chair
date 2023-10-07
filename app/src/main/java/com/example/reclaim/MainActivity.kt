@@ -62,18 +62,21 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        fun hideToolbar(){
+            binding.toolbar.visibility = View.GONE
+            binding.toolbarLogo.visibility = View.GONE
+            binding.fragmentTitle.visibility = View.GONE
+        }
+
+
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.homeFragment ->
                     showToolBar(true, "首頁")
 
-                R.id.alreadySignUpProfileFragment -> showToolBar(false, "我的個人檔案")
+                R.id.alreadySignUpProfileFragment -> hideToolbar()
                 R.id.chatListFragment -> showToolBar(false, "我的好友")
-                R.id.chatRoomFragment -> {
-                    binding.toolbar.visibility = View.GONE
-                    binding.toolbarLogo.visibility = View.GONE
-                    binding.fragmentTitle.visibility = View.GONE
-                }
+                R.id.chatRoomFragment -> hideToolbar()
 
                 R.id.profileFragment -> showToolBar(false, "編輯個人檔案")
                 R.id.matchFragment -> {

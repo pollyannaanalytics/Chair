@@ -130,49 +130,70 @@
                 android:layout_height="wrap_content"/>
 
         </com.google.android.material.textfield.TextInputLayout>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_gender_background"
+            app:layout_constraintTop_toBottomOf="@id/username_edit_container"
+            app:layout_constraintStart_toStartOf="@id/username_edit_container"
+            app:layout_constraintEnd_toEndOf="@id/username_edit_container"
+            app:layout_constraintBottom_toTopOf="@id/next_move"
+            app:cardCornerRadius="@dimen/standard_margin"
 
-        <TextView
-            android:id="@+id/gender_title"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/standard_margin_one_forth"
-            android:text="你的性別"
-            android:textColor="@color/shadow"
-            android:textSize="@dimen/detail_text_size"
-            app:layout_constraintStart_toStartOf="@id/age_title"
-            app:layout_constraintEnd_toEndOf="@id/age_title"
-            app:layout_constraintTop_toBottomOf="@id/username_edit_container" />
+            android:layout_height="wrap_content">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+            android:padding="@dimen/standard_margin"
+                android:background="@color/background"
+                >
+                <TextView
+                    android:id="@+id/gender_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/standard_margin_one_forth"
+                    android:text="你的性別"
+                    android:textColor="@color/shadow"
+                    android:textSize="@dimen/detail_text_size"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    />
 
-        <RadioGroup
-            android:id="@+id/gender_group"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/age_title"
-            app:layout_constraintEnd_toEndOf="@id/age_title"
-            app:layout_constraintTop_toBottomOf="@id/gender_title">
+                <RadioGroup
+                    android:id="@+id/gender_group"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/gender_title">
 
-            <RadioButton
-                android:id="@+id/male"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/myPrimary"
-                android:text="男" />
+                    <RadioButton
+                        android:id="@+id/male"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="男" />
 
-            <RadioButton
-                android:id="@+id/female"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/myPrimary"
-                android:text="女" />
+                    <RadioButton
+                        android:id="@+id/female"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
 
-            <RadioButton
-                android:id="@+id/third_gender"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/myPrimary"
-                android:text="非二元性別" />
+                        android:text="女" />
 
-        </RadioGroup>
+                    <RadioButton
+                        android:id="@+id/third_gender"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:text="非二元性別" />
+
+                </RadioGroup>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
         <Button
             android:id="@+id/next_move"
             android:layout_width="wrap_content"

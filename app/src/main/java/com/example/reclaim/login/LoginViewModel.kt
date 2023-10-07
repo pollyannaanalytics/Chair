@@ -33,6 +33,7 @@ class LoginViewModel : ViewModel() {
                         val images = snapshot.data.get("images").toString()
                         val worriesDescription = snapshot.data.get("worries_description").toString()
                         val worriesType = snapshot.data.get("worries_type").toString()
+                        val age = snapshot.data.get("user_age").toString()
 
                         val userProfile = UserProfile(
                             userId = userId,
@@ -40,7 +41,8 @@ class LoginViewModel : ViewModel() {
                             gender = gender,
                             imageUri = images,
                             worriesDescription = worriesDescription,
-                            worryType = worriesType
+                            worryType = worriesType,
+                            age = age
                         )
                         _userProfile.value = userProfile
                         _canFindProfile.value = true
@@ -59,6 +61,7 @@ class LoginViewModel : ViewModel() {
             UserManager.userImage = userProfile.imageUri.toString()
             UserManager.userType = userProfile.worryType.toString()
             UserManager.gender = userProfile.gender.toString()
+            UserManager.age = userProfile.gender.toString()
             UserManager.worriesDescription = userProfile.worriesDescription.toString()
 
             Log.i(TAG, "user manager: $UserManager")
