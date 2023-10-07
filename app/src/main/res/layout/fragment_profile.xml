@@ -16,19 +16,84 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/primary_background"
 
         tools:context=".profile.ProfileFragment">
-        <androidx.cardview.widget.CardView
-            android:id="@+id/self_avator_container"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            app:cardCornerRadius="250dp"
-            android:layout_marginTop="@dimen/standard_margin"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+
+
+        <ImageView
+            android:id="@+id/round_background"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/round_backgound"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.6"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/edit_icon"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintWidth_percent="0.23"
+            app:layout_constraintEnd_toEndOf="@id/user_name"
+            app:layout_constraintBottom_toBottomOf="@id/age_description"
+            android:src="@drawable/edit_svgrepo_com__1_"
+
+            />
+        <TextView
+            android:id="@+id/edit_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/edit_icon"
+            android:textColor="@color/shadow"
+            app:layout_constraintTop_toBottomOf="@id/edit_icon"
+            app:layout_constraintEnd_toEndOf="@id/edit_icon"
+            android:textSize="@dimen/detail_text_size"
+
+            android:text="編輯"
+            android:gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/friend_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/standard_margin"
+            app:layout_constraintStart_toStartOf="@id/round_background"
+            app:layout_constraintTop_toTopOf="@id/round_background"
+            android:text="@{`Friends: ` + usermanager.friendNumber}"
+            app:layout_constraintEnd_toStartOf="@id/liker_number"
+            android:textSize="@dimen/detail_text_size"
+            android:textColor="@color/white"
+            />
+        <TextView
+            android:id="@+id/liker_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/friend_number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/friend_number"
+            android:text="@{`Got Likes: ` + usermanager.touchNumber}"
+            android:textSize="@dimen/detail_text_size"
+            android:textColor="@color/white"
+            />
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/self_avatar_container"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+           app:cardCornerRadius="250dp"
+            android:layout_marginTop="@dimen/standard_margin"
+            app:layout_constraintStart_toStartOf="@id/round_background"
+            app:layout_constraintTop_toBottomOf="@id/friend_number"
+            app:layout_constraintWidth_percent="0.4"
+            app:layout_constraintDimensionRatio="1"
+            android:layout_marginHorizontal="32dp"
             >
+
             <ImageView
                 android:id="@+id/self_avator_img"
                 android:layout_width="match_parent"
@@ -38,144 +103,100 @@
                 />
         </androidx.cardview.widget.CardView>
 
-       <ImageView
-           android:layout_width="match_parent"
-           android:layout_height="0dp"
-           app:layout_constraintHeight_percent="0.5"
-           android:src="@drawable/round_backgound"
-           app:layout_constraintTop_toTopOf="parent"
-
-
-
-           />
         <TextView
-            android:id="@+id/self_username"
+            android:id="@+id/user_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/self_avator_container"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:gravity="center"
-            android:fontFamily="@font/noto_sans"
-            android:textSize="@dimen/title_text_size"
-            android:textColor="@color/black"
+            android:layout_marginHorizontal="32dp"
+            app:layout_constraintEnd_toEndOf="@id/round_background"
+            app:layout_constraintStart_toEndOf="@id/self_avatar_container"
+            app:layout_constraintTop_toTopOf="@id/self_avatar_container"
+            app:layout_constraintBottom_toBottomOf="@id/self_avatar_container"
+            android:textSize="@dimen/subtitle_text_size"
+            android:text="@{usermanager.userName}"
+            android:textColor="@color/white"
             />
-        <TextView
-            android:id="@+id/self_tag"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textColor="@color/shadow"
-            android:gravity="center"
-            android:textSize="@dimen/detail_text_size"
-            android:fontFamily="@font/noto_sans"
-            app:layout_constraintStart_toStartOf="@id/self_username"
-            app:layout_constraintEnd_toEndOf="@id/self_username"
-            app:layout_constraintTop_toBottomOf="@id/self_username"
-            />
-        <TextView
-            android:id="@+id/self_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="@dimen/detail_text_size"
-            android:fontFamily="@font/noto_sans"
-            app:layout_constraintTop_toBottomOf="@id/self_tag"
-            app:layout_constraintStart_toStartOf="@id/self_tag"
-            app:layout_constraintEnd_toEndOf="@id/self_tag"
-            />
-
-        <Button
-            android:id="@+id/edit_profile"
-            android:text="Edit Profile"
-            android:fontFamily="@font/noto_sans"
-            app:layout_constraintTop_toBottomOf="@id/self_description"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/stroke_shape"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-       />
-        <androidx.cardview.widget.CardView
-            android:id="@+id/self_record"
+        <ImageView
+            android:id="@+id/gender_icon"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintHeight_percent="0.3"
-            app:layout_constraintWidth_percent="0.7"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:cardCornerRadius="60dp"
+            android:src="@drawable/gender_svgrepo_com__1_"
+            android:layout_marginVertical="@dimen/standard_margin"
+            app:layout_constraintTop_toBottomOf="@id/self_avatar_container"
+            app:layout_constraintStart_toStartOf="@id/self_avatar_container"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintWidth_percent="0.15"
+            />
 
-            app:layout_constraintTop_toBottomOf="@id/edit_profile"
+        <TextView
+            android:id="@+id/gender_description"
+            android:textColor="@color/white"
+            android:layout_marginTop="@dimen/standard_margin_one_forth"
+            android:text="@{usermanager.gender + `性`}"
+            android:textSize="@dimen/subtitle_text_size"
+            android:layout_marginLeft="@dimen/standard_margin_one_forth"
+            app:layout_constraintStart_toEndOf="@id/gender_icon"
+            app:layout_constraintEnd_toEndOf="@id/self_avatar_container"
+            app:layout_constraintTop_toTopOf="@id/gender_icon"
+            app:layout_constraintBottom_toBottomOf="@id/gender_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:id="@+id/age_icon"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/circular_line_with_word_age_in_the_center_svgrepo_com__1_"
+            android:layout_marginTop="@dimen/standard_margin"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintTop_toBottomOf="@id/gender_icon"
+            app:layout_constraintStart_toStartOf="@id/gender_icon"
+            app:layout_constraintEnd_toEndOf="@id/gender_icon"
+            />
+        <TextView
+            android:id="@+id/age_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/subtitle_text_size"
+            android:text="@{usermanager.age + `歲`}"
+            app:layout_constraintStart_toStartOf="@id/gender_description"
+            app:layout_constraintEnd_toEndOf="@id/gender_description"
+            app:layout_constraintTop_toTopOf="@id/age_icon"
+            app:layout_constraintBottom_toBottomOf="@id/age_icon"
+            />
+        <TextView
+            android:id="@+id/worries_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_margin"
+            app:layout_constraintTop_toBottomOf="@id/round_background"
+            app:layout_constraintStart_toStartOf="@id/self_avatar_container"
+            app:layout_constraintEnd_toEndOf="@id/user_name"
+            android:textSize="@dimen/detail_text_size"
+            android:textColor="@color/shadow"
+            android:text="關於我的煩惱"
+            />
+        <TextView
+            android:id="@+id/worries_description"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/standard_margin"
+            app:layout_constraintStart_toStartOf="@id/worries_title"
+            app:layout_constraintEnd_toEndOf="@id/worries_title"
+            app:layout_constraintTop_toBottomOf="@id/worries_title"
+            android:textColor="@color/myPrimary"
+            android:textSize="@dimen/subtitle_text_size"
+            android:text="@{usermanager.worriesDescription}"
             app:layout_constraintBottom_toBottomOf="parent"
-            >
-           <androidx.constraintlayout.widget.ConstraintLayout
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/standard_margin"
 
-               android:background="@drawable/round_square"
-
-               >
-               <ImageView
-                   android:id="@+id/friend_icon"
-                   android:src="@drawable/user_add__2_"
-                   android:layout_width="0dp"
-                   android:layout_height="0dp"
-                   app:flow_verticalStyle="spread"
-                   android:layout_marginLeft="@dimen/standard_margin"
-                   app:layout_constraintDimensionRatio="1:1"
-                   app:layout_constraintHorizontal_chainStyle="spread"
-                   app:layout_constraintHorizontal_weight="0.1"
-                   app:layout_constraintEnd_toStartOf="@id/friend_number_description"
-                   app:layout_constraintStart_toStartOf="parent"
-                   app:layout_constraintTop_toTopOf="parent"
-                   app:layout_constraintBottom_toTopOf="@id/like_icon"
-                   />
-
-               <TextView
-                   android:id="@+id/friend_number_description"
-                   android:layout_width="0dp"
-                   android:layout_height="wrap_content"
-                   android:layout_marginLeft="@dimen/standard_margin"
-                   android:textColor="@color/white"
-                   android:fontFamily="@font/noto_sans"
-                   android:textSize="@dimen/detail_text_size"
-                   app:layout_constraintBottom_toBottomOf="@id/friend_icon"
-                   app:layout_constraintEnd_toEndOf="parent"
-                   app:layout_constraintHorizontal_weight="0.5"
-                   app:layout_constraintStart_toEndOf="@id/friend_icon"
-                   app:layout_constraintTop_toTopOf="@id/friend_icon"
-                   app:layout_constraintVertical_bias="0.523" />
-
-               <ImageView
-                   android:id="@+id/like_icon"
-                   android:layout_width="0dp"
-                   android:layout_height="0dp"
-                   android:src="@drawable/heart__3_"
-                   app:layout_constraintStart_toStartOf="@id/friend_icon"
-                   app:layout_constraintEnd_toEndOf="@id/friend_icon"
-                   app:layout_constraintDimensionRatio="1:1"
-                   app:layout_constraintBottom_toBottomOf="parent"
-                   app:layout_constraintTop_toBottomOf="@id/friend_icon"
-                   />
-
-               <TextView
-                   android:id="@+id/like_description"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:textColor="@color/white"
-                   android:textSize="@dimen/detail_text_size"
-                   app:layout_constraintBottom_toBottomOf="@id/like_icon"
-                   app:layout_constraintStart_toStartOf="@id/friend_number_description"
-                   app:layout_constraintTop_toTopOf="@id/like_icon"
-                   app:layout_constraintVertical_bias="0.0" />
-
-           </androidx.constraintlayout.widget.ConstraintLayout>
+            />
 
 
 
 
-        </androidx.cardview.widget.CardView>
+
+
 
 
 

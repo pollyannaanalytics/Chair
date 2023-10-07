@@ -32,19 +32,14 @@ class ProfileFragment : Fragment() {
         val binding = FragmentProfileBinding.inflate(inflater)
         binding.viewModel = viewModel
         binding.usermanager = UserManager
-        binding.selfUsername.setText(UserManager.userName)
-        binding.selfDescription.setText(UserManager.worriesDescription)
-        binding.selfTag.setText("${UserManager.age + "yrs, " + UserManager.gender}")
 
 
-        binding.friendNumberDescription.setText("目前有你有 ${UserManager.friendNumber} 個朋友! ")
 
-        viewModel.touchPeople.observe(viewLifecycleOwner){
-            binding.likeDescription.setText("目前你滑過 ${it} 個人! ")
+        binding.editIcon.setOnClickListener {
+            findNavController().navigate(ProfileFragmentDirections.actionAlreadySignUpProfileFragmentToProfileFragment())
         }
 
-
-        binding.editProfile.setOnClickListener {
+        binding.editDescription.setOnClickListener {
             findNavController().navigate(ProfileFragmentDirections.actionAlreadySignUpProfileFragmentToProfileFragment())
         }
 
