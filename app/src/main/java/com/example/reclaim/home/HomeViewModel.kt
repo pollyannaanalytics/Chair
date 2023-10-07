@@ -96,6 +96,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                                     snapshot.get("worries_description").toString()
                                 val worriesType = snapshot.get("worries_type").toString()
                                 val age = snapshot.get("user_age").toString()
+                                val selfDescription = snapshot.get("self_description").toString()
 
                                 val newUserProfile = UserProfile(
                                     userId = userId,
@@ -104,7 +105,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                                     worryType = worriesType,
                                     worriesDescription = worriesDescription,
                                     imageUri = images,
-                                    age = age
+                                    age = age,
+                                    selfDescription = selfDescription
                                 )
                                 currentList.add(newUserProfile)
                             }
@@ -160,6 +162,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                                     snapshot.get("worries_description").toString()
                                 val worriesType = snapshot.get("worries_type").toString()
                                 val age = snapshot.get("user_age").toString()
+                                val selfDescription = snapshot.get("self_description").toString()
 
                                 val newUserProfile = UserProfile(
                                     userId = userId,
@@ -168,7 +171,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                                     worryType = worriesType,
                                     worriesDescription = worriesDescription,
                                     imageUri = images,
-                                    age = age
+                                    age = age,
+                                    selfDescription = selfDescription
                                 )
                                 currentList.add(newUserProfile)
                             }
@@ -238,6 +242,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                                 snapshot.get("worries_description").toString()
                             val worriesType = snapshot.get("worries_type").toString()
                             val age = snapshot.get("user_age").toString()
+                            val selfDescription = snapshot.get("self_description").toString()
 
                             val newUserProfile = UserProfile(
                                 userId = userId,
@@ -246,7 +251,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                                 worryType = worriesType,
                                 worriesDescription = worriesDescription,
                                 imageUri = images,
-                                age = age
+                                age = age,
+                                selfDescription = selfDescription
                             )
                             currentList.add(newUserProfile)
                         }
@@ -287,6 +293,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                                 snapshot.get("worries_description").toString()
                             val worriesType = snapshot.get("worries_type").toString()
                             val age = snapshot.get("user_age").toString()
+                            val selfDescription = snapshot.get("self_description").toString()
 
                             val newUserProfile = UserProfile(
                                 userId = userId,
@@ -295,7 +302,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                                 worryType = worriesType,
                                 worriesDescription = worriesDescription,
                                 imageUri = images,
-                                age = age
+                                age = age,
+                                selfDescription = selfDescription
                             )
                             currentList.add(newUserProfile)
                         }

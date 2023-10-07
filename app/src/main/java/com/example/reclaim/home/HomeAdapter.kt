@@ -20,6 +20,16 @@ class HomeAdapter(val context: Context, val list: List<UserProfile>, val onClick
             binding.worryType.text = item.worryType
             binding.worriesDescription.setText(item.worriesDescription)
             binding.userTag.text = item.gender + "， 30"
+            binding.aboutmeDescription.text = item.selfDescription
+
+            binding.aboutmeTitle.visibility = View.GONE
+            binding.aboutmeDescription.visibility = View.GONE
+
+            binding.infoBtn.setOnClickListener {
+                binding.aboutmeTitle.visibility = View.VISIBLE
+                binding.aboutmeDescription.visibility = View.VISIBLE
+            }
+
             if(item.worryType == UserManager.userType){
                 binding.sameTypeTag.visibility = View.VISIBLE
                 binding.sameTypeContainer.visibility = View.VISIBLE

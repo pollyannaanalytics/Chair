@@ -29,7 +29,9 @@ data class UserProfile(
     @ColumnInfo(name = "image_uri")
     var imageUri: String?,
 
-    var age: String?
+    var age: String?,
+
+    var selfDescription : String?
 
 
 )
