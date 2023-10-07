@@ -25,19 +25,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
 
-            android:progressTint="@color/myPrimary"/>
+            android:progressTint="@color/bgPrimary"/>
+
         <TextView
             android:id="@+id/question"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/progress_bar"
-            android:textSize="@dimen/title_text_size"
-            android:textColor="@color/myPrimary"
-            android:textStyle="bold"
             android:text="來談談你的煩惱..."
-            />
+            android:textColor="@color/shadow"
+            android:textSize="@dimen/title_text_size"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/progress_bar" />
+
         <TextView
             android:id="@+id/question_description"
             android:layout_width="0dp"
