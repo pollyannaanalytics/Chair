@@ -14,4 +14,5 @@ object UserManager {
     var worriesDescription = ""
     var friendNumber = 0
     var touchNumber = 0
+    var selfDescription = ""
 }

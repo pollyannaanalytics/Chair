@@ -62,6 +62,7 @@ class CreateProfileFragment : Fragment() {
         var gender = ""
         var worriesDescription = ""
         var userAge = ""
+        var selfDescription = ""
 
         UserManager.userId =
             requireActivity().getSharedPreferences(
@@ -70,22 +71,26 @@ class CreateProfileFragment : Fragment() {
             ).all.get(userManagerIdInSharePreferences)
                 .toString()
 
-
-
         binding.progressBar.apply {
             max = 100
             progress = 0
         }
 
+        binding.chooseImgBtn.setOnClickListener {
+            checkImagePermission()
+            pickImageFromGallery()
+        }
+
         binding.ageEdit.doAfterTextChanged {
             userAge = it.toString()
             Log.i(TAG, "userAge: $it")
-            binding.progressBar.progress = 40
         }
+
+
 
         binding.ageEdit.setOnKeyListener { _, keyCode, keyEvent ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN) {
-                binding.progressBar.progress = 20
+                binding.progressBar.progress = 10
                 val imm =
                     this.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(binding.ageEdit.windowToken, 0)
@@ -102,7 +107,7 @@ class CreateProfileFragment : Fragment() {
 
         binding.usernameEdit.setOnKeyListener { _, keyCode, keyEvent ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN) {
-                binding.progressBar.progress = 40
+                binding.progressBar.progress = 30
                 val imm =
                     this.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(binding.usernameEdit.windowToken, 0)
@@ -111,16 +116,22 @@ class CreateProfileFragment : Fragment() {
             false
         }
 
-        binding.chooseImgBtn.setOnClickListener {
-            checkImagePermission()
-            pickImageFromGallery()
 
 
+
+        binding.selfDescriptionEdit.doAfterTextChanged {
+            selfDescription = it.toString()
+
+            binding.progressBar.progress = 80
         }
+
+
+
         binding.nextMove.setOnClickListener {
             UserManager.age = userAge
             UserManager.userName = username
             UserManager.gender = gender
+            UserManager.selfDescription = selfDescription
 
 
             viewModel.uploadImageToFireStorage(imageUri.toString())
