@@ -36,7 +36,8 @@ data class ProfileData(
     var gender: String? = "",
     var worriesDescription: String? = "",
     var worriesType: String? = "",
-    var images: String? = ""
+    var images: String? = "",
+    var selfDescription: String? = ""
 )
 
 
@@ -50,7 +51,7 @@ enum class WorriesType {
     SCHOOL
 }
 
-private const val TAG = "PROFILEVIEWMODEL"
+private const val TAG = "edit_profile_viewmodel"
 
 
 class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel() {
@@ -96,7 +97,8 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
         userGender: String?,
         worriesDescription: String?,
         worriesType: String?,
-        images: String
+        images: String,
+        selfDescription: String?
     ) {
         val userData = _userProfile.value
         userData?.userName = userName
@@ -104,6 +106,7 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
         userData?.worriesDescription = worriesDescription
         userData?.worriesType = worriesType
         userData?.images = images.toString()
+        userData?.selfDescription = selfDescription
         _userProfile.value = userData
 
 
@@ -157,7 +160,7 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
                         val currentType = result
                         _userProfile.value?.worriesType = currentType
 //                        saveInLocalDB()
-//                        UserManager.userType = result
+                        UserManager.userType = result
                         _readyToUploadOnFirebase.value = true
 
                         Log.i(TAG, "result is$result")

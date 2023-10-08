@@ -34,7 +34,7 @@ import com.example.reclaim.databinding.FragmentEditProfileBinding
  * create an instance of this fragment.
  */
 class EditProfileFragment : Fragment() {
-    val TAG = "PROFILE_PAGE"
+    val TAG = "edit_profile"
 
 
     private var imageUri: Uri? = UserManager.contentImage.toUri()
@@ -56,11 +56,22 @@ class EditProfileFragment : Fragment() {
         binding = FragmentEditProfileBinding.inflate(inflater)
 
 //        viewPager = binding.chooseImgContent
-        var userId = ""
+        var userAge = ""
         var username = ""
         var gender = ""
         var worriesDescription = ""
         var selfDescription = ""
+
+        try {
+            when(UserManager.gender){
+                "男" -> binding.male.isChecked = true
+                "女" -> binding.female.isChecked = true
+                "非二元性別" -> binding.thirdGender.isChecked = true
+            }
+        }catch (e: Exception){
+            Log.e(TAG, "cannot click gender: $e")
+        }
+
 
 
 
@@ -70,7 +81,7 @@ class EditProfileFragment : Fragment() {
         binding.userManager = UserManager
 
         binding.ageEdit.doAfterTextChanged {
-            userId = it.toString()
+            userAge = it.toString()
             Log.i(TAG, "userId: $it")
         }
 
@@ -109,8 +120,9 @@ class EditProfileFragment : Fragment() {
 
 
         binding.submitBtn.setOnClickListener {
+            binding.loadingAnimation.playAnimation()
             Log.i(TAG, "imageURI: $imageUri")
-            UserManager.userId = userId
+            UserManager.age = userAge
             UserManager.userName = username
             UserManager.gender = gender
             UserManager.worriesDescription = worriesDescription
@@ -131,7 +143,8 @@ class EditProfileFragment : Fragment() {
                     gender,
                     worriesDescription,
                     it.first().message.trim(),
-                    imageUri.toString()
+                    imageUri.toString(),
+                    UserManager.worriesDescription
                 )
             }
 
@@ -147,6 +160,7 @@ class EditProfileFragment : Fragment() {
 
         viewModel.showLottie.observe(viewLifecycleOwner){
             if (it == true){
+                binding.loadingAnimation.cancelAnimation()
                 binding.successfullyAnimation.playAnimation()
                 findNavController().navigate(
                     EditProfileFragmentDirections.actionProfileFragmentToAlreadySignUpProfileFragment()
