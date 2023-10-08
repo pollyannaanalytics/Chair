@@ -28,7 +28,6 @@ import com.example.reclaim.data.UserManager
 import com.example.reclaim.databinding.FragmentEditProfileBinding
 
 
-
 /**
  * A simple [Fragment] subclass.
  * Use the [EditProfileFragment.newInstance] factory method to
@@ -61,6 +60,7 @@ class EditProfileFragment : Fragment() {
         var username = ""
         var gender = ""
         var worriesDescription = ""
+        var selfDescription = ""
 
 
 
@@ -71,23 +71,28 @@ class EditProfileFragment : Fragment() {
 
         binding.ageEdit.doAfterTextChanged {
             userId = it.toString()
-            Log.i(TAG,"userId: $it")
+            Log.i(TAG, "userId: $it")
         }
 
 
         binding.usernameEdit.doAfterTextChanged {
             username = it.toString()
-            Log.i(TAG,"userId: $it")
+            Log.i(TAG, "userId: $it")
         }
 
         binding.worriesEdit.doAfterTextChanged {
             worriesDescription = it.toString()
-            Log.i(TAG,"userId: $it")
+            Log.i(TAG, "userId: $it")
         }
 
         binding.chooseImgBtn.setOnClickListener {
             checkImagePermission()
             pickImageFromGallery()
+        }
+
+        binding.selfDescriptionEdit.doAfterTextChanged {
+            selfDescription = it.toString()
+
         }
 
 
@@ -105,13 +110,14 @@ class EditProfileFragment : Fragment() {
 
         binding.submitBtn.setOnClickListener {
             Log.i(TAG, "imageURI: $imageUri")
-                UserManager.userId = userId
-                UserManager.userName = username
-                UserManager.gender = gender
-                UserManager.worriesDescription = worriesDescription
-                UserManager.userImage = imageUri.toString()
+            UserManager.userId = userId
+            UserManager.userName = username
+            UserManager.gender = gender
+            UserManager.worriesDescription = worriesDescription
+            UserManager.userImage = imageUri.toString()
+            UserManager.selfDescription = selfDescription
 
-                viewModel.sendDescriptionToGPT(worriesDescription)
+            viewModel.sendDescriptionToGPT(worriesDescription)
         }
 
         binding.cancelEditBtn.setOnClickListener {
@@ -134,7 +140,6 @@ class EditProfileFragment : Fragment() {
         viewModel.readyToUploadOnFirebase.observe(viewLifecycleOwner) {
             if (it != false) {
                 viewModel.uploadImageToFireStorage(imageUri.toString())
-                binding.finishLottie.playAnimation()
 
                 findNavController().navigate(
                     EditProfileFragmentDirections.actionProfileFragmentToAlreadySignUpProfileFragment()

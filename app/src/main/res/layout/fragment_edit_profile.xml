@@ -251,6 +251,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/self_description_edit"
                     android:lines="8"
+                    android:text="@{userManager.selfDescription}"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 

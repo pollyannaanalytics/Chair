@@ -7,6 +7,7 @@ import com.example.reclaim.data.UserManager
 import com.google.firebase.storage.FirebaseStorage
 import java.util.UUID
 
+
 class CreateProfileViewModel: ViewModel() {
 private val TAG = "createprofile"
 

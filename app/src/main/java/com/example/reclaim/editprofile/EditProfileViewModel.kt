@@ -1,6 +1,7 @@
 package com.example.reclaim.editprofile
 
 import android.util.Log
+import androidx.compose.animation.core.snap
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -58,6 +59,10 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
     val userProfile: LiveData<ProfileData?>
         get() = _userProfile
 
+    private var _showLottie = MutableLiveData<Boolean>()
+    val showLottie: LiveData<Boolean>
+        get() = _showLottie
+
     private val _messageList = MutableLiveData<MutableList<MessageToGPT>>()
     val messageList: LiveData<MutableList<MessageToGPT>>
         get() = _messageList
@@ -103,38 +108,6 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
 
 
     }
-
-//    private fun saveUserProfileInLocal() {
-//        val currentUser = UserProfile(
-//            userId = UserManager.userId,
-//            userName = _userProfile.value?.userName,
-//            gender = _userProfile.value?.gender,
-//            worryType = _userProfile.value?.worriesType,
-//            worriesDescription = _userProfile.value?.worriesDescription,
-//            imageUri = _userProfile.value?.images.toString(),
-//        )
-//        viewModelScope.launch {
-//            databaseDao.insertUserProfile(currentUser)
-//        }
-//
-//    }
-
-//    private fun saveImagesInLocal() {
-//        _userProfile.value?.images?.forEach {
-//            val images = Images(userId = UserManager.userId, imageUri = it)
-//            viewModelScope.launch {
-//                databaseDao.saveImages(images)
-//            }
-//
-//        }
-//    }
-
-//    private fun saveInLocalDB() {
-//        viewModelScope.launch {
-//            saveUserProfileInLocal()
-////            saveImagesInLocal()
-//        }
-//    }
 
 
     private fun addToChatGPT(message: String, sentBy: String, timestamp: String) {
@@ -225,30 +198,32 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
 
     fun uploadProfileToFirebase(image: String) {
         val profile = FirebaseFirestore.getInstance().collection("user_profile")
-        try {
-            val data = hashMapOf(
-                "user_id" to UserManager.userId,
-                "user_name" to _userProfile.value?.userName,
-                "gender" to _userProfile.value?.gender,
-                "worries_description" to _userProfile.value?.worriesDescription,
-                "worries_type" to UserManager.userType,
-                "images" to image,
-                "profile_time" to Calendar.getInstance().timeInMillis
-            )
-            Log.i(TAG, "my profile is $data")
 
-            profile.add(data)
-                .addOnSuccessListener {
-                    Log.i(TAG, "upload success")
+            profile.whereEqualTo("user_id", UserManager.userId).get().addOnSuccessListener{snapshots ->
+                if (!snapshots.isEmpty){
+                    for (snapshot in snapshots){
+                        val documentId = snapshot.id
+                        val dataMap = mapOf<String, String>(
+                            "user_id" to UserManager.userId,
+                            "user_name" to UserManager.userName,
+                            "gender" to UserManager.gender,
+                            "worries_description" to UserManager.worriesDescription,
+                            "worries_type" to UserManager.userType,
+                            "images" to image,
+                            "user_age" to UserManager.age,
+                            "self_description" to UserManager.selfDescription,
+                            "profile_time" to Calendar.getInstance().timeInMillis.toString()
+                        )
+
+                        profile.document(documentId).update(dataMap).addOnSuccessListener {
+                            _showLottie.value = true
+                        }.addOnFailureListener {
+                            Log.e(TAG, "cannot update: $it")
+                        }
+                    }
                 }
-                .addOnFailureListener {
-                    Log.i(TAG, "upload failed")
-                }
-        }catch (e: Exception){
-            Log.e(TAG, "cannot upload: $e")
-        }
 
-
+            }
 
 
 
@@ -266,6 +241,7 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
             imageRef.downloadUrl.addOnSuccessListener {
                 currentUri = it.toString()
                 uploadProfileToFirebase(currentUri)
+                UserManager.userImage = currentUri
                 Log.i(TAG, "upload successfully, url is $it")
             }
 
@@ -279,7 +255,7 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
     }
 
 
-    fun removeSnapListener(){
+    fun removeSnapListener() {
         _onDestroyed.value = true
     }
 
