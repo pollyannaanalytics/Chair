@@ -25,8 +25,13 @@ class HomeAdapter(val context: Context, val list: List<UserProfile>, val onClick
             binding.aboutmeDescription.visibility = View.GONE
 
             binding.infoBtn.setOnClickListener {
-                binding.aboutmeTitle.visibility = View.VISIBLE
-                binding.aboutmeDescription.visibility = View.VISIBLE
+                if (binding.aboutmeTitle.visibility == View.VISIBLE){
+                    binding.aboutmeTitle.visibility = View.GONE
+                    binding.aboutmeDescription.visibility = View.GONE
+                }else{
+                    binding.aboutmeTitle.visibility = View.VISIBLE
+                    binding.aboutmeDescription.visibility = View.VISIBLE
+                }
             }
 
             if(item.worryType == UserManager.userType){
