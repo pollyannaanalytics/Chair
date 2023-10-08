@@ -141,6 +141,13 @@ class EditProfileFragment : Fragment() {
             if (it != false) {
                 viewModel.uploadImageToFireStorage(imageUri.toString())
 
+
+            }
+        }
+
+        viewModel.showLottie.observe(viewLifecycleOwner){
+            if (it == true){
+                binding.successfullyAnimation.playAnimation()
                 findNavController().navigate(
                     EditProfileFragmentDirections.actionProfileFragmentToAlreadySignUpProfileFragment()
                 )

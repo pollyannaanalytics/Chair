@@ -196,7 +196,7 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
         callApi(question)
     }
 
-    fun uploadProfileToFirebase(image: String) {
+    private fun uploadProfileToFirebase(image: String) {
         val profile = FirebaseFirestore.getInstance().collection("user_profile")
 
             profile.whereEqualTo("user_id", UserManager.userId).get().addOnSuccessListener{snapshots ->
