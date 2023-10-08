@@ -75,6 +75,7 @@ class LoadingViewModel: ViewModel() {
         UserManager.userType = userProfile.let { it!!.worryType.toString() }
         UserManager.gender = userProfile.let { it!!.gender.toString() }
         UserManager.age = userProfile.let { it!!.age.toString() }
+        UserManager.selfDescription = userProfile.let { it!!.selfDescription.toString() }
 
         UserManager.worriesDescription = userProfile.let { it!!.worriesDescription.toString() }
     }

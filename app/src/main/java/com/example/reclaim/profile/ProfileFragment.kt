@@ -39,9 +39,6 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(ProfileFragmentDirections.actionAlreadySignUpProfileFragmentToProfileFragment())
         }
 
-        binding.editDescription.setOnClickListener {
-            findNavController().navigate(ProfileFragmentDirections.actionAlreadySignUpProfileFragmentToProfileFragment())
-        }
 
         return binding.root
     }

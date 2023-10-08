@@ -63,10 +63,11 @@ class LoginViewModel : ViewModel() {
             UserManager.userImage = userProfile.imageUri.toString()
             UserManager.userType = userProfile.worryType.toString()
             UserManager.gender = userProfile.gender.toString()
-            UserManager.age = userProfile.gender.toString()
+            UserManager.age = userProfile.age.toString()
             UserManager.worriesDescription = userProfile.worriesDescription.toString()
+            UserManager.selfDescription = userProfile.selfDescription.toString()
 
-            Log.i(TAG, "user manager: $UserManager")
+            Log.i(TAG, "user manager: ${UserManager.selfDescription}")
 
         }catch (e: Exception){
             Log.e(TAG, "cannot save in usermanager: $e")

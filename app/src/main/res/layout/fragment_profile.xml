@@ -26,7 +26,7 @@
             android:layout_height="0dp"
             android:background="@drawable/round_backgound"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.5"
+            app:layout_constraintHeight_percent="0.2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,27 +35,23 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:src="@drawable/edit_2_svgrepo_com__1_"
-            app:layout_constraintTop_toTopOf="@id/gender_icon"
+
             app:layout_constraintDimensionRatio="1"
-            android:layout_marginRight="@dimen/standard_margin_half"
-            app:layout_constraintEnd_toEndOf="@id/user_name"
-            app:layout_constraintWidth_percent="0.2"
-
+            android:translationZ="@dimen/standard_margin"
+            app:layout_constraintEnd_toEndOf="@id/self_avatar_container"
+            app:layout_constraintBottom_toBottomOf="@id/self_avatar_container"
+            app:layout_constraintWidth_percent="0.1"
             />
 
-        <TextView
-            android:id="@+id/edit_description"
+
+
+        <ImageView
+            android:id="@+id/friend_avatar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/friend_svgrepo_com"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/edit_icon"
-            android:textColor="@color/shadow"
-            app:layout_constraintTop_toBottomOf="@id/edit_icon"
-            app:layout_constraintEnd_toEndOf="@id/edit_icon"
-            android:textSize="@dimen/detail_text_size"
-
-            android:text="編輯"
-            android:gravity="center"
-            />
+            android:layout_height="0dp"/>
 
         <TextView
             android:id="@+id/friend_number"
@@ -67,7 +63,8 @@
             android:text="@{`Friends: ` + usermanager.friendNumber}"
             app:layout_constraintEnd_toStartOf="@id/liker_number"
             android:textSize="@dimen/detail_text_size"
-            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textColor="@color/shadow"
             />
         <TextView
             android:id="@+id/liker_number"
@@ -78,7 +75,8 @@
             app:layout_constraintTop_toTopOf="@id/friend_number"
             android:text="@{`Got Likes: ` + usermanager.touchNumber}"
             android:textSize="@dimen/detail_text_size"
-            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textColor="@color/shadow"
             />
         <androidx.cardview.widget.CardView
             android:id="@+id/self_avatar_wrapper"
@@ -91,7 +89,6 @@
             app:layout_constraintWidth_percent="0.3"
             app:layout_constraintDimensionRatio="1"
             android:layout_marginHorizontal="32dp"
-            android:background="@color/shadow"
             />
 
 
@@ -118,20 +115,41 @@
                 />
         </androidx.cardview.widget.CardView>
 
+
         <TextView
             android:id="@+id/user_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginHorizontal="32dp"
-            app:layout_constraintEnd_toEndOf="@id/round_background"
-            app:layout_constraintStart_toEndOf="@id/self_avatar_container"
-            app:layout_constraintTop_toTopOf="@id/self_avatar_container"
-            app:layout_constraintBottom_toBottomOf="@id/self_avatar_container"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:layout_marginRight="@dimen/standard_margin"
+            app:layout_constraintStart_toStartOf="@id/self_avatar_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/self_avatar_container"
             android:textSize="@dimen/title_text_size"
             android:text="@{usermanager.userName}"
-            android:textColor="@color/white"
+            android:textColor="@color/shadow"
             />
+
+        <ImageView
+            android:id="@+id/google_icon"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/standard_margin_half"
+            android:background="@drawable/account_settings_svgrepo_com"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintStart_toStartOf="@id/user_name"
+            app:layout_constraintTop_toBottomOf="@id/user_name"
+            app:layout_constraintWidth_percent="0.08" />
+        <TextView
+            android:id="@+id/google_account"
+            android:layout_marginLeft="@dimen/standard_margin_half"
+            android:text="pinyunwuu@gmail.com"
+            app:layout_constraintStart_toEndOf="@id/google_icon"
+            app:layout_constraintTop_toTopOf="@id/google_icon"
+            app:layout_constraintEnd_toEndOf="@id/user_name"
+            app:layout_constraintBottom_toBottomOf="@id/google_icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
         <ImageView
             android:id="@+id/gender_icon"
             android:layout_width="0dp"
@@ -139,39 +157,38 @@
             android:src="@drawable/gender_svgrepo_com__1_"
             android:layout_marginVertical="@dimen/standard_margin"
             android:layout_marginBottom="@dimen/standard_margin_half"
+            android:layout_marginRight="@dimen/standard_margin"
             app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintBottom_toTopOf="@id/age_icon"
-            app:layout_constraintTop_toBottomOf="@id/self_avatar_container"
-            app:layout_constraintStart_toStartOf="@id/self_avatar_container"
+            app:layout_constraintTop_toBottomOf="@id/google_icon"
+            app:layout_constraintStart_toStartOf="@id/google_icon"
             app:layout_constraintDimensionRatio="1"
-            app:layout_constraintWidth_percent="0.1"
+            app:layout_constraintWidth_percent="0.08"
             />
 
         <TextView
             android:id="@+id/gender_description"
-            android:textColor="@color/white"
+            android:textColor="@color/shadow"
             android:layout_marginTop="@dimen/standard_margin_one_forth"
             android:text="@{usermanager.gender + `性`}"
             android:textSize="@dimen/detail_text_size"
-            android:layout_marginLeft="@dimen/standard_margin_one_forth"
+            android:textStyle="bold"
+            android:layout_marginLeft="@dimen/standard_margin_half"
             android:gravity="center"
             app:layout_constraintStart_toEndOf="@id/gender_icon"
-            app:layout_constraintEnd_toEndOf="@id/self_avatar_container"
             app:layout_constraintTop_toTopOf="@id/gender_icon"
             app:layout_constraintBottom_toBottomOf="@id/gender_icon"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <ImageView
             android:id="@+id/age_icon"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:src="@drawable/circular_line_with_word_age_in_the_center_svgrepo_com__1_"
-            android:layout_marginTop="@dimen/standard_margin_half"
-            app:layout_constraintBottom_toBottomOf="@id/round_background"
+            app:layout_constraintWidth_percent="0.08"
             app:layout_constraintDimensionRatio="1"
-            app:layout_constraintTop_toBottomOf="@id/gender_icon"
-            app:layout_constraintStart_toStartOf="@id/gender_icon"
-            app:layout_constraintEnd_toEndOf="@id/gender_icon"
+            app:layout_constraintTop_toTopOf="@id/gender_icon"
+            app:layout_constraintStart_toEndOf="@id/gender_description"
+            app:layout_constraintEnd_toEndOf="parent"
 
             />
         <TextView
@@ -179,60 +196,139 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="@dimen/detail_text_size"
+            android:textStyle="bold"
             android:text="@{usermanager.age + `歲`}"
             android:gravity="center"
-            android:textColor="@color/whitegrey"
-            app:layout_constraintStart_toStartOf="@id/gender_description"
-            app:layout_constraintEnd_toEndOf="@id/self_avatar_container"
-            app:layout_constraintTop_toTopOf="@id/age_icon"
-            app:layout_constraintBottom_toBottomOf="@id/age_icon"
+            android:layout_marginLeft="@dimen/standard_margin_half"
+            app:layout_constraintStart_toEndOf="@id/age_icon"
+            app:layout_constraintTop_toTopOf="@id/gender_description"
+            app:layout_constraintBottom_toBottomOf="@id/gender_description"
             />
-        <TextView
-            android:id="@+id/worries_title"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/worries_card"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/standard_margin"
-            android:layout_marginTop = "@dimen/standard_margin"
-            app:layout_constraintTop_toBottomOf="@id/round_background"
-            app:layout_constraintStart_toStartOf="@id/self_avatar_container"
-            app:layout_constraintEnd_toEndOf="@id/user_name"
-            android:textSize="@dimen/detail_text_size"
-            android:textColor="@color/shadow"
-            android:text="關於我的煩惱"
-            />
-        <TextView
-            android:id="@+id/worries_description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/age_icon"
+            android:layout_marginTop="@dimen/subtitle_text_size"
+            android:layout_marginHorizontal="@dimen/standard_margin"
+            app:cardCornerRadius="@dimen/standard_margin"
+            >
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/background"
+                >
+                <TextView
+                    android:id="@+id/worries_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:layout_marginTop = "@dimen/standard_margin"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginHorizontal="@dimen/standard_margin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+
+                    android:text="關於我的煩惱"
+                    />
+                <TextView
+                    android:id="@+id/worries_description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/standard_margin_one_forth"
+                    app:layout_constraintStart_toStartOf="@id/worries_title"
+                    app:layout_constraintEnd_toEndOf="@id/worries_title"
+                    app:layout_constraintTop_toBottomOf="@id/worries_title"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="@dimen/standard_margin"
+                    android:textColor="@color/shadow"
+                    android:textSize="@dimen/detail_text_size"
+                    android:textStyle="bold"
+                    android:text="@{usermanager.worriesDescription}"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/self_card"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/standard_margin"
+            android:layout_marginTop="@dimen/standard_margin"
+            app:layout_constraintStart_toStartOf="@id/worries_card"
+            app:layout_constraintEnd_toEndOf="@id/worries_card"
+            app:layout_constraintTop_toBottomOf="@id/worries_card"
+            >
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/background"
+                >
+
+                <TextView
+                    android:id="@+id/self_description_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="我的自我介紹"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginLeft="@dimen/standard_margin"
+                    android:layout_marginRight="@dimen/standard_margin"
+                    android:layout_marginTop="@dimen/standard_margin"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+                <TextView
+                    android:id="@+id/self_description_content"
+                    android:text="@{usermanager.selfDescription}"
+                    android:textSize="@dimen/standard_margin"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@id/self_description_title"
+                    app:layout_constraintStart_toStartOf="@id/self_description_title"
+                    app:layout_constraintEnd_toEndOf="@id/self_description_title"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="@dimen/standard_margin"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <ImageView
+            android:id="@+id/app_icon"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/standard_margin_one_forth"
-            app:layout_constraintStart_toStartOf="@id/worries_title"
-            app:layout_constraintEnd_toEndOf="@id/worries_title"
-            app:layout_constraintTop_toBottomOf="@id/worries_title"
-            android:textColor="@color/shadow"
-            android:textSize="@dimen/detail_text_size"
-            android:textStyle="bold"
-            android:text="@{usermanager.worriesDescription}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="@dimen/standard_margin"
+            app:layout_constraintWidth_percent="0.15"
+            app:layout_constraintDimensionRatio="1"
+            android:alpha="0.5"
+            android:background="@drawable/chair_9_svgrepo_com"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:layout_marginLeft="@dimen/standard_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/app_name"
             />
         <TextView
-            android:id="@+id/self_description_title"
-            android:layout_width="0dp"
+            android:id="@+id/app_name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/worries_description"
-            app:layout_constraintStart_toStartOf="@id/worries_description"
-            app:layout_constraintEnd_toEndOf="@id/worries_description"
-
+            android:text="@string/app_name"
+            android:textStyle="bold"
+            android:textSize="@dimen/subtitle_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="@dimen/standard_margin"
             />
 
 
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
-
-
-
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
