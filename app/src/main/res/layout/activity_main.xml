@@ -29,13 +29,29 @@
                 android:layout_height="match_parent">
                 <ImageView
                     android:id="@+id/toolbar_logo"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
+                    app:layout_constraintWidth_percent="0.12"
+                    app:layout_constraintDimensionRatio="1"
+                    android:background="@drawable/chair_9_svgrepo_com"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/app_name"
+                    app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:src="@drawable/reclaim_title"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"/>
+                <TextView
+                    android:id="@+id/app_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/standard_margin_half"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@id/toolbar_logo"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/toolbar_logo"
+                    android:text="@string/app_name"
+                    android:textSize="@dimen/title_text_size"
+                    app:layout_constraintBottom_toBottomOf="@id/toolbar_logo"
+
                     />
                 <TextView
                     android:id="@+id/fragment_title"
@@ -45,7 +61,7 @@
                     android:gravity="center"
                     android:fontFamily="@font/noto_sans"
                     android:textStyle="bold"
-                    android:textColor="@color/black"
+                    android:textColor="@color/shadow"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -64,11 +80,11 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:defaultNavHost="true"
+            app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
             app:navGraph="@navigation/nav_graph" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView

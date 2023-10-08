@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.compose.ui.graphics.Color
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -43,12 +44,15 @@ class MainActivity : AppCompatActivity() {
             binding.toolbar.visibility = View.VISIBLE
             binding.bottomNavigation.visibility = View.VISIBLE
             if (showLogo) {
+                binding.appName.visibility = View.VISIBLE
                 binding.toolbarLogo.visibility = View.VISIBLE
                 binding.fragmentTitle.visibility = View.GONE
             } else {
+                binding.appName.visibility = View.GONE
                 binding.toolbarLogo.visibility = View.GONE
                 binding.fragmentTitle.visibility = View.VISIBLE
                 binding.fragmentTitle.text = titleText
+
             }
 
         }
