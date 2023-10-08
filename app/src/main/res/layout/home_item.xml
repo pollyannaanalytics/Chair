@@ -27,10 +27,10 @@
                     android:id="@+id/users_first_img"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:scaleType="centerCrop"
-                    app:layout_constraintBottom_toTopOf="@id/users_content"
+                    android:scaleType="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHeight_percent="0.6"
+                    app:layout_constraintHeight_percent="1"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
 
@@ -56,6 +56,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@color/background"
+
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -67,27 +68,18 @@
 
                         app:cardCornerRadius="15dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
 
                         app:layout_constraintStart_toStartOf="@id/user_name_title"
                         app:layout_constraintBottom_toTopOf="@id/user_tag"
                         >
-                        <TextView
-                            android:id="@+id/worry_type"
-                            android:text="Work"
-                            android:textColor="@color/myPrimary"
-                            android:background="@drawable/stroke_shape"
-                            android:paddingVertical="@dimen/standard_margin_one_forth"
-                            android:paddingHorizontal="@dimen/standard_margin"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
 
-                            />
                     </androidx.cardview.widget.CardView>
                     <androidx.cardview.widget.CardView
                         android:id="@+id/same_type_container"
                         app:cardCornerRadius="15dp"
-                        android:layout_marginLeft="@dimen/standard_margin_one_forth"
+                        android:layout_marginTop="@dimen/standard_margin"
+
                         app:layout_constraintTop_toTopOf="@id/worry_type_container"
                         app:layout_constraintBottom_toBottomOf="@id/worry_type_container"
                         app:layout_constraintStart_toEndOf="@id/worry_type_container"
@@ -98,6 +90,7 @@
                             android:id="@+id/same_type_tag"
                             android:text="相似煩惱"
                             android:textColor="@color/white"
+
                             android:padding="@dimen/standard_margin_one_forth"
                             android:background="@color/myPrimary"
                             android:layout_width="wrap_content"
@@ -111,7 +104,9 @@
                         android:layout_height="wrap_content"
                         android:text="User"
                         android:textColor="@color/shadow"
-                        android:textSize="40dp"
+                        android:paddingTop="@dimen/standard_margin_half"
+                        android:layout_marginVertical="@dimen/standard_margin"
+                        android:textSize="@dimen/title_text_size"
                         app:layout_constraintBottom_toTopOf="@id/worry_type_container"
                         android:layout_marginHorizontal="@dimen/standard_margin"
                         android:layout_marginBottom="@dimen/standard_margin_one_forth"
@@ -158,6 +153,7 @@
                         android:text="worries description"
                         android:textColor="@color/shadow"
                         android:textSize="20sp"
+                        android:layout_marginTop="@dimen/standard_margin"
                         android:layout_marginRight="@dimen/standard_margin"
                         android:layout_marginBottom="@dimen/standard_margin"
                         app:layout_constraintTop_toBottomOf="@id/user_tag"

@@ -7,6 +7,8 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -63,12 +65,12 @@ class EditProfileFragment : Fragment() {
         var selfDescription = ""
 
         try {
-            when(UserManager.gender){
+            when (UserManager.gender) {
                 "男" -> binding.male.isChecked = true
                 "女" -> binding.female.isChecked = true
                 "非二元性別" -> binding.thirdGender.isChecked = true
             }
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Log.e(TAG, "cannot click gender: $e")
         }
 
@@ -120,6 +122,7 @@ class EditProfileFragment : Fragment() {
 
 
         binding.submitBtn.setOnClickListener {
+            binding.loadingAnimation.visibility = View.VISIBLE
             binding.loadingAnimation.playAnimation()
             Log.i(TAG, "imageURI: $imageUri")
             UserManager.age = userAge
@@ -158,13 +161,20 @@ class EditProfileFragment : Fragment() {
             }
         }
 
-        viewModel.showLottie.observe(viewLifecycleOwner){
-            if (it == true){
-                binding.loadingAnimation.cancelAnimation()
-                binding.successfullyAnimation.playAnimation()
-                findNavController().navigate(
-                    EditProfileFragmentDirections.actionProfileFragmentToAlreadySignUpProfileFragment()
+        viewModel.showLottie.observe(viewLifecycleOwner) {
+            if (it == true) {
+
+                Handler(Looper.getMainLooper()).postDelayed(
+                    {
+                        binding.loadingAnimation.cancelAnimation()
+                        binding.successfullyAnimation.playAnimation()
+                        findNavController().navigate(
+                            EditProfileFragmentDirections.actionProfileFragmentToAlreadySignUpProfileFragment()
+                        )
+                    }, 1000
                 )
+
+
             }
         }
 
