@@ -28,6 +28,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.reclaim.R
 import com.example.reclaim.data.UserManager
 import com.example.reclaim.databinding.FragmentCreateProfileBinding
+import com.google.firebase.firestore.auth.User
 
 
 /**
@@ -83,6 +84,10 @@ class CreateProfileFragment : Fragment() {
 
         binding.ageEdit.doAfterTextChanged {
             userAge = it.toString()
+            if (userAge.isEmpty() || userAge == ""){
+                binding.ageEdit.error = "此為必填項"
+            }
+
             Log.i(TAG, "userAge: $it")
         }
 
@@ -102,6 +107,9 @@ class CreateProfileFragment : Fragment() {
 
         binding.usernameEdit.doAfterTextChanged {
             username = it.toString()
+            if (username.isEmpty() || username == ""){
+                binding.usernameEdit.error = "此為必填項"
+            }
             Log.i(TAG, "userId: $it")
         }
 
@@ -121,24 +129,34 @@ class CreateProfileFragment : Fragment() {
 
         binding.selfDescriptionEdit.doAfterTextChanged {
             selfDescription = it.toString()
+            if (selfDescription.isEmpty() || selfDescription == ""){
+                binding.selfDescription.error = "此為必填項"
+            }else{
+                binding.progressBar.progress = 80
+            }
 
-            binding.progressBar.progress = 80
+
         }
 
 
 
         binding.nextMove.setOnClickListener {
-            UserManager.age = userAge
-            UserManager.userName = username
-            UserManager.gender = gender
-            UserManager.selfDescription = selfDescription
+            if (userAge.isNotEmpty() && username.isNotEmpty() && gender.isNotEmpty() && selfDescription.isNotEmpty() && imageUri.toString().isNotEmpty()){
+                UserManager.age = userAge
+                UserManager.userName = username
+                UserManager.gender = gender
+                UserManager.selfDescription = selfDescription
 
 
-            viewModel.uploadImageToFireStorage(imageUri.toString())
+                viewModel.uploadImageToFireStorage(imageUri.toString())
 
-            Log.i(TAG, "$UserManager")
+                Log.i(TAG, "$UserManager")
 
-            findNavController().navigate(CreateProfileFragmentDirections.actionCreateProfileFragmentToWorriesInputFragment())
+                findNavController().navigate(CreateProfileFragmentDirections.actionCreateProfileFragmentToWorriesInputFragment())
+            }else{
+
+            }
+
 
         }
 
