@@ -2,6 +2,8 @@ package com.example.reclaim.createprofile
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
@@ -13,8 +15,10 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.reclaim.R
+import com.example.reclaim.chatgpt.MessageToGPT
 import com.example.reclaim.data.UserManager
 import com.example.reclaim.databinding.FragmentWorriesInputBinding
+import com.example.reclaim.editprofile.EditProfileFragmentDirections
 
 
 /**
@@ -29,7 +33,6 @@ class WorriesInputFragment : Fragment() {
     }
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,7 +44,8 @@ class WorriesInputFragment : Fragment() {
         var worriesDescription = ""
 
         fun hideKeyboard() {
-            val imm = this.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm =
+                this.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(binding.worriesEdit.windowToken, 0)
         }
 
@@ -54,8 +58,8 @@ class WorriesInputFragment : Fragment() {
             binding.progressBar.progress += 20
         }
 
-        binding.worriesEdit.setOnKeyListener{ _, keyCode, keyEvent ->
-            if(keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN) {
+        binding.worriesEdit.setOnKeyListener { _, keyCode, keyEvent ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN) {
 
                 hideKeyboard()
                 return@setOnKeyListener true
@@ -64,12 +68,35 @@ class WorriesInputFragment : Fragment() {
         }
 
         binding.finishBtn.setOnClickListener {
-            UserManager.worriesDescription = worriesDescription
-            viewModel.uploadUserProfile()
+            viewModel.sendDescriptionToGPT(UserManager.worriesDescription)
             Log.i(TAG, "userManager: ${UserManager.worriesDescription}")
-            findNavController().navigate(WorriesInputFragmentDirections.actionWorriesInputFragmentToHomeFragment())
+
 
         }
+        viewModel.messageList.observe(viewLifecycleOwner) {
+            if (it != emptyList<MessageToGPT>()) {
+                viewModel.uploadUserProfile()
+            }
+
+        }
+        viewModel.showLottie.observe(viewLifecycleOwner) {
+            if (it == true) {
+
+                Handler(Looper.getMainLooper()).postDelayed(
+                    {
+                        binding.loadingAnimation.cancelAnimation()
+                        binding.successfullyAnimation.playAnimation()
+                        findNavController().navigate(WorriesInputFragmentDirections.actionWorriesInputFragmentToHomeFragment())
+                    }, 1000
+                )
+
+
+            }
+        }
+
+
+
+
 
 
         return binding.root
