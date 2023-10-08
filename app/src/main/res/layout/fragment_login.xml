@@ -13,19 +13,36 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/background"
         tools:context=".login.LoginFragment">
-
         <ImageView
-            android:id="@+id/app_name"
+            android:id="@+id/login_title"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="@dimen/standard_margin"
+            app:layout_constraintWidth_percent="0.3"
+            app:layout_constraintDimensionRatio="1"
+            android:src="@drawable/chair_9_svgrepo_com"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.8"
-            app:layout_constraintDimensionRatio="1"
-            android:src="@drawable/chair_recliam"
+            app:layout_constraintBottom_toTopOf="@id/google_btn"
+            />
 
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:fontFamily="@font/noto_sans"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:text="請以以下方式登入"
+            android:gravity="center"
+            android:textColor="@color/shadow"
+            android:textStyle="bold"
+            android:textSize="@dimen/subtitle_text_size"
+            app:layout_constraintTop_toBottomOf="@id/login_title"
             />
 
         <com.google.android.gms.common.SignInButton

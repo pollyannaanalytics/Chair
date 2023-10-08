@@ -34,6 +34,7 @@ class LoginViewModel : ViewModel() {
                         val worriesDescription = snapshot.data.get("worries_description").toString()
                         val worriesType = snapshot.data.get("worries_type").toString()
                         val age = snapshot.data.get("user_age").toString()
+                        val selfDescription = snapshot.data.get("self_description").toString()
 
                         val userProfile = UserProfile(
                             userId = userId,
@@ -42,7 +43,8 @@ class LoginViewModel : ViewModel() {
                             imageUri = images,
                             worriesDescription = worriesDescription,
                             worryType = worriesType,
-                            age = age
+                            age = age,
+                            selfDescription = selfDescription
                         )
                         _userProfile.value = userProfile
                         _canFindProfile.value = true
