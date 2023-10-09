@@ -13,6 +13,7 @@ class ChatListAvatorAdapter(private val onClickListener: OnClickListener):androi
         fun bind(chatroom: ChatRoom){
             binding.chatRoom = chatroom
             binding.executePendingBindings()
+
         }
     }
 

@@ -296,11 +296,23 @@ class ChatRoomViewModel(
     }
 
     private fun updateOnFriendList(text: String, chatRoomKey: String, currentTime: String) {
+        var currentUnreadTime = 0
         val chatRoom = FirebaseFirestore.getInstance().collection("chat_room").document(chatRoomKey)
-        chatRoom.update("last_sentence", text)
-        chatRoom.update("send_by_id", UserManager.userId)
-        chatRoom.update("sent_time", currentTime)
-        chatRoom.update("unread_times", + 1)
+        chatRoom.get().addOnSuccessListener {
+           currentUnreadTime = it.get("unread_times").toString().toInt()
+            currentUnreadTime++
+
+
+            chatRoom.update("last_sentence", text)
+            chatRoom.update("send_by_id", UserManager.userId)
+            chatRoom.update("sent_time", currentTime)
+            chatRoom.update("unread_times", currentUnreadTime)
+        }.addOnFailureListener {
+            Log.e(TAG, "update unread times failed: $it")
+        }
+
+
+
 
     }
 
