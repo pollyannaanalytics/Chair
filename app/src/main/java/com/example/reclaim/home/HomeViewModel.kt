@@ -437,7 +437,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                 selfImage = UserManager.userImage,
                 otherImage = friendImg,
                 sentTime = sentTime,
-                unreadTimes = "0"
+                unreadTimes = "0",
+                otherOnline = true
             )
 
         }.addOnFailureListener {

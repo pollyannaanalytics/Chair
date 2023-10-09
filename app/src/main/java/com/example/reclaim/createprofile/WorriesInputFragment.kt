@@ -68,6 +68,7 @@ class WorriesInputFragment : Fragment() {
         }
 
         binding.finishBtn.setOnClickListener {
+            UserManager.worriesDescription = worriesDescription
             viewModel.sendDescriptionToGPT(UserManager.worriesDescription)
             Log.i(TAG, "userManager: ${UserManager.worriesDescription}")
 
