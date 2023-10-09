@@ -19,7 +19,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/send_by_me_card"
             app:cardCornerRadius="@dimen/standard_margin"
-            app:cardBackgroundColor="@color/skyblue"
+            app:cardBackgroundColor="@color/background"
             android:layout_width="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -36,7 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{chatRecord.content}"
-                    android:textColor="@color/white"
+                    android:textColor="@color/shadow"
                     android:textSize="15sp"
 
                     app:layout_constraintTop_toTopOf="parent"
