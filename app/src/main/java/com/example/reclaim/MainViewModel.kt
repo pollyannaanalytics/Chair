@@ -4,6 +4,8 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.os.UserManager
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -57,12 +59,36 @@ class MainViewModel: ViewModel() {
 
     }
 
-    fun loadUnreadMessage(){
+    fun updateOnline(onlineOrNot: Boolean){
         FirebaseFirestore.getInstance().collection("chat_room").where(
-            Filter.or()
-        )
-    }
+            Filter.or(
+                Filter.equalTo("user_a_id", com.example.reclaim.data.UserManager.userId),
+                Filter.equalTo("user_b_id", com.example.reclaim.data.UserManager.userId)
+            )
+        ).get().addOnSuccessListener { snapshots ->
 
+            for (snapshot in snapshots){
+                val userAId = snapshot.get("user_a_id").toString()
+                val userBId = snapshot.get("user_b_id").toString()
+                if (userAId == com.example.reclaim.data.UserManager.userId){
+                    FirebaseFirestore.getInstance().collection("chat_room").document(snapshot.id)
+                        .update("user_a_online", onlineOrNot)
+                }else{
+                    FirebaseFirestore.getInstance().collection("chat_room").document(snapshot.id)
+                        .update("user_b_online", onlineOrNot)
+                }
+
+            }
+
+
+        }.addOnFailureListener {
+            Log.e(TAG, "cannot update online situation: $it" )
+
+        }
+    }
+companion object{
+    const val TAG = "MainViewModel"
+}
 
 
 

@@ -40,6 +40,8 @@ class MainActivity : AppCompatActivity() {
         val navBottomView: BottomNavigationView = binding.bottomNavigation
         navBottomView.setupWithNavController(navController)
 
+        viewModel.updateOnline(true)
+
         fun showToolBar(showLogo: Boolean, titleText: String) {
             binding.toolbar.visibility = View.VISIBLE
             binding.bottomNavigation.visibility = View.VISIBLE
@@ -100,5 +102,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.updateOnline(false)
+    }
 }
