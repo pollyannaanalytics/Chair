@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.reclaim.R
+import com.example.reclaim.data.UserManager
 import com.example.reclaim.databinding.FragmentLoadingBinding
 
 
@@ -47,13 +48,18 @@ class LoadingFragment : Fragment() {
             if (it == true){
                 Log.i(TAG, "already have info in firebase, go to home page")
                 viewModel.putProfileInfoToUserManager()
-                findNavController().navigate(LoadingFragmentDirections.actionLoadingFragmentToHomeFragment())
+                Log.i(TAG, "current Usermanager: ${UserManager.userId}")
+
             }else if (it == false){
                 Log.i(TAG, "have token, but no user profile in firebase, should go to agreement")
                 findNavController().navigate(LoadingFragmentDirections.actionLoadingFragmentToAgreementFragment())
 
             }
 
+        }
+
+        viewModel.navigateToHome.observe(viewLifecycleOwner){
+            findNavController().navigate(LoadingFragmentDirections.actionLoadingFragmentToHomeFragment())
         }
 
         Handler(Looper.getMainLooper()).postDelayed({

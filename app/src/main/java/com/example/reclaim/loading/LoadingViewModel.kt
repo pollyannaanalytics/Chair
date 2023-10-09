@@ -18,7 +18,9 @@ class LoadingViewModel: ViewModel() {
     private var _haveProfileInfoInFirebase = MutableLiveData<Boolean>()
     val haveProfileInfoInFirebase: LiveData<Boolean>
         get() = _haveProfileInfoInFirebase
-
+    private var _navigateToHome = MutableLiveData<Boolean>()
+    val navigateToHome: LiveData<Boolean>
+        get() = _navigateToHome
 
 
 
@@ -67,6 +69,8 @@ class LoadingViewModel: ViewModel() {
 
     }
 
+
+
     fun putProfileInfoToUserManager(){
         val userProfile = _userProfile.value
         UserManager.userId = userProfile.let { it!!.userId.toString() }
@@ -78,6 +82,9 @@ class LoadingViewModel: ViewModel() {
         UserManager.selfDescription = userProfile.let { it!!.selfDescription.toString() }
 
         UserManager.worriesDescription = userProfile.let { it!!.worriesDescription.toString() }
+        _navigateToHome.value = true
+
+
     }
 
 

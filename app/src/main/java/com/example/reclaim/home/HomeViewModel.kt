@@ -58,7 +58,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         Log.i(TAG, "viewModel start")
         _onDestroyed.value = false
         _otherProfileList.value = emptyList<UserProfile>().toMutableList()
-        loadWhoLikeMe(UserManager.userId)
+
 
     }
 
