@@ -99,17 +99,8 @@ class HomeFragment : Fragment() {
             val scaleAnim = AnimatorSet()
             scaleAnim.playTogether(scaleUpX, scaleUpY, alphaChange)
             scaleAnim.duration = 5000
-
-            val translateY = ObjectAnimator.ofFloat(selfAvatar, "translationY", 0f, -20f, 0f)
-            translateY.interpolator = AccelerateDecelerateInterpolator()
-            translateY.duration = 5000
-
-
-            val animatorSet = AnimatorSet()
-            animatorSet.playTogether(scaleAnim, translateY)
-            animatorSet.start()
-
-            animatorSet.addListener(object : AnimatorListenerAdapter() {
+            scaleAnim.start()
+            scaleAnim.addListener(object : AnimatorListenerAdapter(){
                 override fun onAnimationEnd(animation: Animator, isReverse: Boolean) {
                     super.onAnimationEnd(animation, isReverse)
                     animation.start()

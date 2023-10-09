@@ -161,22 +161,6 @@ class EditProfileFragment : Fragment() {
             }
         }
 
-        viewModel.showLottie.observe(viewLifecycleOwner) {
-            if (it == true) {
-
-                Handler(Looper.getMainLooper()).postDelayed(
-                    {
-                        binding.loadingAnimation.cancelAnimation()
-                        binding.successfullyAnimation.playAnimation()
-                        findNavController().navigate(
-                            EditProfileFragmentDirections.actionProfileFragmentToAlreadySignUpProfileFragment()
-                        )
-                    }, 1000
-                )
-
-
-            }
-        }
 
 
 

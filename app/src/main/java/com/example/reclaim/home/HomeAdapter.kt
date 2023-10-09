@@ -23,6 +23,7 @@ class HomeAdapter(val context: Context, val list: List<UserProfile>, val onClick
 
             binding.aboutmeTitle.visibility = View.GONE
             binding.aboutmeDescription.visibility = View.GONE
+            binding.seperateDot.visibility = View.GONE
 
             binding.infoBtn.setOnClickListener {
 
