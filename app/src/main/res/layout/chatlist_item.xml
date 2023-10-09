@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="chatRoom"
             type="com.example.reclaim.data.ChatRoom" />
@@ -28,9 +29,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@mipmap/ic_launcher" />
+           
 
 
         </androidx.cardview.widget.CardView>
+        <ImageView
+            android:id="@+id/online_situation"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="@{chatRoom.otherOnline? View.VISIBLE: View.GONE}"
+            app:layout_constraintWidth_percent="0.3"
+            app:layout_constraintDimensionRatio="1"
+            android:translationZ="@dimen/standard_margin"
+            android:background="@drawable/avatar_background"
+            app:layout_constraintEnd_toEndOf="@id/chatlist_item_container"
+            app:layout_constraintBottom_toBottomOf="@id/chatlist_item_container"
+            />
         <TextView
             android:id="@+id/user_name"
 

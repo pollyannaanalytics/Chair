@@ -104,7 +104,7 @@ class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity
                             var otherId = ""
                             var otherName = ""
                             var otherImage = ""
-
+                            var otherOnline = true
                             var lastSentence = ""
                             var sendById = ""
 
@@ -126,6 +126,7 @@ class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity
                                 otherName = query.data.get("user_b_name").toString()
                                 selfImage = query.data.get("user_a_img").toString()
                                 otherImage = query.data.get("user_b_img").toString()
+                                otherOnline = query.data.get("user_b_online").toString().toBoolean()
 
                             } else {
                                 otherId = query.data.get("user_a_id").toString()
@@ -136,6 +137,7 @@ class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity
 
                                 otherImage = query.data.get("user_a_img").toString()
                                 selfImage = query.data.get("user_b_img").toString()
+                                otherOnline = query.data.get("user_b_online").toString().toBoolean()
                             }
 
                             val newRecord = ChatRoom(
@@ -150,7 +152,8 @@ class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity
                                 selfImage,
                                 otherImage,
                                 taiwanTime,
-                                unreadTimes
+                                unreadTimes,
+                                otherOnline
                             )
 
                             currentChatRoom.add(newRecord)

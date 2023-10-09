@@ -19,7 +19,8 @@ data class ChatRoom(
     val selfImage: String,
     val otherImage: String,
     val sentTime: String,
-    val unreadTimes: String
+    val unreadTimes: String,
+    val otherOnline: Boolean
 ) : Parcelable
 
 @Entity(tableName = "chat_room")
