@@ -263,6 +263,20 @@ class HomeFragment : Fragment() {
 
         viewModel?.otherProfileList?.observe(viewLifecycleOwner) { userProfileList ->
             currentProfileList = userProfileList
+
+            if (userProfileList.isNotEmpty()) {
+                binding.selfWrapperImg.visibility = View.GONE
+                binding.selfAvatarLoadingContainer.visibility = View.GONE
+                binding.selfAvatarLoadingImg.visibility = View.GONE
+                binding.loadingText.visibility = View.GONE
+            }else{
+                binding.selfWrapperImg.visibility = View.VISIBLE
+                binding.selfAvatarLoadingContainer.visibility = View.VISIBLE
+                binding.selfAvatarLoadingImg.visibility = View.VISIBLE
+                binding.loadingText.visibility = View.VISIBLE
+                loadingAvatar()
+            }
+
             Log.i(TAG, "profile part is triggered")
             Log.i(TAG, "list into adapter is : $currentProfileList")
             OtherUserNumber = 0
@@ -277,18 +291,7 @@ class HomeFragment : Fragment() {
             }
             OtherInfoList = currentFriendList
             OtherUserNumber = OtherInfoList.size
-            if (OtherUserNumber != 0) {
-                binding.selfWrapperImg.visibility = View.GONE
-                binding.selfAvatarLoadingContainer.visibility = View.GONE
-                binding.selfAvatarLoadingImg.visibility = View.GONE
-                binding.loadingText.visibility = View.GONE
-            }else{
-                binding.selfWrapperImg.visibility = View.VISIBLE
-                binding.selfAvatarLoadingContainer.visibility = View.VISIBLE
-                binding.selfAvatarLoadingImg.visibility = View.VISIBLE
-                binding.loadingText.visibility = View.VISIBLE
-                loadingAvatar()
-            }
+
             Log.i(TAG, "all friendnumber is ${OtherUserNumber.toString()}")
             Log.i(TAG, "all friendInfoList is ${OtherInfoList.toString()}")
             val clickListener = HomeAdapter.OnClickListener(

@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -158,23 +160,26 @@ class LoginFragment : Fragment() {
             auth.signInWithCredential(credential).addOnCompleteListener {
 
                 if (task.isSuccessful) {
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        binding.successfullyAnimation.playAnimation()
+                        val editor = sharedPreferences.edit()
+                        editor.putString(userIdInSharedPreferences, auth.uid)
+                        editor.apply()
 
-                    binding.successfullyAnimation.playAnimation()
-                    val editor = sharedPreferences.edit()
-                    editor.putString(userIdInSharedPreferences, auth.uid)
-                    editor.apply()
+                        Log.i(
+                            TAG,
+                            "share preference: ${
+                                context?.getSharedPreferences(
+                                    userManagerInSharePreference,
+                                    Context.MODE_PRIVATE
+                                )?.all
+                            }"
+                        )
 
-                    Log.i(
-                        TAG,
-                        "share preference: ${
-                            context?.getSharedPreferences(
-                                userManagerInSharePreference,
-                                Context.MODE_PRIVATE
-                            )?.all
-                        }"
-                    )
+                        auth.uid?.let { loginViewModel.findProfileInFirebase(it) }
+                    }, 1500)
 
-                    auth.uid?.let { loginViewModel.findProfileInFirebase(it) }
+
 
 
                 } else {
