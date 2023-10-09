@@ -65,7 +65,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:lottie_autoPlay="false"
             app:lottie_loop="false"
-            app:lottie_rawRes="@raw/login_successfully"
+            app:lottie_rawRes="@raw/successfully"
             app:layout_constraintBottom_toBottomOf="parent"
 
             />

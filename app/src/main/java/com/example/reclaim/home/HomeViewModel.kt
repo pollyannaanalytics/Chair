@@ -1,8 +1,6 @@
 package com.example.reclaim.home
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,10 +15,6 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.yuyakaido.android.cardstackview.Direction
-import java.time.Clock
-import java.time.LocalTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 private const val TAG = "HOMEVIEWMODEL"
 
@@ -330,7 +324,24 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         Log.i(TAG, "start to load who is friend currently")
         val currentFriendList = emptyList<String>().toMutableList()
 
-        val registration = db.collection("relationship")
+        val sendLikeByOthers = db.collection("relationship").where(
+            Filter.and(
+                Filter.equalTo("receiver_id", UserManager.userId),
+                Filter.equalTo("current_relationship", "Like")
+            )
+        ).get().addOnSuccessListener {snapshots ->
+            for (snapshot in snapshots){
+                val userId = snapshot.get("sender_id").toString()
+                currentFriendList.add(userId)
+            }
+
+            UserManager.friendNumber = currentFriendList.size
+            loadOtherProfile(currentFriendList)
+        }.addOnFailureListener {
+            Log.e(TAG, "cannot load friend list")
+        }
+
+        val sendRequestFromMe = db.collection("relationship")
             .whereEqualTo("sender_id", UserManager.userId)
             .get()
             .addOnSuccessListener { snapshot ->
@@ -348,8 +359,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                         Log.i(TAG, "currentFriendList: $currentFriendList")
 
                     }
-                    UserManager.friendNumber = currentFriendList.size
-                    loadOtherProfile(currentFriendList)
+                    sendLikeByOthers
+
                 } else {
                     Log.e(TAG, "no friends")
                     loadOtherProfile(currentFriendList)
@@ -359,7 +370,11 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
             }.addOnFailureListener {
                 Log.e(TAG, "cannot load friend list")
             }
-        registration
+
+
+
+        sendRequestFromMe
+
 
     }
 
