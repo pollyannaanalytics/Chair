@@ -18,7 +18,7 @@ class HomeAdapter(val context: Context, val list: List<UserProfile>, val onClick
             binding.executePendingBindings()
             binding.userNameTitle.text = item.userName
             binding.worriesDescription.setText(item.worriesDescription)
-            binding.userTag.text = item.gender + "， 30"
+            binding.userTag.text = item.gender + "， " + item.age
             binding.aboutmeDescription.text = item.selfDescription
 
             binding.aboutmeTitle.visibility = View.GONE
