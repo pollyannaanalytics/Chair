@@ -415,7 +415,9 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
             "send_by_id" to "",
             "user_a_img" to UserManager.userImage,
             "user_b_img" to friendImg,
-            "unread_times" to 0
+            "unread_times" to 0,
+            "user_a_online" to true,
+            "user_b_online" to false
 
         )
 
