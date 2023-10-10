@@ -176,6 +176,11 @@ class EditProfileFragment : Fragment() {
         }
 
 
+        binding.backBtn.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+
 
 
 
