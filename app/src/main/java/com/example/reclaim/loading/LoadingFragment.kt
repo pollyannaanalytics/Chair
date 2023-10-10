@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.reclaim.R
 import com.example.reclaim.data.UserManager
 import com.example.reclaim.databinding.FragmentLoadingBinding
+import com.google.firebase.firestore.auth.User
 
 
 /**
@@ -25,6 +26,7 @@ class LoadingFragment : Fragment() {
 
     private lateinit var userManagerInSharePreference: String
     private lateinit var userIdInSharePreference: String
+    private lateinit var userEmail: String
     private val viewModel: LoadingViewModel by lazy {
         ViewModelProvider(this).get(LoadingViewModel::class.java)
     }
@@ -38,6 +40,7 @@ class LoadingFragment : Fragment() {
         binding.loadingAnimation.playAnimation()
         userManagerInSharePreference = resources.getString(R.string.usermanager)
         userIdInSharePreference  = resources.getString(R.string.userid)
+        userEmail = resources.getString(R.string.useremail)
         val sharePref = requireActivity().getSharedPreferences(
             userManagerInSharePreference, Context.MODE_PRIVATE
         )
@@ -48,6 +51,7 @@ class LoadingFragment : Fragment() {
             if (it == true){
                 Log.i(TAG, "already have info in firebase, go to home page")
                 viewModel.putProfileInfoToUserManager()
+                UserManager.email = sharePref.all.get(userEmail).toString()
                 Log.i(TAG, "current Usermanager: ${UserManager.userId}")
 
             }else if (it == false){
