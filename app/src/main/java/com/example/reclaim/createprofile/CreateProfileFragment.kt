@@ -60,7 +60,7 @@ class CreateProfileFragment : Fragment() {
 
 
         var username = ""
-        var gender = ""
+        var gender = "男"
         var worriesDescription = ""
         var userAge = ""
         var selfDescription = ""
@@ -168,7 +168,7 @@ class CreateProfileFragment : Fragment() {
                 R.id.male -> binding.male.text.toString()
                 R.id.female -> binding.female.text.toString()
                 R.id.third_gender -> binding.thirdGender.text.toString()
-                else -> "the gender is not chose"
+                else -> binding.male.text.toString()
             }
         }
 
