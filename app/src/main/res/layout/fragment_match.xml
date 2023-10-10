@@ -25,8 +25,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/standard_margin"
             android:layout_marginBottom="@dimen/standard_margin"
+            android:paddingTop="@dimen/standard_margin"
             android:gravity="center"
-
+            android:paddingBottom="@dimen/standard_margin"
             android:src="@drawable/match_primary"
             android:text="It's a Match"
             android:textColor="@color/shadow"
