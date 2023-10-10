@@ -75,7 +75,7 @@ class WorriesInputFragment : Fragment() {
 
         }
         viewModel.messageList.observe(viewLifecycleOwner) {
-            if (it != emptyList<MessageToGPT>()) {
+            if (UserManager.userType != "") {
                 viewModel.uploadUserProfile()
             }
 

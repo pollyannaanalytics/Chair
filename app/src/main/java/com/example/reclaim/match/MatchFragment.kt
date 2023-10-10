@@ -80,7 +80,7 @@ class MatchFragment : Fragment() {
             if (binding.messageInputEdit.text.toString() != ""){
                 viewModel.sendMessageToChatRoom(message)
                 binding.messageInputEdit.setText("")
-                findNavController().navigate(MatchFragmentDirections.actionMatchFragmentToHomeFragment())
+                findNavController().navigate(MatchFragmentDirections.actionMatchFragmentToChatListFragment())
             }
         }
 

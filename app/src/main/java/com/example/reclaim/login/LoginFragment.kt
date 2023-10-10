@@ -163,8 +163,9 @@ class LoginFragment : Fragment() {
             auth.signInWithCredential(credential).addOnCompleteListener {
 
                 if (task.isSuccessful) {
+                    binding.successfullyAnimation.playAnimation()
                     Handler(Looper.getMainLooper()).postDelayed({
-                        binding.successfullyAnimation.playAnimation()
+
                         val editor = sharedPreferences.edit()
                         editor.putString(userIdInSharedPreferences, auth.uid)
                         editor.putString(userEmailInSharedPreferences, auth.currentUser.let { it!!.email })

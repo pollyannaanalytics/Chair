@@ -64,8 +64,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:lottie_autoPlay="false"
+            android:translationZ="@dimen/standard_margin"
             app:lottie_loop="false"
-            app:lottie_rawRes="@raw/successfully"
+            app:lottie_rawRes="@raw/check"
             app:layout_constraintBottom_toBottomOf="parent"
 
             />

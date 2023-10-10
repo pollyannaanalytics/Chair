@@ -228,6 +228,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                                 age = age,
                                 selfDescription = selfDescription
                             )
+
                             currentList.add(newUserProfile)
                         }
                         _otherProfileList.value = currentList
@@ -304,15 +305,15 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         _otherProfileList.value = emptyList<UserProfile>().toMutableList()
         Log.i(TAG, "start to load who is friend currently")
         val currentFriendList = emptyList<String>().toMutableList()
-
+        currentFriendList.add(UserManager.userId)
         val sendLikeByOthers = db.collection("relationship").where(
             Filter.and(
                 Filter.equalTo("receiver_id", UserManager.userId),
                 Filter.equalTo("current_relationship", "Like")
             )
         ).get().addOnSuccessListener {snapshots ->
+            Log.i(TAG, "found friend number by other: ${snapshots.documents.size}")
             for (snapshot in snapshots){
-                currentFriendList.add(UserManager.userId)
                 val userId = snapshot.get("sender_id").toString()
                 currentFriendList.add(userId)
             }
@@ -327,7 +328,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
             .whereEqualTo("sender_id", UserManager.userId)
             .get()
             .addOnSuccessListener { snapshot ->
-                currentFriendList.add(UserManager.userId)
+                Log.i(TAG, "found friend number by me: ${snapshot.documents.size}")
                 if (snapshot != null && !snapshot.isEmpty) {
 
                     for (shot in snapshot) {
