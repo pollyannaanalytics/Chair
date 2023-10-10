@@ -102,6 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/grey"
+
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/message_input"
             app:layout_constraintEnd_toEndOf="parent"
@@ -112,19 +113,20 @@
             android:id="@+id/message_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/myPrimary"
-
+            android:background="@color/white"
             android:hint="說些什麼吧..."
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/send_btn"
             app:layout_constraintStart_toStartOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/message_edit"
+                android:layout_margin="@dimen/standard_margin_half"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/stroke_shape"
-
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -133,12 +135,13 @@
             android:id="@+id/send_btn"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:src="@drawable/send_message"
+            android:src="@drawable/send_svgrepo_com"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintWidth_percent="0.1"
+            app:layout_constraintWidth_percent="0.12"
+            app:layout_constraintDimensionRatio="1"
             app:layout_constraintTop_toTopOf="@id/message_input"
-            android:background="@color/myPrimary"
+            android:background="@color/white"
             android:paddingHorizontal="@dimen/standard_margin_half"
             app:layout_constraintStart_toEndOf="@id/message_input"
             />

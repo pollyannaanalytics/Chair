@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.reclaim.data.ChatRecord
 import com.example.reclaim.data.ChatRoom
 import com.example.reclaim.data.ReclaimDatabaseDao
 import com.example.reclaim.data.UserManager
@@ -45,14 +46,35 @@ class MatchViewModel(
                 } else {
                     documentId = it.documents.get(0).id
 
+                    val newRecord = ChatRecord(
+                        id = Random.nextLong(),
+                        chatRoomKey = _chatRoomInfo.value.let { it!!.key },
+                        content = text,
+                        sendTime = System.currentTimeMillis().toString(),
+                        sender = UserManager.userName,
+                        type = "message",
+                        meetingId = "",
+                        otherImage = _chatRoomInfo.value.let { it!!.otherImage },
+                        selfImage = UserManager.userImage,
+                        selfName = UserManager.userName,
+                        otherName = _chatRoomInfo.value.let { it!!.otherName },
+                        isSeen = false
+                    )
+
+
                     val data = hashMapOf(
-                        "chat_room_key" to _chatRoomInfo.value!!.key,
-                        "content" to text,
-                        "sent_time" to System.currentTimeMillis(),
-                        "sender_name" to UserManager.userName,
-                        "id" to Random.nextLong(),
-                        "message_type" to "message",
-                        "meeting_id" to ""
+                        "chat_room_key" to newRecord.chatRoomKey,
+                        "content" to newRecord.content,
+                        "sent_time" to newRecord.sendTime,
+                        "sender_name" to newRecord.sender,
+                        "id" to newRecord.id,
+                        "message_type" to newRecord.type,
+                        "is_seen" to newRecord.isSeen,
+                        "meeting_id" to newRecord.meetingId,
+                        "user_b_img" to newRecord.otherImage,
+                        "user_a_img" to UserManager.userImage,
+                        "user_a_name" to newRecord.selfName,
+                        "user_b_name" to newRecord.otherName
                     )
 
                     FirebaseFirestore.getInstance().collection("chat_room").document(documentId)
