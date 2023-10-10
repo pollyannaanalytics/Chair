@@ -1,5 +1,6 @@
 package com.example.reclaim.profile
 
+import android.content.Context
 import android.os.Bundle
 
 import androidx.fragment.app.Fragment
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.reclaim.R
 import com.example.reclaim.data.UserManager
 
 
@@ -36,8 +38,11 @@ class ProfileFragment : Fragment() {
 
 
         binding.editIcon.setOnClickListener {
-            findNavController().navigate(ProfileFragmentDirections.actionAlreadySignUpProfileFragmentToProfileFragment())
+            findNavController().navigate(ProfileFragmentDirections.actionAlreadySignUpProfileFragmentToProfileFragment2())
         }
+
+
+
 
 
         return binding.root

@@ -257,6 +257,17 @@
                     android:layout_height="match_parent"/>
 
             </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:id="@+id/log_out_btn"
+                android:text="登出我的帳號"
+                android:textStyle="bold"
+                android:paddingBottom="@dimen/standard_margin"
+                android:layout_marginTop="@dimen/standard_margin"
+                app:layout_constraintTop_toBottomOf="@id/self_description_container"
+                app:layout_constraintStart_toStartOf="@id/self_description_container"
+                app:layout_constraintEnd_toEndOf="@id/self_description_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
 
 

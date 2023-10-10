@@ -2,6 +2,7 @@ package com.example.reclaim.editprofile
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -28,6 +29,7 @@ import com.example.reclaim.chatgpt.MessageToGPT
 import com.example.reclaim.data.ReclaimDatabase
 import com.example.reclaim.data.UserManager
 import com.example.reclaim.databinding.FragmentEditProfileBinding
+import com.example.reclaim.profile.ProfileFragmentDirections
 
 
 /**
@@ -162,7 +164,16 @@ class EditProfileFragment : Fragment() {
         }
 
 
+        binding.logOutBtn.setOnClickListener {
+            val sharedPreferenceString = resources.getText(R.string.usermanager).toString()
+            val sharedPreferences = requireActivity().getSharedPreferences(sharedPreferenceString, Context.MODE_PRIVATE)
+            sharedPreferences.edit().clear().apply()
 
+            findNavController().navigate(EditProfileFragmentDirections.actionProfileFragmentToLoadingFragment3())
+
+
+
+        }
 
 
 

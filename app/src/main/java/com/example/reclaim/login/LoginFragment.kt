@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.UserManager
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -44,6 +45,7 @@ class LoginFragment : Fragment() {
     }
     private lateinit var userManagerInSharePreference: String
     private lateinit var userIdInSharedPreferences: String
+    private lateinit var userEmailInSharedPreferences: String
 
 
 
@@ -58,6 +60,7 @@ class LoginFragment : Fragment() {
         binding.viewModel = loginViewModel
         userManagerInSharePreference = resources.getString(R.string.usermanager)
         userIdInSharedPreferences = resources.getString(R.string.userid)
+        userEmailInSharedPreferences = resources.getString(R.string.useremail)
 
         // test
         // google singIn
@@ -164,6 +167,7 @@ class LoginFragment : Fragment() {
                         binding.successfullyAnimation.playAnimation()
                         val editor = sharedPreferences.edit()
                         editor.putString(userIdInSharedPreferences, auth.uid)
+                        editor.putString(userEmailInSharedPreferences, auth.currentUser.let { it!!.email })
                         editor.apply()
 
                         Log.i(
@@ -177,6 +181,7 @@ class LoginFragment : Fragment() {
                         )
 
                         auth.uid?.let { loginViewModel.findProfileInFirebase(it) }
+                        com.example.reclaim.data.UserManager.email = sharedPreferences.all.get(userEmailInSharedPreferences).toString()
                     }, 1500)
 
 

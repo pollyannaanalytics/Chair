@@ -97,6 +97,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.loadingFragment -> {
                     hideToolbarAndBottom()
                 }
+
+
+                R.id.loginFragment -> {
+                    hideToolbarAndBottom()
+                }
             }
         }
 

@@ -45,6 +45,8 @@
 
 
 
+
+
         <ImageView
             android:id="@+id/friend_avatar"
             app:layout_constraintStart_toStartOf="parent"
@@ -143,7 +145,7 @@
         <TextView
             android:id="@+id/google_account"
             android:layout_marginLeft="@dimen/standard_margin_half"
-            android:text="pinyunwuu@gmail.com"
+            android:text="@{usermanager.email}"
             app:layout_constraintStart_toEndOf="@id/google_icon"
             app:layout_constraintTop_toTopOf="@id/google_icon"
             app:layout_constraintEnd_toEndOf="@id/user_name"
