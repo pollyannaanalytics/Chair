@@ -118,6 +118,7 @@
                     android:id="@+id/message_input_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textColorHint="@color/black"
                     android:hint="跟對方打聲招呼吧!" />
             </com.google.android.material.textfield.TextInputLayout>
 
