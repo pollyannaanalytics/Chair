@@ -11,10 +11,12 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/worries_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/standard_margin"
         android:padding="@dimen/standard_margin"
+
         tools:context=".createprofile.WorriesInputFragment">
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -88,7 +90,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:lottie_rawRes="@raw/successfully"
+            app:lottie_rawRes="@raw/check"
             app:lottie_autoPlay="false"
             app:lottie_loop="true"
             app:layout_constraintWidth_percent="0.3"

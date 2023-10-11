@@ -83,8 +83,8 @@
         android:name="com.example.reclaim.createprofile.WorriesInputFragment"
         android:label="WorriesInputFragment" >
         <action
-            android:id="@+id/action_worriesInputFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            android:id="@+id/action_worriesInputFragment_to_aiLoadingFragment"
+            app:destination="@id/aiLoadingFragment" />
     </fragment>
     <fragment
         android:id="@+id/agreementFragment"
@@ -121,5 +121,13 @@
         <action
             android:id="@+id/action_loginFragment_to_agreementFragment"
             app:destination="@id/agreementFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/aiLoadingFragment"
+        android:name="com.example.reclaim.createprofile.AiLoadingFragment"
+        android:label="AiLoadingFragment" >
+        <action
+            android:id="@+id/action_aiLoadingFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

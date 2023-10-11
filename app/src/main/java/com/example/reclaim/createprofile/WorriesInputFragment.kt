@@ -33,12 +33,14 @@ class WorriesInputFragment : Fragment() {
     }
 
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentWorriesInputBinding.inflate(inflater)
+        binding.worriesLayout.alpha = 1f
         binding.viewModel = viewModel
 
         var worriesDescription = ""
@@ -68,6 +70,8 @@ class WorriesInputFragment : Fragment() {
         }
 
         binding.finishBtn.setOnClickListener {
+            it.isEnabled = false
+            binding.worriesLayout.alpha = 0.5f
             UserManager.worriesDescription = worriesDescription
             viewModel.sendDescriptionToGPT(UserManager.worriesDescription)
             Log.i(TAG, "userManager: ${UserManager.worriesDescription}")
@@ -83,11 +87,12 @@ class WorriesInputFragment : Fragment() {
         viewModel.showLottie.observe(viewLifecycleOwner) {
             if (it == true) {
 
+
                 Handler(Looper.getMainLooper()).postDelayed(
                     {
                         binding.loadingAnimation.cancelAnimation()
                         binding.successfullyAnimation.playAnimation()
-                        findNavController().navigate(WorriesInputFragmentDirections.actionWorriesInputFragmentToHomeFragment())
+                        findNavController().navigate(WorriesInputFragmentDirections.actionWorriesInputFragmentToAiLoadingFragment())
                     }, 1000
                 )
 

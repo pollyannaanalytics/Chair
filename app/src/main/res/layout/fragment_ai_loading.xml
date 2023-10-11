@@ -10,6 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/background"
         tools:context=".createprofile.AiLoadingFragment">
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/ai_loading_animation"
