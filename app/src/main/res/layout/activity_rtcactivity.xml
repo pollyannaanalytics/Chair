@@ -45,7 +45,7 @@
             app:layout_constraintStart_toStartOf="@id/remote_view"
             app:layout_constraintTop_toTopOf="@id/remote_view" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:gravity="center"
             android:background="@drawable/curve_background"
             android:backgroundTint="@android:color/secondary_text_light"
@@ -62,8 +62,14 @@
 
             <ImageView
                 android:id="@+id/mic_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintWidth_percent="0.12"
+                app:layout_constraintDimensionRatio="1"
+                app:layout_constraintEnd_toStartOf="@id/video_button"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 android:layout_margin="16dp"
                 android:clickable="true"
                 android:focusable="true"
@@ -74,8 +80,14 @@
 
             <ImageView
                 android:id="@+id/video_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintWidth_percent="0.12"
+                app:layout_constraintDimensionRatio="1"
+                app:layout_constraintStart_toEndOf="@id/mic_button"
+                app:layout_constraintEnd_toStartOf="@id/end_call_button"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_margin="16dp"
                 android:clickable="true"
                 android:focusable="true"
@@ -86,8 +98,14 @@
 
             <ImageView
                 android:id="@+id/end_call_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintWidth_percent="0.15"
+                app:layout_constraintDimensionRatio="1"
+                app:layout_constraintStart_toEndOf="@id/video_button"
+                app:layout_constraintEnd_toStartOf="@id/switch_camera_button"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_margin="16dp"
                 android:clickable="true"
                 android:focusable="true"
@@ -98,28 +116,38 @@
 
             <ImageView
                 android:id="@+id/switch_camera_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_margin="16dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="12dp"
+                app:layout_constraintStart_toEndOf="@id/end_call_button"
+                app:layout_constraintWidth_percent="0.12"
+                app:layout_constraintDimensionRatio="1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/audio_output_button"
                 android:background="@drawable/circle_background"
                 app:backgroundTint="@color/cardview_dark_background"
                 app:srcCompat="@drawable/ic_baseline_cameraswitch_24" />
 
             <ImageView
                 android:id="@+id/audio_output_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:layout_margin="16dp"
-                android:padding="12dp"
+                app:layout_constraintStart_toEndOf="@id/switch_camera_button"
+                app:layout_constraintWidth_percent="0.12"
+                app:layout_constraintDimensionRatio="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:background="@drawable/circle_background"
                 app:backgroundTint="@color/cardview_dark_background"
                 app:srcCompat="@drawable/ic_baseline_speaker_up_24" />
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 

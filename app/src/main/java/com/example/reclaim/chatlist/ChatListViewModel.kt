@@ -78,7 +78,7 @@ class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity
                 Filter.equalTo("user_b_name", UserManager.userName)
             )
         )
-            .orderBy("last_sentence", Query.Direction.ASCENDING)
+            .orderBy("last_sentence", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     Log.e(TAG, "cannot load record: $error")
