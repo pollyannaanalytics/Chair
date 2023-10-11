@@ -41,9 +41,12 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/self_container"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginTop="@dimen/standard_margin"
+            app:layout_constraintBottom_toTopOf="@id/got_to_chat_card"
+            app:layout_constraintWidth_percent="0.25"
+            app:layout_constraintDimensionRatio="1"
             app:cardCornerRadius="250dp"
             app:layout_constraintEnd_toStartOf="@id/other_container"
             app:layout_constraintStart_toStartOf="parent"
@@ -69,8 +72,10 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/other_container"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintWidth_percent="0.25"
+            app:layout_constraintDimensionRatio="1"
             app:cardCornerRadius="250dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/self_container"
@@ -95,12 +100,14 @@
             app:layout_constraintTop_toTopOf="parent"
             app:cardCornerRadius="16dp"
             android:layout_width="0dp"
+            android:background="@color/myPrimary"
             app:layout_constraintWidth_percent="0.7"
             android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/myPrimary"
 
             >
 
@@ -112,7 +119,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/send_to_chat_room"
                 android:layout_width="0dp"
-                android:layout_height="0dp">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/message_input_edit"
@@ -129,6 +136,7 @@
                 android:background="@color/myPrimary"
                 app:layout_constraintStart_toEndOf="@id/message_input_container"
                 app:layout_constraintEnd_toEndOf="parent"
+
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:text="傳送"

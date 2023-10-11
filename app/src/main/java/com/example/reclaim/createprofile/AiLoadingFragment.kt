@@ -27,10 +27,12 @@ class AiLoadingFragment : Fragment() {
         // Inflate the layout for this fragment
 
         val binding = FragmentAiLoadingBinding.inflate(inflater)
+        binding.aiLoadingAnimation.playAnimation()
 
         Handler(Looper.getMainLooper()).postDelayed({
+            binding.aiLoadingAnimation.cancelAnimation()
             findNavController().navigate(AiLoadingFragmentDirections.actionAiLoadingFragmentToHomeFragment())
-        }, 2000)
+        }, 3000)
 
 
         return binding.root
