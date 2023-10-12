@@ -266,9 +266,10 @@
                     android:layout_height="0dp"
                     android:src="@drawable/down_circle_svgrepo_com"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/worries_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="1"
-                    app:layout_constraintHeight_percent="0.3"
+                    app:layout_constraintHeight_percent="0.4"
                     android:layout_marginRight="@dimen/standard_margin"
 
                     />
@@ -285,6 +286,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/standard_margin"
             app:cardCornerRadius="@dimen/standard_margin"
+            android:visibility="gone"
             android:layout_marginBottom="@dimen/subtitle_text_size"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/worries_card"

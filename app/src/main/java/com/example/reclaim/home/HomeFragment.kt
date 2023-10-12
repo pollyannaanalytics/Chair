@@ -59,6 +59,7 @@ class HomeFragment : Fragment() {
     var manager: CardStackLayoutManager? = null
     var OtherUserNumber: Int? = null
     var OtherInfoList = emptyList<FriendInfo>().toMutableList()
+    var currentPosition = 0
 
 
     private var viewModel: HomeViewModel? = null
@@ -117,6 +118,7 @@ class HomeFragment : Fragment() {
                 }
 
                 override fun onCardSwiped(direction: Direction?) {
+                    currentPosition ++
                     val currentFriend = OtherInfoList[manager.let { it!!.topPosition } - 1]
                     if (direction != null) {
                         Log.i(TAG, "current user is ${currentFriend.friendName}")
@@ -126,7 +128,7 @@ class HomeFragment : Fragment() {
                             currentFriend.friendImg!!,
                             direction
                         )
-                        UserManager.touchNumber++
+
 
                     } else {
                         Log.i(TAG, "friends is null")
@@ -242,12 +244,23 @@ class HomeFragment : Fragment() {
                         if (!animationSet.isRunning) {
 
                             binding.cardStackview.post {
+                                currentPosition ++
 
                                 binding.cardStackview.alpha = 1.0f
                                 binding.cardStackview.rotation = 0f
                                 binding.cardStackview.translationX = 0f
 
-                                binding.cardStackview.scrollToPosition(binding.cardStackview.adapter!!.itemCount - 1)
+                                Log.i(TAG, "next position: ${currentPosition}")
+                                if (currentPosition < OtherInfoList.size){
+                                    binding.cardStackview.scrollToPosition(currentPosition)
+                                }else{
+
+                                    loadingAvatar()
+                                    Log.i(TAG, "current should be no cards")
+                                    binding.cardStackview.visibility = View.GONE
+                                }
+
+
 
 
                             }

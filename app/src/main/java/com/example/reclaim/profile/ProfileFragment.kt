@@ -36,6 +36,15 @@ class ProfileFragment : Fragment() {
         binding.usermanager = UserManager
 
 
+        binding.infoIcon.setOnClickListener {
+            if (binding.selfCard.visibility == View.GONE){
+                binding.selfCard.visibility = View.VISIBLE
+            }else{
+                binding.selfCard.visibility = View.GONE
+            }
+        }
+
+
 
         binding.editIcon.setOnClickListener {
             findNavController().navigate(ProfileFragmentDirections.actionAlreadySignUpProfileFragmentToProfileFragment2())
