@@ -46,6 +46,8 @@ class RTCActivity : AppCompatActivity() {
 
     private var meetingID: String = "test-call"
 
+    private var onDestroyed = false
+
     private var isJoin = false
 
     private var isMute = false
@@ -93,7 +95,8 @@ class RTCActivity : AppCompatActivity() {
         }
 
         fun endCallShowHint(){
-            FirebaseFirestore.getInstance().collection("calls").document(meetingID).addSnapshotListener { value, error ->
+
+            val registration = FirebaseFirestore.getInstance().collection("calls").document(meetingID).addSnapshotListener { value, error ->
                 if (value?.get("type")?.toString() == "END_CALL"){
                     findViewById<ImageView>(R.id.end_call).visibility = View.VISIBLE
                     findViewById<ImageView>(R.id.end_call_hint).visibility = View.VISIBLE
@@ -102,6 +105,11 @@ class RTCActivity : AppCompatActivity() {
                     findViewById<ImageView>(R.id.end_call_hint).visibility = View.GONE
                 }
             }
+            registration
+            if (!onDestroyed){
+                registration.remove()
+            }
+
         }
 
         endCallShowHint()
@@ -245,12 +253,23 @@ class RTCActivity : AppCompatActivity() {
                 Constants.isCallEnded = true
                 rtcClient.endCall(meetingID)
                 finish()
+                turnOffVideoCallBtn()
                 Log.i(TAG, "onIceCandidateReceived")
                 startActivity(Intent(this@RTCActivity, MainActivity::class.java))
             }
         }
     }
 
+    private fun turnOffVideoCallBtn() {
+
+        FirebaseFirestore.getInstance().collection("chat_room").whereEqualTo("meeting_id", meetingID).get()
+            .addOnSuccessListener {
+                it.documents[0].reference.update("meeting_over", true)
+            }
+            .addOnFailureListener {
+                Log.e(TAG, "cannot turn off video call: $it")
+            }
+    }
 
 
     private fun requestCameraAndAudioPermission(dialogShown: Boolean = false) {
@@ -302,6 +321,7 @@ class RTCActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         signallingClient?.destroy()
+        onDestroyed = true
         super.onDestroy()
     }
 }
