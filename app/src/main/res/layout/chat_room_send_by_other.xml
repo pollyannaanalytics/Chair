@@ -37,7 +37,8 @@
             app:layout_constraintTop_toTopOf="@id/other_avatar_container"
             app:layout_constraintBottom_toBottomOf="@id/other_avatar_container"
             app:layout_constraintStart_toEndOf="@id/other_avatar_container"
-            android:layout_width="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/standard_margin_half"
 
