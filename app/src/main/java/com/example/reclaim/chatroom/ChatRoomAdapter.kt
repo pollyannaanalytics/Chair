@@ -39,16 +39,20 @@ class ChatRoomAdapter(private val onClickListener: OnClickListener) :
             binding.executePendingBindings()
 
             if (record.type == "videocall"){
-                binding.videoInvitationBtn.visibility = View.VISIBLE
-                binding.videoInvitationBtn.setOnClickListener {
-                    onClickListener.onClick(record)
+                if (!record.meetingOver){
+                    binding.videoInvitationBtn.visibility = View.VISIBLE
+                    binding.videoInvitationBtn.setOnClickListener {
+                        onClickListener.onClick(record)
 
-                    Log.i(TAG, "record is : $record")
+                        Log.i(TAG, "record is : $record")
+                    }
+                }else{
+                    binding.videoInvitationBtn.visibility = View.GONE
+                    binding.sendByOtherText.text = "通話已結束"
                 }
 
             }else{
                 binding.videoInvitationBtn.visibility = View.GONE
-
             }
         }
     }
