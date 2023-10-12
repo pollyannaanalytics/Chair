@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -15,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import com.example.reclaim.MainActivity
 import com.example.reclaim.R
+import com.google.firebase.firestore.FirebaseFirestore
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.webrtc.*
@@ -89,6 +91,23 @@ class RTCActivity : AppCompatActivity() {
                 audioManager.setDefaultAudioDevice(RTCAudioManager.AudioDevice.SPEAKER_PHONE)
             }
         }
+
+        fun endCallShowHint(){
+            FirebaseFirestore.getInstance().collection("calls").document(meetingID).addSnapshotListener { value, error ->
+                if (value?.get("type")?.toString() == "END_CALL"){
+                    findViewById<ImageView>(R.id.end_call).visibility = View.VISIBLE
+                    findViewById<ImageView>(R.id.end_call_hint).visibility = View.VISIBLE
+                }else{
+                    findViewById<ImageView>(R.id.end_call).visibility = View.GONE
+                    findViewById<ImageView>(R.id.end_call_hint).visibility = View.GONE
+                }
+            }
+        }
+
+        endCallShowHint()
+
+
+
         videoButton.setOnClickListener {
             if (isVideoPaused) {
                 isVideoPaused = false
@@ -109,8 +128,12 @@ class RTCActivity : AppCompatActivity() {
             }
             rtcClient.enableAudio(isMute)
         }
+
+
+
         endCallButton.setOnClickListener {
             rtcClient.endCall(meetingID)
+
             findViewById<SurfaceViewRenderer>(R.id.remote_view).isGone = false
             Constants.isCallEnded = true
             finish()
@@ -227,6 +250,8 @@ class RTCActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
     private fun requestCameraAndAudioPermission(dialogShown: Boolean = false) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, CAMERA_PERMISSION) &&
