@@ -58,7 +58,12 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-        navBottomView.getOrCreateBadge(R.id.chatListFragment)
+
+        viewModel.totalUnreadMessage.observe(this){
+            Log.i("mainactiviy", it.toString())
+            navBottomView.getOrCreateBadge(R.id.chatListFragment).number = it
+        }
+
 
         fun hideToolbarAndBottom(){
             binding.toolbar.visibility = View.GONE
@@ -107,8 +112,14 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.updateOnline(false)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        viewModel.OnDestroyed()
         viewModel.updateOnline(false)
     }
 }

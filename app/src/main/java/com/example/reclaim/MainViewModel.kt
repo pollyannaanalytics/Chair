@@ -12,8 +12,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.auth.User
 
-class MainViewModel: ViewModel() {
+class MainViewModel : ViewModel() {
 
     // use map to control all fragments' visibility
     private val _elementVisibleMap = MutableLiveData<Map<String, Boolean>>()
@@ -26,12 +27,24 @@ class MainViewModel: ViewModel() {
     val showWholeToolbar: LiveData<Boolean>
         get() = _showWholeToolBar
 
+
+    private var _totalUnreadMessage = MutableLiveData<Int>()
+    val totalUnreadMessage: LiveData<Int>
+        get() = _totalUnreadMessage
+
+    private var _onDestroyed = MutableLiveData<Boolean>()
+    val onDestroyed: LiveData<Boolean>
+        get() = _onDestroyed
+
     init {
+        _onDestroyed.value = false
         _elementVisibleMap.value = mapOf(
             "homePage" to false,
             "profilePage" to false,
             "chatList" to false,
         )
+
+        getTotalUnreadNumber()
     }
 
 
@@ -53,13 +66,13 @@ class MainViewModel: ViewModel() {
     }
 
 
-    fun showElementOrToolBar(fragmentId: String, showElement: Boolean, showToolbar: Boolean){
+    fun showElementOrToolBar(fragmentId: String, showElement: Boolean, showToolbar: Boolean) {
         setElementVisibility(fragmentId, showElement)
         setToolBar(showToolbar)
 
     }
 
-    fun updateOnline(onlineOrNot: Boolean){
+    fun updateOnline(onlineOrNot: Boolean) {
         FirebaseFirestore.getInstance().collection("chat_room").where(
             Filter.or(
                 Filter.equalTo("user_a_id", com.example.reclaim.data.UserManager.userId),
@@ -67,13 +80,13 @@ class MainViewModel: ViewModel() {
             )
         ).get().addOnSuccessListener { snapshots ->
 
-            for (snapshot in snapshots){
+            for (snapshot in snapshots) {
                 val userAId = snapshot.get("user_a_id").toString()
                 val userBId = snapshot.get("user_b_id").toString()
-                if (userAId == com.example.reclaim.data.UserManager.userId){
+                if (userAId == com.example.reclaim.data.UserManager.userId) {
                     FirebaseFirestore.getInstance().collection("chat_room").document(snapshot.id)
                         .update("user_a_online", onlineOrNot)
-                }else{
+                } else {
                     FirebaseFirestore.getInstance().collection("chat_room").document(snapshot.id)
                         .update("user_b_online", onlineOrNot)
                 }
@@ -82,15 +95,55 @@ class MainViewModel: ViewModel() {
 
 
         }.addOnFailureListener {
-            Log.e(TAG, "cannot update online situation: $it" )
+            Log.e(TAG, "cannot update online situation: $it")
 
         }
     }
-companion object{
-    const val TAG = "MainViewModel"
-}
+
+    fun OnDestroyed() {
+        _onDestroyed.value = true
+    }
 
 
+    private fun getTotalUnreadNumber() {
+        val registration = FirebaseFirestore.getInstance().collection("chat_room").where(
+            Filter.or(
+                Filter.equalTo("user_a_id", com.example.reclaim.data.UserManager.userId),
+                Filter.equalTo("user_b_id", com.example.reclaim.data.UserManager.userId)
+            )
+        ).whereNotEqualTo("send_by_id", com.example.reclaim.data.UserManager.userId)
+            .addSnapshotListener { snapshots, error ->
+                var currentTotalNumber = 0
+                if (error != null) {
+                    Log.e(TAG, "get unread message error: $error")
+                    return@addSnapshotListener
+                }
+                if (snapshots != null && !snapshots.isEmpty) {
+                    Log.i(TAG, snapshots.size().toString())
+                    _totalUnreadMessage.value = 0
+
+                    for (snapshot in snapshots) {
+                        val unReadTimes = snapshot.get("unread_times").toString().toInt()
+                        currentTotalNumber += unReadTimes
+                    }
+
+                    _totalUnreadMessage.value = currentTotalNumber
+                } else {
+                    Log.e(TAG, "message is 0")
+                }
+
+            }
+
+        registration
+
+        if (_onDestroyed.value == true) {
+            registration.remove()
+        }
+    }
+
+    companion object {
+        const val TAG = "MainViewModel"
+    }
 
 
 }
