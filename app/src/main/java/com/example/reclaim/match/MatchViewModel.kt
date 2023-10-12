@@ -58,7 +58,8 @@ class MatchViewModel(
                         selfImage = UserManager.userImage,
                         selfName = UserManager.userName,
                         otherName = _chatRoomInfo.value.let { it!!.otherName },
-                        isSeen = false
+                        isSeen = false,
+                        meetingOver = false
                     )
 
 
@@ -74,8 +75,10 @@ class MatchViewModel(
                         "user_b_img" to newRecord.otherImage,
                         "user_a_img" to UserManager.userImage,
                         "user_a_name" to newRecord.selfName,
-                        "user_b_name" to newRecord.otherName
+                        "user_b_name" to newRecord.otherName,
+                        "meeting_over" to newRecord.meetingOver
                     )
+
 
                     FirebaseFirestore.getInstance().collection("chat_room").document(documentId)
                         .collection("chat_record").add(data).addOnSuccessListener {

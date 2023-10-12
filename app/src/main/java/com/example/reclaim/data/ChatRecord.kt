@@ -35,6 +35,7 @@ data class ChatRecord(
 
     val otherName: String,
 
-    val isSeen: Boolean
+    val isSeen: Boolean,
+    val meetingOver: Boolean
 
 )

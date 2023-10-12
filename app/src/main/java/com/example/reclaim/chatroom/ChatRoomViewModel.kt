@@ -94,6 +94,7 @@ class ChatRoomViewModel(
                         val type = document.get("message_type").toString()
                         val meetingId = document.get("meeting_id").toString()
                         val isSeen = document.get("is_seen").toString().toBoolean()
+                        val meetingOver = document.get("meeting_over").toString().toBoolean()
 
                         var selfImage = ""
                         var selfName = ""
@@ -134,7 +135,9 @@ class ChatRoomViewModel(
                             selfImage = selfImage,
                             selfName = selfName,
                             otherName = otherName,
-                            isSeen
+                            isSeen = isSeen,
+                            meetingOver = meetingOver
+
                         )
 
                         currentRecord.add(newRecord)
@@ -243,7 +246,8 @@ class ChatRoomViewModel(
             selfImage = UserManager.userImage,
             selfName = UserManager.userName,
             otherName = friendName,
-            isSeen = false
+            isSeen = false,
+            meetingOver = false
         )
 
         val data = hashMapOf(
@@ -258,7 +262,8 @@ class ChatRoomViewModel(
             "user_b_img" to newRecord.otherImage,
             "user_a_img" to UserManager.userImage,
             "user_a_name" to newRecord.selfName,
-            "user_b_name" to newRecord.otherName
+            "user_b_name" to newRecord.otherName,
+            "meeting_over" to newRecord.meetingOver
         )
         var documentID = ""
         val chatRoomCollection =
