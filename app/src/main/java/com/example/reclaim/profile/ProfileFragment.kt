@@ -45,6 +45,17 @@ class ProfileFragment : Fragment() {
         }
 
 
+        fun factoral(n: Int){
+            if (n >= 0){
+                var newInt = n * (n -1)
+                factoral(newInt)
+            }
+
+        }
+
+        
+
+
 
         binding.editIcon.setOnClickListener {
             findNavController().navigate(ProfileFragmentDirections.actionAlreadySignUpProfileFragmentToProfileFragment2())
