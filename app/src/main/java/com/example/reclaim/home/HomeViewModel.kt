@@ -57,6 +57,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
     }
 
     private fun loadOtherProfile(currentFriends: List<String>) {
+        Log.i(TAG, "current friends: ${currentFriends}")
         _otherProfileList.value = emptyList<UserProfile>().toMutableList()
         if (currentFriends.isNotEmpty()) {
             Log.i(TAG, "currentFriend: $currentFriends")
@@ -310,26 +311,13 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         currentFriendList.add(UserManager.userId)
 
 
-        db.collection("relationship").where(
-            Filter.and(
-                Filter.equalTo("receiver_id", UserManager.userId),
-                Filter.equalTo("current_relationship", "Like")
-            )
-        ).get().addOnSuccessListener { snapshots ->
-            Log.i(TAG, "found friend number by other: ${snapshots.documents.size}")
-            for (snapshot in snapshots) {
-                val userId = snapshot.get("sender_id").toString()
-                currentFriendList.add(userId)
-                UserManager.friendNumber = currentFriendList.size
-            }
-
-        }.addOnFailureListener {
-            Log.e(TAG, "cannot load friend list")
-        }
 
 
         db.collection("relationship")
-            .whereEqualTo("sender_id", UserManager.userId)
+            .where(Filter.or(
+                Filter.equalTo("sender_id", UserManager.userId),
+                Filter.equalTo("current_relationship", "Like")
+            ))
             .get()
             .addOnSuccessListener { snapshot ->
                 Log.i(TAG, "found friend number by me: ${snapshot.documents.size}")
@@ -345,8 +333,9 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                         Log.i(TAG, "currentFriendList: $currentFriendList")
 
                     }
-
                     loadOtherProfile(currentFriendList)
+                    Log.i(TAG, "list: ${currentFriendList}, start to find other")
+
                 } else {
                     Log.e(TAG, "no friends")
                     loadOtherProfile(currentFriendList)
