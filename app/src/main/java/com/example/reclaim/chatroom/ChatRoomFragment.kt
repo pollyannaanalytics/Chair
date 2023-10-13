@@ -1,8 +1,10 @@
 package com.example.reclaim.chatroom
 
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,6 +17,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
 import com.example.reclaim.R
 import com.example.reclaim.data.Friends
 import com.example.reclaim.data.ReclaimDatabase
@@ -73,6 +77,7 @@ class ChatRoomFragment : Fragment() {
                 Log.i(TAG, "join meeting click")
             }
         )
+
         binding.viewModel = viewModel
         binding.chatRecordRecyclerview.adapter = adapter
 
@@ -95,11 +100,30 @@ class ChatRoomFragment : Fragment() {
 
 
         viewModel.recordWithFriend.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
-            binding.chatRecordRecyclerview.scrollToPosition(it.size - 1)
-            Log.i(TAG, "submit to adapter: $it")
+
+            if (it.size > 0){
+                adapter.submitList(it)
+//                adapter.notifyDataSetChanged()
+//            final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+
+
+
+                val smoothScroller = BottomSmoothScroller(binding.chatRecordRecyclerview.context)
+
+                smoothScroller.targetPosition = it.size - 1
+
+                binding.chatRecordRecyclerview.layoutManager?.startSmoothScroll(smoothScroller)
+
+//            layoutManager.reverseLayout = true;
+//            binding.chatRecordRecyclerview.layoutManager = layoutManager;
+
+                Log.i(TAG, "submit to adapter: $it")
+            }
+
 
         }
+
+
 
         binding.videoButton.setOnClickListener {
             val meetingId = UUID.randomUUID().leastSignificantBits.toString()
@@ -140,5 +164,16 @@ class ChatRoomFragment : Fragment() {
         super.onDestroy()
         viewModel.removeListener()
 
+    }
+
+
+    class BottomSmoothScroller(context: Context) : LinearSmoothScroller(context) {
+        override fun getVerticalSnapPreference(): Int {
+            return SNAP_TO_END
+        }
+
+        override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics): Float {
+            return super.calculateSpeedPerPixel(displayMetrics) * 1.5f
+        }
     }
 }

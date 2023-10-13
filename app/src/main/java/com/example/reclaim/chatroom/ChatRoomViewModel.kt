@@ -81,7 +81,7 @@ class ChatRoomViewModel(
                     return@addSnapshotListener
                 }
                 if (snapshot != null) {
-                    val currentRecord = emptyList<ChatRecord>().toMutableList()
+                    val currentRecord = mutableListOf<ChatRecord>()
                     Log.i(TAG, "record includes: ${snapshot.documents.size}")
 
                     for (document in snapshot) {
