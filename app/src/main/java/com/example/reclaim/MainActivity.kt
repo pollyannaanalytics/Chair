@@ -1,24 +1,16 @@
 package com.example.reclaim
 
-import android.content.Intent
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.compose.ui.graphics.Color
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.reclaim.databinding.ActivityMainBinding
-import com.example.reclaim.databinding.ActivityRtcactivityBinding
-import com.example.reclaim.videocall.Constants
-import com.example.reclaim.videocall.RTCActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.tabs.TabLayout.TabGravity
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,13 +18,22 @@ class MainActivity : AppCompatActivity() {
         ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val sharedPreferencesName = resources.getString(R.string.usermanager)
+        var sharedPreferencesId = resources.getString(R.string.userid)
+
+        var getSharedPreferences = getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE)
+
+        var userId = getSharedPreferences.all.get(sharedPreferencesId).toString()
 
         val binding: ActivityMainBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.viewModel = viewModel
+        viewModel.getTotalUnreadNumber(userId)
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.myNavHostFragment) as NavHostFragment
         val navController = navHostFragment.navController

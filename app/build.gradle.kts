@@ -77,8 +77,8 @@ dependencies {
 
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
-    implementation("androidx.core:core-ktx:1.3.2")
-    implementation("androidx.appcompat:appcompat:1.2.0")
+    implementation("androidx.core:core-ktx:1.5.0")
+    implementation("androidx.appcompat:appcompat:1.7.0-alpha02")
     implementation("com.google.android.material:material:1.9.0")
 
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
@@ -89,7 +89,7 @@ dependencies {
 
     androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 
     implementation("org.webrtc:google-webrtc:1.0.32006")
 
@@ -109,6 +109,7 @@ dependencies {
     implementation("io.ktor:ktor-client-websocket:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-gson:$ktorVersion")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0")
 
     val nav_version = "2.5.3"
     // Kotlin
@@ -146,7 +147,7 @@ dependencies {
 
     implementation ("com.yuyakaido.android:card-stack-view:2.3.4")
 
-    implementation ("com.google.android.material:material:1.9.0")
+//    implementation ("com.google.android.material:material:1.9.0")
 
     implementation ("com.airbnb.android:lottie:6.1.0")
 

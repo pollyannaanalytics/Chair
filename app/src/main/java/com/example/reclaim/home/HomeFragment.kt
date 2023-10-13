@@ -76,7 +76,8 @@ class HomeFragment : Fragment() {
 
         val binding = FragmentHomeBinding.inflate(inflater)
 
-
+        Log.i(TAG, "viewModel instance: ${viewModel}")
+        Log.i(TAG, "fragment instance: ${this}")
         binding.viewModel = viewModel
 
         viewModel?.loadWhoLikeMe(UserManager.userId)

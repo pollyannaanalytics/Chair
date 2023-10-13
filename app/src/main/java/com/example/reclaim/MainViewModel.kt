@@ -44,8 +44,10 @@ class MainViewModel : ViewModel() {
             "chatList" to false,
         )
 
-        getTotalUnreadNumber()
+
     }
+
+
 
 
     // determine hide view or not depend on fragment id
@@ -105,11 +107,12 @@ class MainViewModel : ViewModel() {
     }
 
 
-    private fun getTotalUnreadNumber() {
+    fun getTotalUnreadNumber(userId: String) {
+        Log.i(TAG, "current userId: ${com.example.reclaim.data.UserManager.userId}")
         val registration = FirebaseFirestore.getInstance().collection("chat_room").where(
             Filter.or(
-                Filter.equalTo("user_a_id", com.example.reclaim.data.UserManager.userId),
-                Filter.equalTo("user_b_id", com.example.reclaim.data.UserManager.userId)
+                Filter.equalTo("user_a_id", userId),
+                Filter.equalTo("user_b_id", userId)
             )
         ).whereNotEqualTo("send_by_id", com.example.reclaim.data.UserManager.userId)
             .addSnapshotListener { snapshots, error ->
