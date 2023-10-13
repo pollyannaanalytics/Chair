@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.core.view.accessibility.AccessibilityViewCommand.ScrollToPositionArguments
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -95,6 +96,7 @@ class ChatRoomFragment : Fragment() {
 
         viewModel.recordWithFriend.observe(viewLifecycleOwner) {
             adapter.submitList(it)
+            binding.chatRecordRecyclerview.scrollToPosition(it.size - 1)
             Log.i(TAG, "submit to adapter: $it")
 
         }
