@@ -57,6 +57,7 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
     }
 
     private fun loadOtherProfile(currentFriends: List<String>) {
+        _otherProfileList.value = emptyList<UserProfile>().toMutableList()
         if (currentFriends.isNotEmpty()) {
             Log.i(TAG, "currentFriend: $currentFriends")
             try {
@@ -102,6 +103,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                                     age = age,
                                     selfDescription = selfDescription
                                 )
+
+                                Log.i(TAG, "load real profile: ${newUserProfile.userId}")
                                 currentList.add(newUserProfile)
                             }
                             _otherProfileList.value = currentList
@@ -120,7 +123,6 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                         Log.i(TAG, it.toString())
                     }
                 registration
-
 
 
             } catch (e: Exception) {
@@ -306,25 +308,27 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         Log.i(TAG, "start to load who is friend currently")
         val currentFriendList = emptyList<String>().toMutableList()
         currentFriendList.add(UserManager.userId)
-        val sendLikeByOthers = db.collection("relationship").where(
+
+
+        db.collection("relationship").where(
             Filter.and(
                 Filter.equalTo("receiver_id", UserManager.userId),
                 Filter.equalTo("current_relationship", "Like")
             )
-        ).get().addOnSuccessListener {snapshots ->
+        ).get().addOnSuccessListener { snapshots ->
             Log.i(TAG, "found friend number by other: ${snapshots.documents.size}")
-            for (snapshot in snapshots){
+            for (snapshot in snapshots) {
                 val userId = snapshot.get("sender_id").toString()
                 currentFriendList.add(userId)
+                UserManager.friendNumber = currentFriendList.size
             }
 
-            UserManager.friendNumber = currentFriendList.size
-            loadOtherProfile(currentFriendList)
         }.addOnFailureListener {
             Log.e(TAG, "cannot load friend list")
         }
 
-        val sendRequestFromMe = db.collection("relationship")
+
+        db.collection("relationship")
             .whereEqualTo("sender_id", UserManager.userId)
             .get()
             .addOnSuccessListener { snapshot ->
@@ -341,8 +345,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                         Log.i(TAG, "currentFriendList: $currentFriendList")
 
                     }
-                    sendLikeByOthers
 
+                    loadOtherProfile(currentFriendList)
                 } else {
                     Log.e(TAG, "no friends")
                     loadOtherProfile(currentFriendList)
@@ -352,10 +356,6 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
             }.addOnFailureListener {
                 Log.e(TAG, "cannot load friend list: $it")
             }
-
-
-
-        sendRequestFromMe
 
 
     }
@@ -556,7 +556,6 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
     }
 
 
-
     fun navigateToMatch() {
         _matchToChatRoom.value = null
     }
@@ -566,8 +565,6 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
         super.onCleared()
         Log.i(TAG, "home viewModel is dead")
     }
-
-
 
 
 }
