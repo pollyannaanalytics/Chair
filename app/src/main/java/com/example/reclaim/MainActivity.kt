@@ -62,7 +62,9 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.totalUnreadMessage.observe(this){
             Log.i("mainactiviy", it.toString())
-            navBottomView.getOrCreateBadge(R.id.chatListFragment).number = it
+            if (it != 0){
+                navBottomView.getOrCreateBadge(R.id.chatListFragment).number = it
+            }
         }
 
 

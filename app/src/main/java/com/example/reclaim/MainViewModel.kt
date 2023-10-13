@@ -116,18 +116,23 @@ class MainViewModel : ViewModel() {
             )
         ).whereNotEqualTo("send_by_id", com.example.reclaim.data.UserManager.userId)
             .addSnapshotListener { snapshots, error ->
-                var currentTotalNumber = 0
+
                 if (error != null) {
                     Log.e(TAG, "get unread message error: $error")
                     return@addSnapshotListener
                 }
                 if (snapshots != null && !snapshots.isEmpty) {
                     Log.i(TAG, snapshots.size().toString())
+                    var currentTotalNumber = 0
                     _totalUnreadMessage.value = 0
 
                     for (snapshot in snapshots) {
                         val unReadTimes = snapshot.get("unread_times").toString().toInt()
-                        currentTotalNumber += unReadTimes
+                        val sendById = snapshot.get("send_by_id").toString()
+                        if (sendById != com.example.reclaim.data.UserManager.userId){
+                            currentTotalNumber += unReadTimes
+                        }
+
                     }
 
                     _totalUnreadMessage.value = currentTotalNumber
