@@ -77,6 +77,11 @@ class LoginFragment : Fragment() {
             userManagerInSharePreference, Context.MODE_PRIVATE
         )
 
+        fun showShadow(){
+            binding.loginLayout.alpha = 0.6f
+            binding.googleBtn.isEnabled = false
+        }
+
 
         loginViewModel.canFindProfile.observe(viewLifecycleOwner) {
             try {
@@ -108,6 +113,7 @@ class LoginFragment : Fragment() {
         //
         binding.googleBtn.setOnClickListener {
             googleSignIn()
+            showShadow()
 
 
         }
