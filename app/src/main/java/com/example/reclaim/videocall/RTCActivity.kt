@@ -9,12 +9,16 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.reclaim.MainActivity
+import com.example.reclaim.MainViewModel
 import com.example.reclaim.R
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -24,6 +28,11 @@ import java.util.*
 
 @ExperimentalCoroutinesApi
 class RTCActivity : AppCompatActivity() {
+
+    private val viewModel: RTCViewModel by lazy {
+        ViewModelProvider(this).get(RTCViewModel::class.java)
+    }
+
 
     companion object {
         private const val CAMERA_AUDIO_PERMISSION_REQUEST_CODE = 1
@@ -66,6 +75,7 @@ class RTCActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rtcactivity)
+
         switchCameraButton = findViewById(R.id.switch_camera_button)
         audioOutputButton = findViewById(R.id.audio_output_button)
         videoButton = findViewById(R.id.video_button)
@@ -94,9 +104,16 @@ class RTCActivity : AppCompatActivity() {
             }
         }
 
+        viewModel.showEndCallHint.observe(this){
+            if (it == true){
+                findViewById<TextView>(R.id.end_call_hint).visibility = View.VISIBLE
+                findViewById<ImageView>(R.id.end_call).visibility = View.VISIBLE
+            }else{
+                findViewById<TextView>(R.id.end_call_hint).visibility = View.GONE
+                findViewById<ImageView>(R.id.end_call).visibility = View.GONE
+            }
+        }
 
-
-        endCallShowHint()
 
 
 
@@ -305,6 +322,8 @@ class RTCActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         signallingClient?.destroy()
+        viewModel.destroySnapshotListener()
+
         onDestroyed = true
         super.onDestroy()
     }
