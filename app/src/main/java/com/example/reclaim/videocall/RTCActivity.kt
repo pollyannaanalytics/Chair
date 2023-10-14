@@ -94,23 +94,7 @@ class RTCActivity : AppCompatActivity() {
             }
         }
 
-        fun endCallShowHint(){
 
-            val registration = FirebaseFirestore.getInstance().collection("calls").document(meetingID).addSnapshotListener { value, error ->
-                if (value?.get("type")?.toString() == "END_CALL"){
-                    findViewById<ImageView>(R.id.end_call).visibility = View.VISIBLE
-                    findViewById<ImageView>(R.id.end_call_hint).visibility = View.VISIBLE
-                }else{
-                    findViewById<ImageView>(R.id.end_call).visibility = View.GONE
-                    findViewById<ImageView>(R.id.end_call_hint).visibility = View.GONE
-                }
-            }
-            registration
-            if (!onDestroyed){
-                registration.remove()
-            }
-
-        }
 
         endCallShowHint()
 
