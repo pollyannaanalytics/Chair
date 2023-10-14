@@ -1,13 +1,13 @@
 package com.example.reclaim.videocall
 
 import android.util.Log
-import android.view.View
-import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.reclaim.R
+import com.example.reclaim.data.UserManager
+import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.auth.User
 
 class RTCViewModel: ViewModel() {
 
@@ -18,12 +18,15 @@ class RTCViewModel: ViewModel() {
     private var _onDestroyed = MutableLiveData<Boolean>()
     val onDestroyed: LiveData<Boolean>
         get() = _onDestroyed
+
+
     init {
         _showEndCallHint.value = false
         _onDestroyed.value = false
+
     }
 
-    fun endCallShowHint(meetingID: String){
+    fun listenEndCall(meetingID: String){
 
         val registration = FirebaseFirestore.getInstance().collection("calls").document(meetingID)
             .addSnapshotListener { value, error ->
@@ -57,6 +60,8 @@ class RTCViewModel: ViewModel() {
     fun destroySnapshotListener(){
         _onDestroyed.value = true
     }
+
+
 
     companion object{
         private const val TAG = "RTCViewModel"

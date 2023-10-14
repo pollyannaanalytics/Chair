@@ -108,13 +108,13 @@ class MainViewModel : ViewModel() {
 
 
     fun getTotalUnreadNumber(userId: String) {
-        Log.i(TAG, "current userId: ${com.example.reclaim.data.UserManager.userId}")
+        Log.i(TAG, "current userId: $userId")
         val registration = FirebaseFirestore.getInstance().collection("chat_room").where(
             Filter.or(
                 Filter.equalTo("user_a_id", userId),
                 Filter.equalTo("user_b_id", userId)
             )
-        ).whereNotEqualTo("send_by_id", com.example.reclaim.data.UserManager.userId)
+        ).whereNotEqualTo("send_by_id", userId)
             .addSnapshotListener { snapshots, error ->
 
                 if (error != null) {

@@ -6,7 +6,6 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.room.util.query
 import com.example.reclaim.data.ChatRecord
 import com.example.reclaim.data.ReclaimDatabaseDao
 import com.example.reclaim.data.UserManager
@@ -49,6 +48,10 @@ class ChatRoomViewModel(
         get() = _noRecord
 
     private val db = Firebase.firestore
+
+    var _documentID = ""
+    var _meetingId = ""
+
 
     private val chatRoom = db.collection("chat_room").whereEqualTo("key", chatRoomKey)
 
@@ -139,6 +142,7 @@ class ChatRoomViewModel(
                             meetingOver = meetingOver
 
                         )
+                        _meetingId = meetingId
 
                         currentRecord.add(newRecord)
                         updateSeenStatus(room.id, document.id)
@@ -160,8 +164,9 @@ class ChatRoomViewModel(
     }
 
     private fun updateSeenStatus(chatRoomID: String, documentID: String) {
-        val chatRoomIsSeenOrNot = db.collection("chat_room").document(chatRoomID).collection("chat_record")
-            .document(documentID)
+        val chatRoomIsSeenOrNot =
+            db.collection("chat_room").document(chatRoomID).collection("chat_record")
+                .document(documentID)
         chatRoomIsSeenOrNot.update("is_seen", true)
 
     }
@@ -265,19 +270,20 @@ class ChatRoomViewModel(
             "user_b_name" to newRecord.otherName,
             "meeting_over" to newRecord.meetingOver
         )
-        var documentID = ""
+
         val chatRoomCollection =
             db.collection("chat_room").whereEqualTo("key", newRecord.chatRoomKey)
         chatRoomCollection.get().addOnSuccessListener {
-            documentID = it.documents[0].id
-            Log.e(TAG, "document ID : $documentID")
+            _documentID = it.documents[0].id
 
-            Log.i(TAG, "current document ID: $documentID")
-            db.collection("chat_room").document(documentID).collection("chat_record")
+            Log.e(TAG, "document ID : $_documentID")
+
+            Log.i(TAG, "current document ID: $_documentID")
+            db.collection("chat_room").document(_documentID).collection("chat_record")
                 .add(data).addOnSuccessListener {
                     val currentTime = System.currentTimeMillis().toString()
-                    updateSentTime(documentID, newRecord.sendTime, it.id)
-                    updateOnFriendList(text, documentID, newRecord.sendTime)
+                    updateSentTime(_documentID, newRecord.sendTime, it.id)
+                    updateOnFriendList(text, _documentID, newRecord.sendTime)
 
                 }.addOnFailureListener {
                     Log.e(TAG, "error: $it")
@@ -304,7 +310,7 @@ class ChatRoomViewModel(
         var currentUnreadTime = 0
         val chatRoom = FirebaseFirestore.getInstance().collection("chat_room").document(chatRoomKey)
         chatRoom.get().addOnSuccessListener {
-           currentUnreadTime = it.get("unread_times").toString().toInt()
+            currentUnreadTime = it.get("unread_times").toString().toInt()
             currentUnreadTime++
 
 
@@ -317,8 +323,6 @@ class ChatRoomViewModel(
         }
 
 
-
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -326,6 +330,8 @@ class ChatRoomViewModel(
         val text = "我開啟了視訊，一起加入吧!"
         val type = "videocall"
         sendMessage(text, type, meetingId)
+        _meetingId = meetingId
+
 
     }
 
@@ -337,6 +343,15 @@ class ChatRoomViewModel(
         _onDestroyed.value = true
     }
 
+    fun turnOffJoinBtn() {
+        FirebaseFirestore.getInstance().collection("chat_room").document(_documentID)
+            .collection("chat_record").document(_meetingId).update("meeting_over", true).addOnSuccessListener{
+                Log.i(TAG, "success turn off meeting")
+            }
+            .addOnFailureListener {
+                Log.e(TAG, "failed to turn off: $it")
+            }
+    }
 
 
 }

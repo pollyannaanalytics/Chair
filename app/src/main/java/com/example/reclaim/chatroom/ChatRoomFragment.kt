@@ -144,6 +144,8 @@ class ChatRoomFragment : Fragment() {
             intent.putExtra("meetingID", it)
             intent.putExtra("isJoin", true)
 
+            viewModel.turnOffJoinBtn()
+
             startActivity(intent)
         }
 

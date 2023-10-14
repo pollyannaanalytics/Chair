@@ -15,16 +15,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.reclaim.MainActivity
-import com.example.reclaim.MainViewModel
 import com.example.reclaim.R
 import com.google.firebase.firestore.FirebaseFirestore
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.webrtc.*
-import java.util.*
 
 @ExperimentalCoroutinesApi
 class RTCActivity : AppCompatActivity() {
@@ -81,6 +78,8 @@ class RTCActivity : AppCompatActivity() {
         videoButton = findViewById(R.id.video_button)
         micButton = findViewById(R.id.mic_button)
         endCallButton = findViewById(R.id.end_call_button)
+
+        viewModel.listenEndCall(meetingID)
 
         if (intent.hasExtra("meetingID"))
             meetingID = intent.getStringExtra("meetingID")!!
@@ -142,7 +141,6 @@ class RTCActivity : AppCompatActivity() {
 
         endCallButton.setOnClickListener {
             rtcClient.endCall(meetingID)
-
             findViewById<SurfaceViewRenderer>(R.id.remote_view).isGone = false
             Constants.isCallEnded = true
             finish()
@@ -254,23 +252,14 @@ class RTCActivity : AppCompatActivity() {
                 Constants.isCallEnded = true
                 rtcClient.endCall(meetingID)
                 finish()
-                turnOffVideoCallBtn()
+
                 Log.i(TAG, "onIceCandidateReceived")
                 startActivity(Intent(this@RTCActivity, MainActivity::class.java))
             }
         }
     }
 
-    private fun turnOffVideoCallBtn() {
 
-        FirebaseFirestore.getInstance().collection("chat_room").whereEqualTo("meeting_id", meetingID).get()
-            .addOnSuccessListener {
-                it.documents[0].reference.update("meeting_over", true)
-            }
-            .addOnFailureListener {
-                Log.e(TAG, "cannot turn off video call: $it")
-            }
-    }
 
 
     private fun requestCameraAndAudioPermission(dialogShown: Boolean = false) {
