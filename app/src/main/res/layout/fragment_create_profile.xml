@@ -54,11 +54,25 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/upload_image_hint"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:text="請上傳你的照片"
+            android:textSize="@dimen/detail_text_size"
+            android:textColor="@color/shadow"
+            app:layout_constraintTop_toBottomOf="@id/question"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            />
+
         <androidx.cardview.widget.CardView
             android:id="@+id/user_image_container"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/question"
+            app:layout_constraintTop_toBottomOf="@id/upload_image_hint"
             app:cardCornerRadius="250dp"
             app:layout_constraintWidth_percent="0.3"
             app:layout_constraintDimensionRatio="1"
