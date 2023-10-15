@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.alreadySignUpProfileFragment -> hideToolbar()
                 R.id.chatListFragment -> showToolBar(false, "我的好友")
-                R.id.chatRoomFragment -> hideToolbar()
+                R.id.chatRoomFragment -> hideToolbarAndBottom()
 
                 R.id.profileFragment -> showToolBar(false, "編輯個人檔案")
                 R.id.matchFragment -> {
