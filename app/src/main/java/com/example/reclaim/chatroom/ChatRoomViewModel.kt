@@ -210,6 +210,7 @@ class ChatRoomViewModel(
             if (rooms != null && !rooms.isEmpty) {
                 val room = rooms.documents.get(0)
                 getAllRecordFromRoom(room)
+                _documentID = room.id
                 Log.i(TAG, room.id.toString())
             } else {
                 _noRecord.value = true
@@ -344,13 +345,20 @@ class ChatRoomViewModel(
     }
 
     fun turnOffJoinBtn() {
-        FirebaseFirestore.getInstance().collection("chat_room").document(_documentID)
-            .collection("chat_record").document(_meetingId).update("meeting_over", true).addOnSuccessListener{
-                Log.i(TAG, "success turn off meeting")
+
+        Log.i(TAG, "document: $_documentID, chat_record: $_meetingId")
+        val chatRoom = FirebaseFirestore.getInstance().collection("chat_room").document(_documentID)
+        var meetingDocument = ""
+        chatRoom.collection("chat_record").whereEqualTo("meeting_id", _meetingId).get().addOnSuccessListener {
+            meetingDocument = it.documents.get(0).id
+
+            chatRoom.collection("chat_record").document(meetingDocument).update("meeting_over", true).addOnSuccessListener {
+                Log.i(TAG, "update meeting over successfully")
+            }.addOnFailureListener {
+                Log.e(TAG, "fail to update meeting over: $it")
             }
-            .addOnFailureListener {
-                Log.e(TAG, "failed to turn off: $it")
-            }
+        }
+
     }
 
 
