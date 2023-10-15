@@ -45,6 +45,7 @@ class ChatRoomAdapter(private val onClickListener: OnClickListener) :
                     binding.videoInvitationBtn.setOnClickListener {
                         onClickListener.onClick(record)
 
+
                         Log.i(TAG, "record is : $record")
                     }
                 }else{

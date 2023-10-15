@@ -348,15 +348,17 @@ class ChatRoomViewModel(
 
         Log.i(TAG, "document: $_documentID, chat_record: $_meetingId")
         val chatRoom = FirebaseFirestore.getInstance().collection("chat_room").document(_documentID)
-        var meetingDocument = ""
+        var meetingDocumentID = ""
         chatRoom.collection("chat_record").whereEqualTo("meeting_id", _meetingId).get().addOnSuccessListener {
-            meetingDocument = it.documents.get(0).id
 
-            chatRoom.collection("chat_record").document(meetingDocument).update("meeting_over", true).addOnSuccessListener {
-                Log.i(TAG, "update meeting over successfully")
-            }.addOnFailureListener {
-                Log.e(TAG, "fail to update meeting over: $it")
-            }
+            meetingDocumentID = it.documents.get(0).id
+
+            val meetingDocument = chatRoom.collection("chat_record").document(meetingDocumentID)
+
+            meetingDocument.update("meeting_over", true)
+            meetingDocument.update("content", "通話已結束")
+            chatRoom.update("last_sentence", "通話已結束")
+
         }
 
     }
