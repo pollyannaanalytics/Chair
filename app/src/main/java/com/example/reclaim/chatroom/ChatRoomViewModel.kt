@@ -146,6 +146,7 @@ class ChatRoomViewModel(
 
                         currentRecord.add(newRecord)
                         updateSeenStatus(room.id, document.id)
+                        clearUnreadTimes(room.id)
                         Log.i(TAG, "get record: ${room.id}")
                     }
                     Log.i(TAG, "current record: $currentRecord")
@@ -161,6 +162,19 @@ class ChatRoomViewModel(
         if (_onDestroyed.value == true) {
             regitration.remove()
         }
+    }
+
+    private fun clearUnreadTimes(documentID: String) {
+
+        val chatRoom = db.collection("chat_room")
+            .document(documentID)
+        chatRoom.get().addOnSuccessListener {
+
+            chatRoom.update("unread_times", 0)
+        }.addOnFailureListener {
+            Log.e(TAG, "failed to clear unread times: $it")
+        }
+
     }
 
     private fun updateSeenStatus(chatRoomID: String, documentID: String) {
@@ -349,17 +363,18 @@ class ChatRoomViewModel(
         Log.i(TAG, "document: $_documentID, chat_record: $_meetingId")
         val chatRoom = FirebaseFirestore.getInstance().collection("chat_room").document(_documentID)
         var meetingDocumentID = ""
-        chatRoom.collection("chat_record").whereEqualTo("meeting_id", _meetingId).get().addOnSuccessListener {
+        chatRoom.collection("chat_record").whereEqualTo("meeting_id", _meetingId).get()
+            .addOnSuccessListener {
 
-            meetingDocumentID = it.documents.get(0).id
+                meetingDocumentID = it.documents.get(0).id
 
-            val meetingDocument = chatRoom.collection("chat_record").document(meetingDocumentID)
+                val meetingDocument = chatRoom.collection("chat_record").document(meetingDocumentID)
 
-            meetingDocument.update("meeting_over", true)
-            meetingDocument.update("content", "通話已結束")
-            chatRoom.update("last_sentence", "通話已結束")
+                meetingDocument.update("meeting_over", true)
+                meetingDocument.update("content", "通話已結束")
+                chatRoom.update("last_sentence", "通話已結束")
 
-        }
+            }
 
     }
 
