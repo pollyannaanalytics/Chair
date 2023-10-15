@@ -93,6 +93,7 @@ class MainViewModel : ViewModel() {
                         .update("user_b_online", onlineOrNot)
                 }
 
+
             }
 
 
@@ -116,7 +117,7 @@ class MainViewModel : ViewModel() {
             )
         ).whereNotEqualTo("send_by_id", userId)
             .addSnapshotListener { snapshots, error ->
-
+                _totalUnreadMessage.value = 0
                 if (error != null) {
                     Log.e(TAG, "get unread message error: $error")
                     return@addSnapshotListener
@@ -132,6 +133,8 @@ class MainViewModel : ViewModel() {
                         if (sendById != com.example.reclaim.data.UserManager.userId){
                             currentTotalNumber += unReadTimes
                         }
+
+                        Log.i(TAG, "update online: ${currentTotalNumber}")
 
                     }
 

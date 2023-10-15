@@ -192,7 +192,7 @@ class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity
 
     fun displayChatRoom(data: ChatRoom) {
         _navigateToChatRoom.value = data
-        clearUnreadTimes(documentID = data.id)
+//        clearUnreadTimes(documentID = data.id)
     }
 
     fun navigateToRoom() {
@@ -218,17 +218,17 @@ class ChatListViewModel(private val reclaimDao: ReclaimDatabaseDao, val activity
         }
     }
 
-    private fun clearUnreadTimes(documentID: String) {
-        val chatRoom = db.collection("chat_room")
-            .document(documentID)
-        chatRoom.get().addOnSuccessListener {
-            if (it.get("send_by_id").toString() != UserManager.userId){
-                chatRoom.update("unread_times", 0)
-            }else{
-                Log.i(TAG, "newest message is send by me")
-            }
-        }
-    }
+//    private fun clearUnreadTimes(documentID: String) {
+//        val chatRoom = db.collection("chat_room")
+//            .document(documentID)
+//        chatRoom.get().addOnSuccessListener {
+//            if (it.get("send_by_id").toString() != UserManager.userId){
+//                chatRoom.update("unread_times", 0)
+//            }else{
+//                Log.i(TAG, "newest message is send by me")
+//            }
+//        }
+//    }
 
 
 }

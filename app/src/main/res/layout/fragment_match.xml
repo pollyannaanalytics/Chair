@@ -91,13 +91,49 @@
 
         </androidx.cardview.widget.CardView>
 
+        <TextView
+            android:id="@+id/default_message_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="安安你好"
+            android:padding="@dimen/standard_margin_one_forth"
+            android:layout_marginBottom="@dimen/standard_margin_half"
+            app:layout_constraintBottom_toTopOf="@id/got_to_chat_card"
+            app:layout_constraintStart_toStartOf="@id/got_to_chat_card"
+            android:background="@drawable/stroke_shape"
+            />
+        <TextView
+            android:id="@+id/default_message_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="哈囉"
+            android:padding="@dimen/standard_margin_one_forth"
+            android:layout_marginBottom="@dimen/standard_margin_half"
+            app:layout_constraintBottom_toTopOf="@id/got_to_chat_card"
+            app:layout_constraintStart_toEndOf="@id/default_message_1"
+            android:layout_marginLeft="@dimen/standard_margin_half"
+            android:background="@drawable/stroke_shape"
+            />
+        <TextView
+            android:id="@+id/default_message_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="一起視訊嗎"
+            android:padding="@dimen/standard_margin_one_forth"
+            android:layout_marginBottom="@dimen/standard_margin_half"
+            app:layout_constraintBottom_toTopOf="@id/got_to_chat_card"
+            app:layout_constraintStart_toEndOf="@id/default_message_2"
+            android:layout_marginLeft="@dimen/standard_margin_half"
+            android:background="@drawable/stroke_shape"
+            />
+
 
         <androidx.cardview.widget.CardView
             android:id="@+id/got_to_chat_card"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/self_container"
             app:cardCornerRadius="16dp"
             android:layout_width="0dp"
             android:background="@color/myPrimary"
@@ -132,7 +168,7 @@
             <Button
                 android:id="@+id/send_to_chat_room"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@color/myPrimary"
                 app:layout_constraintStart_toEndOf="@id/message_input_container"
                 app:layout_constraintEnd_toEndOf="parent"
