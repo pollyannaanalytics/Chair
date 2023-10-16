@@ -164,6 +164,7 @@ class ChatRoomFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.i(TAG, "fragment is dead")
         viewModel.removeListener()
 
     }

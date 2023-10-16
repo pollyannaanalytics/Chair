@@ -70,7 +70,7 @@ class MatchViewModel(
                         "sender_name" to newRecord.sender,
                         "id" to newRecord.id,
                         "message_type" to newRecord.type,
-                        "is_seen" to newRecord.isSeen,
+                        "is_seen" to false,
                         "meeting_id" to newRecord.meetingId,
                         "user_b_img" to newRecord.otherImage,
                         "user_a_img" to UserManager.userImage,
@@ -84,10 +84,15 @@ class MatchViewModel(
                         .collection("chat_record").add(data).addOnSuccessListener {
                             val chatRoom = FirebaseFirestore.getInstance().collection("chat_room")
                                 .document(documentId)
-                            chatRoom.update("last_sentence", text)
-                            chatRoom.update("send_by_id", UserManager.userId)
-                            chatRoom.update("sent_time", System.currentTimeMillis())
-                            chatRoom.update("unread_times", + 1)
+
+                            val dataMap = mapOf<String, String>(
+                                "last_sentence" to text,
+                                "send_by_id" to UserManager.userId,
+                                "sent_time" to System.currentTimeMillis().toString(),
+                                "unread_times" to 1.toString(),
+
+                            )
+                            chatRoom.update(dataMap)
                             Log.i(TAG, "add chat message successfully")
                         }
                         .addOnFailureListener {

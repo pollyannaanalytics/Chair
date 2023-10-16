@@ -315,8 +315,12 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
 
         db.collection("relationship")
             .where(Filter.or(
-                Filter.equalTo("sender_id", UserManager.userId),
-                Filter.equalTo("current_relationship", "Like")
+                Filter.and(
+                    Filter.equalTo("receiver_id", UserManager.userId),
+                    Filter.equalTo("current_relationship", "Like")
+                ),
+                Filter.equalTo("sender_id", UserManager.userId)
+
             ))
             .get()
             .addOnSuccessListener { snapshot ->

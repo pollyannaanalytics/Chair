@@ -11,6 +11,7 @@ import com.example.reclaim.data.ReclaimDatabaseDao
 import com.example.reclaim.data.UserManager
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -71,10 +72,12 @@ class ChatRoomViewModel(
         searchChatRoomWithFriend(chatRoom)
 
     }
+    lateinit var recordRegistraion: ListenerRegistration
+    lateinit var recordFriendRegistration : ListenerRegistration
 
     private fun getAllRecordFromRoom(room: DocumentSnapshot) {
         Log.i(TAG, "start to get data")
-        val regitration = room.reference.collection("chat_record")
+        recordRegistraion = room.reference.collection("chat_record")
             .orderBy("sent_time", Query.Direction.ASCENDING)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
@@ -142,13 +145,29 @@ class ChatRoomViewModel(
                             meetingOver = meetingOver
 
                         )
+                        Log.i("update isseen", "current seen status is :${newRecord.isSeen}")
                         _meetingId = meetingId
 
                         currentRecord.add(newRecord)
-                        updateSeenStatus(room.id, document.id)
-                        clearUnreadTimes(room.id)
-                        Log.i(TAG, "get record: ${room.id}")
+                        if (!document.get("is_seen").toString().toBoolean()) {
+                            Log.i("updateread", "current record is unreaded: ${newRecord.content}")
+                            if (newRecord.sender != UserManager.userName) {
+                                Log.i(
+                                    "updateread",
+                                    "current sender is not me, is ${newRecord.sender}, but i am ${UserManager.userName}"
+                                )
+                                updateSeenStatus(room.id, document.id)
+                            } else {
+                                Log.i("updateread", "sender is me")
+                            }
+                        }
+
                     }
+                    if (room.get("send_by_id").toString() != UserManager.userId) {
+                        Log.i(TAG, "is not sent by me")
+                        clearUnreadTimes(room.id)
+                    }
+
                     Log.i(TAG, "current record: $currentRecord")
                     _recordWithFriend.value = currentRecord
 
@@ -157,11 +176,6 @@ class ChatRoomViewModel(
                     Log.i(TAG, "record is null")
                 }
             }
-        regitration
-
-        if (_onDestroyed.value == true) {
-            regitration.remove()
-        }
     }
 
     private fun clearUnreadTimes(documentID: String) {
@@ -169,7 +183,7 @@ class ChatRoomViewModel(
         val chatRoom = db.collection("chat_room")
             .document(documentID)
         chatRoom.get().addOnSuccessListener {
-
+            Log.i(TAG, "update unread time to 0")
             chatRoom.update("unread_times", 0)
         }.addOnFailureListener {
             Log.e(TAG, "failed to clear unread times: $it")
@@ -178,44 +192,18 @@ class ChatRoomViewModel(
     }
 
     private fun updateSeenStatus(chatRoomID: String, documentID: String) {
+        Log.i(TAG, "update seen status is trigger")
         val chatRoomIsSeenOrNot =
             db.collection("chat_room").document(chatRoomID).collection("chat_record")
                 .document(documentID)
-        chatRoomIsSeenOrNot.update("is_seen", true)
+        chatRoomIsSeenOrNot.update("is_seen", false)
 
     }
 
-    private fun saveDataInLocal(record: ChatRecord) {
-        reclaimDatabaseDao.insertChatRecord(record)
-    }
-
-    private fun changeTimeStampToHHMMFormat(timeStamp: String): String {
-        val timeStampToLong = timeStamp.toLong()
-        val minuteInt = ((timeStampToLong / (1000 * 60)) % 60)
-        val hourInt = ((timeStampToLong / (1000 * 60 * 60)) % 24)
-        var minutString = ""
-        var hourString = ""
-
-        minutString = if (minuteInt < 10) {
-            "0$minuteInt"
-        } else {
-            minuteInt.toString()
-        }
-        hourString = if (hourInt < 10) {
-            "0$hourInt"
-        } else {
-            hourInt.toString()
-        }
-
-        val timeFormatResult = "$hourString : $minutString"
-
-        return timeFormatResult
-
-    }
 
     fun searchChatRoomWithFriend(chatRoom: Query) {
 
-        val registration = chatRoom.addSnapshotListener { rooms, error ->
+        recordFriendRegistration = chatRoom.addSnapshotListener { rooms, error ->
             if (error != null) {
                 _recordWithFriend.value = reclaimDatabaseDao.loadAllRecord().toMutableList()
                 return@addSnapshotListener
@@ -232,11 +220,6 @@ class ChatRoomViewModel(
             }
         }
 
-        registration
-
-        if (_onDestroyed.value == true) {
-            registration.remove()
-        }
 
     }
 
@@ -252,7 +235,7 @@ class ChatRoomViewModel(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun sendMessage(text: String, type: String, meetingId: String = "") {
-        val sendTimeInTaiwan = setUpTime()
+
 
         val newRecord = ChatRecord(
             id = Random.nextLong(),
@@ -277,7 +260,7 @@ class ChatRoomViewModel(
             "sender_name" to newRecord.sender,
             "id" to newRecord.id,
             "message_type" to type,
-            "is_seen" to newRecord.isSeen,
+            "is_seen" to false,
             "meeting_id" to meetingId,
             "user_b_img" to newRecord.otherImage,
             "user_a_img" to UserManager.userImage,
@@ -329,11 +312,15 @@ class ChatRoomViewModel(
             currentUnreadTime = it.get("unread_times").toString().toInt()
             currentUnreadTime++
 
+            val updateData = mapOf<String, String>(
+                "key" to chatRoomKey,
+                "last_sentence" to text,
+                "send_by_id" to UserManager.userId,
+                "sent_time" to currentTime,
+                "unread_times" to currentUnreadTime.toString()
 
-            chatRoom.update("last_sentence", text)
-            chatRoom.update("send_by_id", UserManager.userId)
-            chatRoom.update("sent_time", currentTime)
-            chatRoom.update("unread_times", currentUnreadTime)
+            )
+            chatRoom.update(updateData)
         }.addOnFailureListener {
             Log.e(TAG, "update unread times failed: $it")
         }
@@ -357,6 +344,7 @@ class ChatRoomViewModel(
 
     fun removeListener() {
         _onDestroyed.value = true
+        Log.i("update", "ondestroyed is true")
     }
 
     fun turnOffJoinBtn() {
@@ -379,5 +367,9 @@ class ChatRoomViewModel(
 
     }
 
-
+    override fun onCleared() {
+        Log.i(TAG, "registration is cleared")
+        recordRegistraion.remove()
+        recordFriendRegistration.remove()
+    }
 }
