@@ -75,6 +75,7 @@ class MatchFragment : Fragment() {
             }
             false
         }
+        binding.sendSuccessfulHint.visibility = View.GONE
 
         binding.sendToChatRoom.setOnClickListener {
             if (binding.messageInputEdit.text.toString() != ""){
@@ -93,6 +94,7 @@ class MatchFragment : Fragment() {
             binding.messageInputEdit.setText("")
 
             binding.sendLottie.playAnimation()
+            binding.sendSuccessfulHint.visibility = View.VISIBLE
             binding.matchLayout.alpha = 0.5f
             findNavController().navigate(MatchFragmentDirections.actionMatchFragmentToHomeFragment())
         }
@@ -103,6 +105,7 @@ class MatchFragment : Fragment() {
             binding.messageInputEdit.setText("")
 
             binding.sendLottie.playAnimation()
+            binding.sendSuccessfulHint.visibility = View.VISIBLE
             binding.matchLayout.alpha = 0.5f
             findNavController().navigate(MatchFragmentDirections.actionMatchFragmentToHomeFragment())
         }
@@ -112,6 +115,7 @@ class MatchFragment : Fragment() {
             binding.messageInputEdit.setText("")
 
             binding.sendLottie.playAnimation()
+            binding.sendSuccessfulHint.visibility = View.VISIBLE
             binding.matchLayout.alpha = 0.5f
             findNavController().navigate(MatchFragmentDirections.actionMatchFragmentToHomeFragment())
         }

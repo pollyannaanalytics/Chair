@@ -65,117 +65,125 @@ class ChatRoomViewModel(
     val joinMeetingId: LiveData<String>
         get() = _joinMeetingId
 
+    lateinit var recordRegistraion: ListenerRegistration
+
+
 
     init {
         _onDestroyed.value = false
         _recordWithFriend.value = emptyList<ChatRecord>().toMutableList()
-        searchChatRoomWithFriend(chatRoom)
+        getAllRecordFromRoom(chatRoomKey)
 
     }
-    lateinit var recordRegistraion: ListenerRegistration
-    lateinit var recordFriendRegistration : ListenerRegistration
 
-    private fun getAllRecordFromRoom(room: DocumentSnapshot) {
+
+    private fun getAllRecordFromRoom(chatRoomKey: String) {
         Log.i(TAG, "start to get data")
-        recordRegistraion = room.reference.collection("chat_record")
-            .orderBy("sent_time", Query.Direction.ASCENDING)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    Log.e(TAG, "this is error: ${error.message}")
+
+        db.collection("chat_room").whereEqualTo("key", chatRoomKey).get().addOnSuccessListener { documents ->
+            val room = documents.documents.get(0)
+            recordRegistraion = room.reference.collection("chat_record")
+                .orderBy("sent_time", Query.Direction.ASCENDING)
+                .addSnapshotListener { snapshot, error ->
+                    if (error != null) {
+                        Log.e(TAG, "this is error: ${error.message}")
 
 
-                    return@addSnapshotListener
-                }
-                if (snapshot != null) {
-                    val currentRecord = mutableListOf<ChatRecord>()
-                    Log.i(TAG, "record includes: ${snapshot.documents.size}")
+                        return@addSnapshotListener
+                    }
+                    if (snapshot != null) {
+                        val currentRecord = mutableListOf<ChatRecord>()
+                        Log.i(TAG, "record includes: ${snapshot.documents.size}")
 
-                    for (document in snapshot) {
+                        for (document in snapshot) {
 
-                        val id = document.get("id").toString()
-                        val chatRoomKey = document.get("chat_room_key").toString()
-                        val content = document.get("content").toString()
-                        val timeStamp = document.get("sent_time").toString()
-                        val sender = document.get("sender_name").toString()
-                        val type = document.get("message_type").toString()
-                        val meetingId = document.get("meeting_id").toString()
-                        val isSeen = document.get("is_seen").toString().toBoolean()
-                        val meetingOver = document.get("meeting_over").toString().toBoolean()
+                            val id = document.get("id").toString()
+                            val chatRoomKey = document.get("chat_room_key").toString()
+                            val content = document.get("content").toString()
+                            val timeStamp = document.get("sent_time").toString()
+                            val sender = document.get("sender_name").toString()
+                            val type = document.get("message_type").toString()
+                            val meetingId = document.get("meeting_id").toString()
+                            val isSeen = document.get("is_seen").toString().toBoolean()
+                            val meetingOver = document.get("meeting_over").toString().toBoolean()
 
-                        var selfImage = ""
-                        var selfName = ""
+                            var selfImage = ""
+                            var selfName = ""
 
-                        var otherImage = ""
-                        var otherName = ""
+                            var otherImage = ""
+                            var otherName = ""
 
 
-                        if (document.get("user_a_name").toString() == UserManager.userName) {
-                            selfImage = document.get("user_a_img").toString()
-                            selfName = document.get("user_a_name").toString()
+                            if (document.get("user_a_name").toString() == UserManager.userName) {
+                                selfImage = document.get("user_a_img").toString()
+                                selfName = document.get("user_a_name").toString()
 
-                            otherImage = document.get("user_b_img").toString()
-                            otherName = document.get("user_b_name").toString()
-                        } else {
-                            otherImage = document.get("user_a_img").toString()
-                            otherName = document.get("user_a_name").toString()
-
-                            selfImage = document.get("user_b_img").toString()
-                            selfName = document.get("user_b_name").toString()
-                        }
-
-                        val timeFormatter = SimpleDateFormat("HH:mm")
-
-                        timeFormatter.timeZone = TimeZone.getTimeZone("Asia/Taipei")
-                        val date = Date(timeStamp.toLong())
-                        val taiwanTime = timeFormatter.format(date)
-
-                        val newRecord = ChatRecord(
-                            id = id.toLong(),
-                            chatRoomKey = chatRoomKey,
-                            content = content,
-                            sendTime = taiwanTime,
-                            sender = sender,
-                            type = type,
-                            meetingId = meetingId,
-                            otherImage = otherImage,
-                            selfImage = selfImage,
-                            selfName = selfName,
-                            otherName = otherName,
-                            isSeen = isSeen,
-                            meetingOver = meetingOver
-
-                        )
-                        Log.i("update isseen", "current seen status is :${newRecord.isSeen}")
-                        _meetingId = meetingId
-
-                        currentRecord.add(newRecord)
-                        if (!document.get("is_seen").toString().toBoolean()) {
-                            Log.i("updateread", "current record is unreaded: ${newRecord.content}")
-                            if (newRecord.sender != UserManager.userName) {
-                                Log.i(
-                                    "updateread",
-                                    "current sender is not me, is ${newRecord.sender}, but i am ${UserManager.userName}"
-                                )
-                                updateSeenStatus(room.id, document.id)
+                                otherImage = document.get("user_b_img").toString()
+                                otherName = document.get("user_b_name").toString()
                             } else {
-                                Log.i("updateread", "sender is me")
+                                otherImage = document.get("user_a_img").toString()
+                                otherName = document.get("user_a_name").toString()
+
+                                selfImage = document.get("user_b_img").toString()
+                                selfName = document.get("user_b_name").toString()
                             }
+
+                            val timeFormatter = SimpleDateFormat("HH:mm")
+
+                            timeFormatter.timeZone = TimeZone.getTimeZone("Asia/Taipei")
+                            val date = Date(timeStamp.toLong())
+                            val taiwanTime = timeFormatter.format(date)
+
+                            val newRecord = ChatRecord(
+                                id = id.toLong(),
+                                chatRoomKey = chatRoomKey,
+                                content = content,
+                                sendTime = taiwanTime,
+                                sender = sender,
+                                type = type,
+                                meetingId = meetingId,
+                                otherImage = otherImage,
+                                selfImage = selfImage,
+                                selfName = selfName,
+                                otherName = otherName,
+                                isSeen = isSeen,
+                                meetingOver = meetingOver
+
+                            )
+                            Log.i("update isseen", "current seen status is :${newRecord.isSeen}")
+                            _meetingId = meetingId
+
+                            currentRecord.add(newRecord)
+                            if (!document.get("is_seen").toString().toBoolean()) {
+                                Log.i("updateread", "current record is unreaded: ${newRecord.content}")
+                                if (newRecord.sender != UserManager.userName) {
+                                    Log.i(
+                                        "updateread",
+                                        "current sender is not me, is ${newRecord.sender}, but i am ${UserManager.userName}"
+                                    )
+                                    updateSeenStatus(room.id, document.id)
+                                } else {
+                                    Log.i("updateread", "sender is me")
+                                }
+                            }
+
+                        }
+                        if (room.get("send_by_id").toString() != UserManager.userId && room.get("unread_times").toString() != "0") {
+                            Log.i("updateread", "is not sent by me")
+                            clearUnreadTimes(room.id)
                         }
 
+                        Log.i(TAG, "current record: $currentRecord")
+                        _recordWithFriend.value = currentRecord
+
+
+                    } else {
+                        Log.i(TAG, "record is null")
                     }
-                    if (room.get("send_by_id").toString() != UserManager.userId) {
-                        Log.i(TAG, "is not sent by me")
-                        clearUnreadTimes(room.id)
-                    }
-
-                    Log.i(TAG, "current record: $currentRecord")
-                    _recordWithFriend.value = currentRecord
-
-
-                } else {
-                    Log.i(TAG, "record is null")
                 }
-            }
+        }
+
+
     }
 
     private fun clearUnreadTimes(documentID: String) {
@@ -192,46 +200,18 @@ class ChatRoomViewModel(
     }
 
     private fun updateSeenStatus(chatRoomID: String, documentID: String) {
-        Log.i(TAG, "update seen status is trigger")
+        Log.i("updateread", "update seen status is trigger")
         val chatRoomIsSeenOrNot =
             db.collection("chat_room").document(chatRoomID).collection("chat_record")
                 .document(documentID)
-        chatRoomIsSeenOrNot.update("is_seen", false)
+        chatRoomIsSeenOrNot.update("is_seen", true)
 
     }
 
 
-    fun searchChatRoomWithFriend(chatRoom: Query) {
-
-        recordFriendRegistration = chatRoom.addSnapshotListener { rooms, error ->
-            if (error != null) {
-                _recordWithFriend.value = reclaimDatabaseDao.loadAllRecord().toMutableList()
-                return@addSnapshotListener
-            }
-
-            if (rooms != null && !rooms.isEmpty) {
-                val room = rooms.documents.get(0)
-                getAllRecordFromRoom(room)
-                _documentID = room.id
-                Log.i(TAG, room.id.toString())
-            } else {
-                _noRecord.value = true
-                Log.i(TAG, "this room is null")
-            }
-        }
 
 
-    }
 
-
-    private fun updateSentTime(chatRoomKey: String, currentTime: String, documentId: String) {
-        val updateDocument =
-            db.collection("chat_room").document(chatRoomKey).collection("chat_record")
-                .document(documentId)
-        updateDocument.update("send_time", currentTime)
-//        updateDocument.update("isProcessed", true)
-        Log.i(TAG, "successfully update sendtime")
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun sendMessage(text: String, type: String, meetingId: String = "") {
@@ -279,9 +259,7 @@ class ChatRoomViewModel(
             Log.i(TAG, "current document ID: $_documentID")
             db.collection("chat_room").document(_documentID).collection("chat_record")
                 .add(data).addOnSuccessListener {
-                    Log.i(TAG, "message is send successfully")
-                    val currentTime = System.currentTimeMillis().toString()
-                    updateSentTime(_documentID, newRecord.sendTime, it.id)
+
                     updateOnFriendList(text, _documentID, newRecord.sendTime)
 
                 }.addOnFailureListener {
@@ -294,16 +272,7 @@ class ChatRoomViewModel(
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun setUpTime(): String {
-        val taipeiClock = Clock.system(ZoneId.of("Asia/Taipei"))
-        val localTimeNow = LocalTime.now(taipeiClock)
 
-        val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
-
-        return localTimeNow.format(formatter)
-
-    }
 
     private fun updateOnFriendList(text: String, chatRoomKey: String, currentTime: String) {
         var currentUnreadTime = 0
@@ -321,6 +290,7 @@ class ChatRoomViewModel(
 
             )
             chatRoom.update(updateData)
+            Log.i("updateread", "successfullly")
         }.addOnFailureListener {
             Log.e(TAG, "update unread times failed: $it")
         }
@@ -370,6 +340,6 @@ class ChatRoomViewModel(
     override fun onCleared() {
         Log.i(TAG, "registration is cleared")
         recordRegistraion.remove()
-        recordFriendRegistration.remove()
+
     }
 }
