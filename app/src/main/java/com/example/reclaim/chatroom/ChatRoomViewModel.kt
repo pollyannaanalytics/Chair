@@ -296,6 +296,7 @@ class ChatRoomViewModel(
             Log.i(TAG, "current document ID: $_documentID")
             db.collection("chat_room").document(_documentID).collection("chat_record")
                 .add(data).addOnSuccessListener {
+                    Log.i(TAG, "message is send successfully")
                     val currentTime = System.currentTimeMillis().toString()
                     updateSentTime(_documentID, newRecord.sendTime, it.id)
                     updateOnFriendList(text, _documentID, newRecord.sendTime)

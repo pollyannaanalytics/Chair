@@ -80,9 +80,44 @@ class MatchFragment : Fragment() {
             if (binding.messageInputEdit.text.toString() != ""){
                 viewModel.sendMessageToChatRoom(message)
                 binding.messageInputEdit.setText("")
+                binding.sendLottie.playAnimation()
+                binding.matchLayout.alpha = 0.5f
                 findNavController().navigate(MatchFragmentDirections.actionMatchFragmentToHomeFragment())
             }
         }
+
+
+        binding.defaultMessage1.setOnClickListener {
+            viewModel.sendMessageToChatRoom(binding.defaultMessage1.text.toString())
+
+            binding.messageInputEdit.setText("")
+
+            binding.sendLottie.playAnimation()
+            binding.matchLayout.alpha = 0.5f
+            findNavController().navigate(MatchFragmentDirections.actionMatchFragmentToHomeFragment())
+        }
+
+
+        binding.defaultMessage2.setOnClickListener {
+            viewModel.sendMessageToChatRoom(binding.defaultMessage2.text.toString())
+            binding.messageInputEdit.setText("")
+
+            binding.sendLottie.playAnimation()
+            binding.matchLayout.alpha = 0.5f
+            findNavController().navigate(MatchFragmentDirections.actionMatchFragmentToHomeFragment())
+        }
+
+        binding.defaultMessage3.setOnClickListener {
+            viewModel.sendMessageToChatRoom(binding.defaultMessage3.text.toString())
+            binding.messageInputEdit.setText("")
+
+            binding.sendLottie.playAnimation()
+            binding.matchLayout.alpha = 0.5f
+            findNavController().navigate(MatchFragmentDirections.actionMatchFragmentToHomeFragment())
+        }
+
+
+
 
         binding.laterChatBtn.setOnClickListener {
             findNavController().navigate(MatchFragmentDirections.actionMatchFragmentToHomeFragment())
