@@ -226,8 +226,8 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
     fun deleteChatRoom(){
         FirebaseFirestore.getInstance().collection("chat_room").where(
             Filter.or(
-                Filter.equalTo("user_a_id", UserManager.userId),
-                Filter.equalTo("user_b_id", UserManager.userId)
+                Filter.equalTo("user_a_name", UserManager.userName),
+                Filter.equalTo("user_b_name", UserManager.userName)
             )
         ).get().addOnSuccessListener { snapshots ->
             for (snapshot in snapshots){

@@ -64,6 +64,8 @@ class CreateProfileFragment : Fragment() {
         var worriesDescription = ""
         var userAge = ""
         var selfDescription = ""
+        UserManager.worriesDescription = ""
+        UserManager.userType = ""
 
         UserManager.userId =
             requireActivity().getSharedPreferences(
@@ -146,11 +148,12 @@ class CreateProfileFragment : Fragment() {
                 UserManager.userName = username
                 UserManager.gender = gender
                 UserManager.selfDescription = selfDescription
-
+                binding.nextMove.isEnabled = false
 
                 viewModel.uploadImageToFireStorage(imageUri.toString())
 
                 Log.i(TAG, "$UserManager")
+
 
                 findNavController().navigate(CreateProfileFragmentDirections.actionCreateProfileFragmentToWorriesInputFragment())
             }else{
