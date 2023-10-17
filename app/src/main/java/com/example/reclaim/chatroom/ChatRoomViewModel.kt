@@ -57,6 +57,7 @@ class ChatRoomViewModel(
     private val chatRoom = db.collection("chat_room").whereEqualTo("key", chatRoomKey)
 
 
+
     private var _onDestroyed = MutableLiveData<Boolean>()
     val onDestroyed: LiveData<Boolean>
         get() = _onDestroyed
@@ -250,13 +251,6 @@ class ChatRoomViewModel(
             "meeting_over" to newRecord.meetingOver
         )
 
-        val chatRoomCollection =
-            db.collection("chat_room").whereEqualTo("key", newRecord.chatRoomKey)
-        chatRoomCollection.get().addOnSuccessListener {
-            _documentID = it.documents[0].id
-
-
-
             Log.i(TAG, "current document ID: $_documentID")
             db.collection("chat_room").document(_documentID).collection("chat_record")
                 .add(data).addOnSuccessListener {
@@ -267,9 +261,7 @@ class ChatRoomViewModel(
                 }.addOnFailureListener {
                     Log.e(TAG, "error: $it")
                 }
-        }.addOnFailureListener {
-            Log.e(TAG, "cannot add data in chat room")
-        }
+
 
 
     }
