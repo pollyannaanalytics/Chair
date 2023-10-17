@@ -121,6 +121,20 @@ class EditProfileFragment : Fragment() {
             }
         }
 
+        binding.deleteBtn.setOnClickListener {
+            viewModel.deleteMyAccount()
+            viewModel.deleteMyRelationship()
+            viewModel.deleteChatRoom()
+
+
+            val sharedPreferenceString = resources.getText(R.string.usermanager).toString()
+            val sharedPreferences = requireActivity().getSharedPreferences(sharedPreferenceString, Context.MODE_PRIVATE)
+            sharedPreferences.edit().clear().apply()
+
+            findNavController().navigate(EditProfileFragmentDirections.actionProfileFragmentToLoadingFragment3())
+
+        }
+
 
 
         binding.submitBtn.setOnClickListener {

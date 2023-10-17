@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/chatListFragment"
-        android:title="Chat"
+        android:title="聊天"
         android:icon="@drawable/message_circle_lines_alt_svgrepo_com"
 
         />
@@ -10,12 +10,12 @@
 
     <item
         android:id="@+id/homeFragment"
-        android:title="HomePage"
+        android:title="主頁"
         android:icon="@drawable/heart__1_"
         />
     <item
         android:id="@+id/alreadySignUpProfileFragment"
-        android:title="Profile"
+        android:title="個人"
         android:icon="@drawable/profile_close_round_1344_svgrepo_com"
         />
 

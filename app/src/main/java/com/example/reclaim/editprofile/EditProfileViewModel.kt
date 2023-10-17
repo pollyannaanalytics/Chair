@@ -14,6 +14,7 @@ import com.example.reclaim.chatgpt.MessageToGPT
 import com.example.reclaim.data.ReclaimDatabaseDao
 import com.example.reclaim.data.UserManager
 import com.example.reclaim.data.UserProfile
+import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -183,6 +184,61 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
 
                 }
             }
+        }
+    }
+
+    fun deleteMyAccount(){
+        FirebaseFirestore.getInstance().collection("user_profile").whereEqualTo(
+            "user_id", UserManager.userId
+        ).get().addOnSuccessListener {
+            it.documents[0].reference.delete().addOnSuccessListener {
+                Log.i(TAG, "delete my profile")
+            }.addOnFailureListener {
+
+                Log.i(TAG, "fail to delete my profile: $it")
+            }
+        }.addOnFailureListener {
+            Log.i(TAG, "fail to get my profile: $it")
+        }
+    }
+
+    fun deleteMyRelationship(){
+        FirebaseFirestore.getInstance().collection("relationship").where(
+            Filter.or(
+                Filter.equalTo("sender_id", UserManager.userId),
+                Filter.equalTo("receiver_id", UserManager.userId)
+            )
+        ).get().addOnSuccessListener {snapshots ->
+            for (snapshot in snapshots){
+                snapshot.reference.delete().addOnSuccessListener {
+                    Log.i(TAG, "success delete all relationship")
+                }.addOnFailureListener {
+                    Log.e(TAG, "fail to delete : $it")
+                }
+            }
+        }.addOnFailureListener {
+            Log.e(TAG, "fail to get relationship : $it")
+        }
+
+    }
+
+
+    fun deleteChatRoom(){
+        FirebaseFirestore.getInstance().collection("chat_room").where(
+            Filter.or(
+                Filter.equalTo("user_a_id", UserManager.userId),
+                Filter.equalTo("user_b_id", UserManager.userId)
+            )
+        ).get().addOnSuccessListener { snapshots ->
+            for (snapshot in snapshots){
+                snapshot.reference.delete().addOnSuccessListener {
+                    Log.i(TAG, "successfully delete my room")
+                }.addOnFailureListener {
+                    Log.e(TAG, "fail to delete room: $it")
+                }
+            }
+        }.addOnFailureListener {
+            Log.e(TAG, "fail to get room")
         }
     }
 

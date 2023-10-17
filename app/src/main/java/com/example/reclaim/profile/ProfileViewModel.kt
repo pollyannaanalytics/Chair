@@ -32,7 +32,7 @@ class ProfileViewModel : ViewModel() {
 
     }
 
-    fun loadTouchPeople() {
+    private fun loadTouchPeople() {
         FirebaseFirestore.getInstance().collection("relationship")
             .where(
                 Filter.and(
@@ -54,7 +54,7 @@ class ProfileViewModel : ViewModel() {
 
     }
 
-    fun loadLiker(){
+    private fun loadLiker(){
         FirebaseFirestore.getInstance().collection("relationship").where(
             Filter.and(
                 Filter.equalTo("receiver_id", UserManager.userId),
