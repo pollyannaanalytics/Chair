@@ -1,18 +1,12 @@
 package com.example.reclaim
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
-import android.os.UserManager
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.auth.User
+import com.google.firebase.firestore.ListenerRegistration
 
 class MainViewModel : ViewModel() {
 
@@ -35,6 +29,8 @@ class MainViewModel : ViewModel() {
     private var _onDestroyed = MutableLiveData<Boolean>()
     val onDestroyed: LiveData<Boolean>
         get() = _onDestroyed
+
+    lateinit var badgeRegistration: ListenerRegistration
 
     init {
         _onDestroyed.value = false
@@ -63,7 +59,7 @@ class MainViewModel : ViewModel() {
         _elementVisibleMap.value = currentMap
     }
 
-    fun setToolBar(show: Boolean) {
+    private fun setToolBar(show: Boolean) {
         _showWholeToolBar.value = show
     }
 
@@ -103,14 +99,16 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun OnDestroyed() {
-        _onDestroyed.value = true
+    fun removeListener() {
+        badgeRegistration.remove()
     }
+
+
 
 
     fun getTotalUnreadNumber(userId: String) {
         Log.i(TAG, "current userId: $userId")
-        val registration = FirebaseFirestore.getInstance().collection("chat_room").where(
+        badgeRegistration = FirebaseFirestore.getInstance().collection("chat_room").where(
             Filter.or(
                 Filter.equalTo("user_a_id", userId),
                 Filter.equalTo("user_b_id", userId)
@@ -136,6 +134,7 @@ class MainViewModel : ViewModel() {
 
                         Log.i(TAG, "update online: ${currentTotalNumber}")
 
+
                     }
 
                     _totalUnreadMessage.value = currentTotalNumber
@@ -145,11 +144,14 @@ class MainViewModel : ViewModel() {
 
             }
 
-        registration
 
-        if (_onDestroyed.value == true) {
-            registration.remove()
-        }
+
+
+
+    }
+
+    fun clearBadgeNumber(){
+        _totalUnreadMessage.value = 0
     }
 
     companion object {

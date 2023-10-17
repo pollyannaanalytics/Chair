@@ -81,6 +81,7 @@ class MatchFragment : Fragment() {
             if (binding.messageInputEdit.text.toString() != ""){
                 viewModel.sendMessageToChatRoom(message)
                 binding.messageInputEdit.setText("")
+                binding.sendSuccessfulHint.visibility = View.VISIBLE
                 binding.sendLottie.playAnimation()
                 binding.matchLayout.alpha = 0.5f
                 findNavController().navigate(MatchFragmentDirections.actionMatchFragmentToHomeFragment())

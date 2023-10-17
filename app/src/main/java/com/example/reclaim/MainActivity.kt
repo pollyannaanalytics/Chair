@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.example.reclaim.data.UserManager
 import com.example.reclaim.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
             DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.viewModel = viewModel
+
         viewModel.getTotalUnreadNumber(userId)
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.myNavHostFragment) as NavHostFragment
@@ -64,6 +66,8 @@ class MainActivity : AppCompatActivity() {
             Log.i("mainactiviy", it.toString())
             if (it != 0){
                 navBottomView.getOrCreateBadge(R.id.chatListFragment).number = it
+            }else{
+                navBottomView.removeBadge(R.id.chatListFragment)
             }
         }
 
@@ -89,7 +93,14 @@ class MainActivity : AppCompatActivity() {
                     showToolBar(true, "首頁")
 
                 R.id.alreadySignUpProfileFragment -> hideToolbar()
-                R.id.chatListFragment -> showToolBar(false, "我的好友")
+                R.id.chatListFragment ->
+                {
+                    showToolBar(false, "我的好友")
+                    viewModel.clearBadgeNumber()
+                }
+
+
+
                 R.id.chatRoomFragment -> hideToolbarAndBottom()
 
                 R.id.profileFragment -> showToolBar(false, "編輯個人檔案")
@@ -122,7 +133,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.OnDestroyed()
+        viewModel.removeListener()
         viewModel.updateOnline(false)
     }
 }
