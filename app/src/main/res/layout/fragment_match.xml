@@ -204,6 +204,7 @@
             app:layout_constraintDimensionRatio="1"
             app:lottie_autoPlay="false"
             app:lottie_loop="true"
+            android:translationZ="@dimen/standard_margin"
             app:lottie_rawRes="@raw/message_send"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -217,10 +218,11 @@
             android:text="你的真心誠意已經送達"
             android:textStyle="bold"
             android:gravity="center"
-            android:background="@color/background"
-            app:layout_constraintTop_toBottomOf="@id/send_lottie"
-            app:layout_constraintStart_toStartOf="@id/send_lottie"
-            app:layout_constraintEnd_toEndOf="@id/send_lottie"
+            android:textColor="@color/black"
+            android:textSize="@dimen/subtitle_text_size"
+            app:layout_constraintBottom_toTopOf="@id/send_lottie"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:translationZ="@dimen/standard_margin"
             />
 

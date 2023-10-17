@@ -4,6 +4,8 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -83,42 +85,27 @@ class MatchFragment : Fragment() {
                 binding.messageInputEdit.setText("")
                 binding.sendSuccessfulHint.visibility = View.VISIBLE
                 binding.sendLottie.playAnimation()
-                binding.matchLayout.alpha = 0.5f
-                findNavController().navigate(MatchFragmentDirections.actionMatchFragmentToHomeFragment())
+                Handler(Looper.getMainLooper()).postDelayed({
+                    findNavController().navigate(MatchFragmentDirections.actionMatchFragmentToHomeFragment())
+                }, 1500)
+
+
             }
         }
 
 
         binding.defaultMessage1.setOnClickListener {
-            viewModel.sendMessageToChatRoom(binding.defaultMessage1.text.toString())
+            binding.messageInputEdit.setText(binding.defaultMessage1.text)
 
-            binding.messageInputEdit.setText("")
-
-            binding.sendLottie.playAnimation()
-            binding.sendSuccessfulHint.visibility = View.VISIBLE
-            binding.matchLayout.alpha = 0.5f
-            findNavController().navigate(MatchFragmentDirections.actionMatchFragmentToHomeFragment())
         }
 
 
         binding.defaultMessage2.setOnClickListener {
-            viewModel.sendMessageToChatRoom(binding.defaultMessage2.text.toString())
-            binding.messageInputEdit.setText("")
-
-            binding.sendLottie.playAnimation()
-            binding.sendSuccessfulHint.visibility = View.VISIBLE
-            binding.matchLayout.alpha = 0.5f
-            findNavController().navigate(MatchFragmentDirections.actionMatchFragmentToHomeFragment())
+            binding.messageInputEdit.setText(binding.defaultMessage2.text)
         }
 
         binding.defaultMessage3.setOnClickListener {
-            viewModel.sendMessageToChatRoom(binding.defaultMessage3.text.toString())
-            binding.messageInputEdit.setText("")
-
-            binding.sendLottie.playAnimation()
-            binding.sendSuccessfulHint.visibility = View.VISIBLE
-            binding.matchLayout.alpha = 0.5f
-            findNavController().navigate(MatchFragmentDirections.actionMatchFragmentToHomeFragment())
+            binding.messageInputEdit.setText(binding.defaultMessage3.text)
         }
 
 
