@@ -82,6 +82,7 @@ class ChatRoomViewModel(
 
         db.collection("chat_room").whereEqualTo("key", chatRoomKey).get().addOnSuccessListener { documents ->
             val room = documents.documents.get(0)
+            _documentID = room.id
             recordRegistraion = room.reference.collection("chat_record")
                 .orderBy("sent_time", Query.Direction.ASCENDING)
                 .addSnapshotListener { snapshot, error ->
