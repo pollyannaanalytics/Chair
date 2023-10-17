@@ -255,13 +255,14 @@ class ChatRoomViewModel(
         chatRoomCollection.get().addOnSuccessListener {
             _documentID = it.documents[0].id
 
-            Log.e(TAG, "document ID : $_documentID")
+
 
             Log.i(TAG, "current document ID: $_documentID")
             db.collection("chat_room").document(_documentID).collection("chat_record")
                 .add(data).addOnSuccessListener {
 
                     updateOnFriendList(text, _documentID, newRecord.sendTime)
+                    Log.i(TAG, "add data: ${it.id}")
 
                 }.addOnFailureListener {
                     Log.e(TAG, "error: $it")
@@ -306,6 +307,8 @@ class ChatRoomViewModel(
         sendMessage(text, type, meetingId)
         _meetingId = meetingId
 
+        recordRegistraion.remove()
+
 
     }
 
@@ -321,6 +324,7 @@ class ChatRoomViewModel(
     fun turnOffJoinBtn() {
 
         Log.i(TAG, "document: $_documentID, chat_record: $_meetingId")
+        recordRegistraion.remove()
         val chatRoom = FirebaseFirestore.getInstance().collection("chat_room").document(_documentID)
         var meetingDocumentID = ""
         chatRoom.collection("chat_record").whereEqualTo("meeting_id", _meetingId).get()

@@ -101,6 +101,7 @@ class SignalingClient(
                         Log.d(TAG, "Current data: null")
                     }
                 }
+
             db.collection("calls").document(meetingID)
                 .collection("candidates").addSnapshotListener{ querysnapshot,e->
                     if (e != null) {
@@ -127,21 +128,7 @@ class SignalingClient(
                         }
                     }
                 }
-//            db.collection("calls").document(meetingID)
-//                    .get()
-//                    .addOnSuccessListener { result ->
-//                        val data = result.data
-//                        if (data?.containsKey("type")!! && data.getValue("type").toString() == "OFFER") {
-//                            Log.e(TAG, "connect: OFFER - $data")
-//                            listener.onOfferReceived(SessionDescription(SessionDescription.Type.OFFER,data["sdp"].toString()))
-//                        } else if (data?.containsKey("type") && data.getValue("type").toString() == "ANSWER") {
-//                            Log.e(TAG, "connect: ANSWER - $data")
-//                            listener.onAnswerReceived(SessionDescription(SessionDescription.Type.ANSWER,data["sdp"].toString()))
-//                        }
-//                    }
-//                    .addOnFailureListener {
-//                        Log.e(TAG, "connect: $it")
-//                    }
+
 
         } catch (exception: Exception) {
             Log.e(TAG, "connectException: $exception")
@@ -161,6 +148,8 @@ class SignalingClient(
             "sdpCandidate" to candidate?.sdp,
             "type" to type
         )
+
+
         db.collection("calls")
             .document("$meetingID").collection("candidates").document(type)
             .set(candidateConstant as Map<String, Any>)
