@@ -230,7 +230,9 @@ class ProfileViewModel(private val databaseDao: ReclaimDatabaseDao) : ViewModel(
                 Filter.equalTo("user_b_name", UserManager.userName)
             )
         ).get().addOnSuccessListener { snapshots ->
+
             for (snapshot in snapshots){
+                
                 snapshot.reference.delete().addOnSuccessListener {
                     Log.i(TAG, "successfully delete my room")
                 }.addOnFailureListener {

@@ -126,9 +126,10 @@ class MainViewModel : ViewModel() {
                     _totalUnreadMessage.value = 0
 
                     for (snapshot in snapshots) {
+
                         val unReadTimes = snapshot.get("unread_times").toString().toInt()
                         val sendById = snapshot.get("send_by_id").toString()
-                        if (sendById != com.example.reclaim.data.UserManager.userId){
+                        if (sendById != com.example.reclaim.data.UserManager.userId && sendById != ""){
                             currentTotalNumber += unReadTimes
                         }
 

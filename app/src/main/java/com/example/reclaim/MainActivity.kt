@@ -89,8 +89,12 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.homeFragment ->
+                R.id.homeFragment ->{
                     showToolBar(true, "首頁")
+                    supportActionBar?.setDisplayHomeAsUpEnabled(false)
+                    supportActionBar?.setHomeButtonEnabled(false)
+                }
+
 
                 R.id.alreadySignUpProfileFragment -> hideToolbar()
                 R.id.chatListFragment ->
