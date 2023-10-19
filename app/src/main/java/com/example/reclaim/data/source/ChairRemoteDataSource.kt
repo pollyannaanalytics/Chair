@@ -39,8 +39,16 @@ class ChairRemoteDataSource {
 
     }
 
+    fun getAllRecordFromRoom(chatRoomKey: String, callback: (String) -> Unit){
+        db.collection(COLLECTION_CHAT_ROOM).whereEqualTo(ROOM_KEY, chatRoomKey)
+            .get().addOnSuccessListener { snapshots ->
+                val room = snapshots.documents.first()
+                callback(room.id)
+            }
+    }
 
-    private fun clearUnreadTimes(documentID: String) {
+
+    fun clearUnreadTimes(documentID: String) {
 
         val chatRoom = db.collection(COLLECTION_CHAT_ROOM)
             .document(documentID)
@@ -53,7 +61,7 @@ class ChairRemoteDataSource {
 
     }
 
-    private fun updateSeenStatus(chatRoomID: String, documentID: String) {
+     fun updateSeenStatus(chatRoomID: String, documentID: String) {
         Log.i(TAG, "update seen status is trigger")
         val chatRoomIsSeenOrNot =
             db.collection(COLLECTION_CHAT_ROOM).document(chatRoomID).collection(
@@ -104,7 +112,7 @@ class ChairRemoteDataSource {
     }
 
 
-    private fun updateOnChatList(content: String, chatRoomKey: String, currentTimeString: String){
+    fun updateOnChatList(content: String, chatRoomKey: String, currentTimeString: String){
         var currentUnreadTime = 0
         val chatRoom = db.collection(COLLECTION_CHAT_ROOM).document(chatRoomKey)
         chatRoom.get().addOnSuccessListener {
