@@ -3,6 +3,7 @@ package com.example.reclaim.data.source
 import com.example.reclaim.data.ChatRoom
 import com.example.reclaim.data.MessageType
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.Query
 
 class ChairRepository(private val remoteDataSource: ChairRemoteDataSource) {
 
@@ -32,7 +33,7 @@ class ChairRepository(private val remoteDataSource: ChairRemoteDataSource) {
         remoteDataSource.clearUnreadTimes(documentID)
     }
 
-    fun getAllRecordFromRoom(chatRoomKey: String){
-
+    fun getAllRecordFromRoom(chatRoomKey: String, callback: (Query) -> Unit){
+        remoteDataSource.getAllRecordFromRoom(chatRoomKey, callback)
     }
 }
