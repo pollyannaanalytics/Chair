@@ -4,7 +4,11 @@ import android.util.Log
 import com.example.reclaim.data.ChatRoom
 import com.example.reclaim.data.MessageType
 import com.example.reclaim.data.UserManager
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import io.opencensus.metrics.export.Summary.Snapshot
 import kotlin.random.Random
 
 class ChairRemoteDataSource {
@@ -39,11 +43,14 @@ class ChairRemoteDataSource {
 
     }
 
-    fun getAllRecordFromRoom(chatRoomKey: String, callback: (String) -> Unit){
+    fun getAllRecordFromRoom(chatRoomKey: String, callback: (Query, DocumentSnapshot) -> Unit){
         db.collection(COLLECTION_CHAT_ROOM).whereEqualTo(ROOM_KEY, chatRoomKey)
             .get().addOnSuccessListener { snapshots ->
                 val room = snapshots.documents.first()
-                callback(room.id)
+                val recordRegistration = room.reference.collection(COLLECTION_CHAT_RECORD).orderBy(
+                    SENT_TIME, Query.Direction.ASCENDING)
+
+                callback(recordRegistration, room)
             }
     }
 
