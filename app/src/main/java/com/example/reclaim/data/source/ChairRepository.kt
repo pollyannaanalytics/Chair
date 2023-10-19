@@ -31,4 +31,8 @@ class ChairRepository(private val remoteDataSource: ChairRemoteDataSource) {
     fun clearUnreadTimes(documentID: String){
         remoteDataSource.clearUnreadTimes(documentID)
     }
+
+    fun getAllRecordFromRoom(chatRoomKey: String){
+
+    }
 }
