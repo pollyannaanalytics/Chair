@@ -23,7 +23,7 @@ data class ChatRecord(
     @ColumnInfo(name = "sender_id")
     val sender : String,
 
-    val type: String,
+    val type: MessageType,
 
     val meetingId: String,
 

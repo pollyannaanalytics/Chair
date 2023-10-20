@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.view.accessibility.AccessibilityViewCommand.ScrollToPositionArguments
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -24,6 +25,7 @@ import com.example.reclaim.data.Friends
 import com.example.reclaim.data.ReclaimDatabase
 import com.example.reclaim.databinding.FragmentChatRoomBinding
 import com.example.reclaim.databinding.FragmentMeetingBinding
+import com.example.reclaim.ext.getVmFactory
 import com.example.reclaim.videocall.RTCActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -52,9 +54,7 @@ class ChatRoomFragment : Fragment() {
     val db = Firebase.firestore
 
 
-
-
-    lateinit var viewModel: ChatRoomViewModel
+   private val viewModel by viewModels<ChatRoomViewModel> { getVmFactory(arg) }
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -63,10 +63,7 @@ class ChatRoomFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val application = requireNotNull(this.activity).application
-        val databaseDao = ReclaimDatabase.getInstance(application).reclaimDao()
-        val factory = ChatRoomFactory(arg, databaseDao)
-        viewModel = ViewModelProvider(this, factory).get(ChatRoomViewModel::class.java)
+
         val binding = FragmentChatRoomBinding.inflate(inflater)
 
         var sendText = ""

@@ -5,7 +5,7 @@ import androidx.annotation.VisibleForTesting
 import com.example.reclaim.data.source.ChairRemoteDataSource
 import com.example.reclaim.data.source.ChairRepository
 
-class ServiceLocator {
+object ServiceLocator {
     @Volatile
     var chairRepository: ChairRepository? = null
         @VisibleForTesting set
