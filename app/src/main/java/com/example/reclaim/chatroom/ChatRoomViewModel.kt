@@ -28,6 +28,8 @@ class ChatRoomViewModel(
     companion object {
         private const val TAG = "ChatRoomViewModel"
     }
+    private val userName = UserManager.userName
+    private val userImageUri = UserManager.userImage
 
     private val chatRoom = navArgs.chatRoom
     private val chatRoomKey = navArgs.chatRoom.key
@@ -198,13 +200,13 @@ class ChatRoomViewModel(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun sendMessage(content: String, type: MessageType, meetingId: String = "") {
-        chairRepository.sendMessage(content, type, meetingId, chatRoom, chatRoomDocumentID)
+        chairRepository.sendMessage(content, type, meetingId, chatRoom, chatRoomDocumentID, userName, userImageUri)
     }
 
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun sendVideoCallMessage(meetingId: String) {
-        chairRepository.sendVideoCallMessage(meetingId, chatRoom, chatRoomDocumentID)
+        chairRepository.sendVideoCallMessage(meetingId, chatRoom, chatRoomDocumentID, userName, userImageUri)
 
     }
 

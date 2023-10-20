@@ -7,7 +7,6 @@ import com.example.reclaim.data.UserManager
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import kotlin.random.Random
 
 class ChairRemoteDataSource {
 
@@ -83,7 +82,9 @@ class ChairRemoteDataSource {
         type: MessageType,
         meetingId: String = "",
         chatRoom: ChatRoom,
-        chatRoomDocumentID: String
+        chatRoomDocumentID: String,
+        senderName: String,
+        senderImageUri: String
     ) {
         val currentTimeString = System.currentTimeMillis().toString()
 
@@ -92,13 +93,12 @@ class ChairRemoteDataSource {
             CHAT_ROOM_KEY to chatRoom.key,
             CONTENT to content,
             SENT_TIME to currentTimeString,
-            SENDER_NAME to UserManager.userName,
-            ID to Random.nextLong(),
+            SENDER_NAME to senderName,
             MESSAGE_TYPE to type,
             IS_SEEN to false,
             MEETING_ID to meetingId,
             USER_B_IMG to chatRoom.otherImage,
-            USER_A_IMG to UserManager.userImage,
+            USER_A_IMG to senderImageUri,
             USER_A_NAME to chatRoom.selfName,
             USER_B_NAME to chatRoom.otherName,
             MEETING_OVER to false
@@ -144,10 +144,10 @@ class ChairRemoteDataSource {
 
 
 
-    fun sendVideoCallMessage(meetingId: String, chatRoom: ChatRoom, chatRoomDocumentID: String){
+    fun sendVideoCallMessage(meetingId: String, chatRoom: ChatRoom, chatRoomDocumentID: String, senderName: String, senderImageUri: String){
         val text = SEND_VIDEO_CALL_TEXT
         val type = MessageType.VIDEO_CALL
-        sendMessage(text, type, meetingId, chatRoom, chatRoomDocumentID)
+        sendMessage(text, type, meetingId, chatRoom, chatRoomDocumentID, senderName, senderImageUri)
     }
 
 
