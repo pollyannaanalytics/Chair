@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.view.accessibility.AccessibilityViewCommand.ScrollToPositionArguments
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -21,9 +22,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import com.example.reclaim.R
 import com.example.reclaim.data.Friends
+import com.example.reclaim.data.MessageType
 import com.example.reclaim.data.ReclaimDatabase
+import com.example.reclaim.data.source.ChairRemoteDataSource
+import com.example.reclaim.data.source.ChairRepository
 import com.example.reclaim.databinding.FragmentChatRoomBinding
 import com.example.reclaim.databinding.FragmentMeetingBinding
+
 import com.example.reclaim.videocall.RTCActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -45,16 +50,14 @@ import java.util.UUID
  */
 class ChatRoomFragment : Fragment() {
     companion object {
-        const val TAG = "messagechat"
+        const val TAG = "chatRoomFragment"
     }
 
     private val arg by navArgs<ChatRoomFragmentArgs>()
     val db = Firebase.firestore
 
 
-
-
-    lateinit var viewModel: ChatRoomViewModel
+   lateinit var viewModel: ChatRoomViewModel
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -63,10 +66,9 @@ class ChatRoomFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val application = requireNotNull(this.activity).application
-        val databaseDao = ReclaimDatabase.getInstance(application).reclaimDao()
-        val factory = ChatRoomFactory(arg, databaseDao)
+        val factory = ChatRoomFactory(ChairRepository(ChairRemoteDataSource()), arg)
         viewModel = ViewModelProvider(this, factory).get(ChatRoomViewModel::class.java)
+
         val binding = FragmentChatRoomBinding.inflate(inflater)
 
         var sendText = ""
@@ -90,7 +92,7 @@ class ChatRoomFragment : Fragment() {
         binding.sendBtn.setOnClickListener {
             if (sendText != "") {
                 Log.i(TAG, "send btn is clicked")
-                viewModel.sendMessage(sendText, "message")
+                viewModel.sendMessage(sendText, MessageType.MESSAGE)
                 binding.messageEdit.setText("")
 
             }
@@ -103,10 +105,6 @@ class ChatRoomFragment : Fragment() {
 
             if (it.size > 0){
                 adapter.submitList(it)
-//                adapter.notifyDataSetChanged()
-//            final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-
-
 
                 val smoothScroller = BottomSmoothScroller(binding.chatRecordRecyclerview.context)
 
@@ -114,8 +112,6 @@ class ChatRoomFragment : Fragment() {
 
                 binding.chatRecordRecyclerview.layoutManager?.startSmoothScroll(smoothScroller)
 
-//            layoutManager.reverseLayout = true;
-//            binding.chatRecordRecyclerview.layoutManager = layoutManager;
 
                 Log.i(TAG, "submit to adapter: $it")
             }
@@ -144,7 +140,7 @@ class ChatRoomFragment : Fragment() {
             intent.putExtra("meetingID", it)
             intent.putExtra("isJoin", true)
 
-            viewModel.turnOffJoinBtn()
+            viewModel.stopUserJoinMeeting()
 
             startActivity(intent)
         }

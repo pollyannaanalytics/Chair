@@ -59,6 +59,7 @@ android {
 
 dependencies {
 
+    implementation("com.google.android.ads:mediation-test-suite:3.0.0")
     val kotlinVersion = "1.8.20"
     val ktorVersion = "1.1.4"
 

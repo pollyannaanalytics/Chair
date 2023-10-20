@@ -22,8 +22,6 @@ interface ReclaimDatabaseDao {
     @Insert
     fun insertFriends(relationship: Relationship)
 
-    @Insert
-    fun insertChatRecord(chatRecord: ChatRecord)
 
     @Update
     fun receiveFriends(relationship: Relationship)
@@ -34,8 +32,6 @@ interface ReclaimDatabaseDao {
     @Update
     fun changeUserProfile(userProfile: UserProfile)
 
-    @Query("SELECT * from chat_record")
-    fun loadAllRecord(): List<ChatRecord>
 
     @Query("SELECT * from chat_room")
     fun loadAllChatRoom(): List<ChatRoomLocal>

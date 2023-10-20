@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.example.reclaim.data.ChatRecord
+import com.example.reclaim.data.MessageType
 import com.example.reclaim.data.UserManager
 import com.example.reclaim.databinding.ChatRoomSendByMeBinding
 import com.example.reclaim.databinding.ChatRoomSendByOtherBinding
@@ -39,7 +40,7 @@ class ChatRoomAdapter(private val onClickListener: OnClickListener) :
             binding.chatRecord = record
             binding.executePendingBindings()
 
-            if (record.type == "videocall"){
+            if (record.type == MessageType.VIDEO_CALL){
                 if (!record.meetingOver){
                     binding.videoInvitationBtn.visibility = View.VISIBLE
                     binding.videoInvitationBtn.setOnClickListener {
@@ -115,7 +116,7 @@ class ChatRoomAdapter(private val onClickListener: OnClickListener) :
         }
 
         override fun areContentsTheSame(oldItem: ChatRecord, newItem: ChatRecord): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.content == newItem.content
         }
     }
 
