@@ -60,6 +60,7 @@ android {
 dependencies {
 
     implementation("com.google.android.ads:mediation-test-suite:3.0.0")
+    testImplementation("junit:junit:4.12")
     val kotlinVersion = "1.8.20"
     val ktorVersion = "1.1.4"
 
@@ -75,6 +76,8 @@ dependencies {
     implementation ("androidx.room:room-ktx:$room_version")
 
     kapt("androidx.room:room-compiler:$room_version")
+
+    testImplementation ("junit:junit:4.13")
 
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
@@ -153,5 +156,16 @@ dependencies {
     implementation ("com.airbnb.android:lottie:6.1.0")
 
     implementation ("com.google.android.gms:play-services-auth:20.7.0")
+
+
+    // AndroidX Test - Instrumented testing
+    androidTestImplementation ("androidx.test.ext:junit:1.1.3")
+    androidTestImplementation ("androidx.test.espresso:espresso-core:3.4.0")
+
+
+    // Optional -- Mockito framework
+    testImplementation ("org.mockito:mockito-core: 3.+")
+    // Optional -- mockito-kotlin
+    testImplementation ("org.mockito.kotlin:mockito-kotlin:3.+")
 
 }
