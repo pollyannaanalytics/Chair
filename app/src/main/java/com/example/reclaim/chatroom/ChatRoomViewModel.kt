@@ -98,8 +98,8 @@ class ChatRoomViewModel(
 
 
                         val messageType = when(type){
-                            "message" -> MessageType.MESSAGE
-                            "video_call" -> MessageType.VIDEO_CALL
+                            "MESSAGE" -> MessageType.MESSAGE
+                            "VIDEO_CALL" -> MessageType.VIDEO_CALL
                             else -> {MessageType.MESSAGE}
                         }
 
