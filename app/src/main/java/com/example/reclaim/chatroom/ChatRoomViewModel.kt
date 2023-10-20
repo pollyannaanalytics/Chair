@@ -31,7 +31,6 @@ class ChatRoomViewModel(
 
     private val chatRoom = navArgs.chatRoom
     private val chatRoomKey = navArgs.chatRoom.key
-    val friend = navArgs.chatRoom.key
     val friendImage = navArgs.chatRoom.otherImage
     val friendName = navArgs.chatRoom.otherName
 
@@ -39,14 +38,9 @@ class ChatRoomViewModel(
     val recordWithFriend: LiveData<MutableList<ChatRecord>>
         get() = _recordWithFriend
 
-    private var _noRecord = MutableLiveData<Boolean>()
-    val noRecord: LiveData<Boolean>
-        get() = _noRecord
-
-    private val db = Firebase.firestore
-
-    var _documentID = ""
-    var _meetingId = ""
+    private var meetingID = ""
+    private var chatRoomDocumentID = ""
+    private var chatRecordDocumentID =""
 
 
 
@@ -74,7 +68,9 @@ class ChatRoomViewModel(
         Log.i(TAG, "start to get data")
 
         chairRepository.getAllRecordFromRoom(chatRoomKey) { query, room ->
-            query.addSnapshotListener { snapshot, error ->
+            chatRoomDocumentID = room.id
+
+            recordRegistraion = query.addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     Log.e(TAG, "this is error: ${error.message}")
 
@@ -88,6 +84,9 @@ class ChatRoomViewModel(
                     for (document in snapshot) {
 
                         val documentID = document.get("id").toString()
+                        chatRecordDocumentID = documentID
+
+
                         val chatRoomKey = document.get("chat_room_key").toString()
                         val content = document.get("content").toString()
                         val timeStamp = document.get("sent_time").toString()
@@ -133,7 +132,7 @@ class ChatRoomViewModel(
                         val taiwanTime = timeFormatter.format(date)
 
                         val newRecord = ChatRecord(
-                            id = documentID.toLong(),
+
                             chatRoomKey = chatRoomKey,
                             content = content,
                             sendTime = taiwanTime,
@@ -149,7 +148,7 @@ class ChatRoomViewModel(
 
                         )
                         Log.i("update isseen", "current seen status is :${newRecord.isSeen}")
-                        _meetingId = meetingId
+                        meetingID = meetingId
 
                         currentRecord.add(newRecord)
                         if (!document.get("is_seen").toString().toBoolean()) {
@@ -198,21 +197,13 @@ class ChatRoomViewModel(
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun sendMessage(content: String, type: MessageType, meetingId: String = "", chatRoom: ChatRoom, documentID: String) {
-        chairRepository.sendMessage(content, type, meetingId, chatRoom, documentID)
-
-
+    fun sendMessage(content: String, type: MessageType, meetingId: String = "") {
+        chairRepository.sendMessage(content, type, meetingId, chatRoom, chatRoomDocumentID)
     }
 
-
-    private fun updateOnChatList(content: String, chatRoomKey: String, currentTime: String) {
-        chairRepository.updateOnChatList(content, chatRoomKey, currentTime)
-
-
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun sendVideoCallMessage(meetingId: String, chatRoom: ChatRoom, chatRoomDocumentID: String) {
+    fun sendVideoCallMessage(meetingId: String) {
         chairRepository.sendVideoCallMessage(meetingId, chatRoom, chatRoomDocumentID)
 
     }
@@ -226,10 +217,7 @@ class ChatRoomViewModel(
         Log.i("update", "ondestroyed is true")
     }
 
-    fun stopUserJoinMeeting(chatRoomDocumentID: String, meetingID: String) {
-
-
-        Log.i(TAG, "document: $_documentID, chat_record: $_meetingId")
+    fun stopUserJoinMeeting() {
         recordRegistraion.remove()
        chairRepository.stopUserJoinMeeting(chatRoomDocumentID, meetingID)
 

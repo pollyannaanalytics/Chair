@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.reclaim.data.ChatRecord
 import com.example.reclaim.data.ChatRoom
+import com.example.reclaim.data.MessageType
 import com.example.reclaim.data.ReclaimDatabaseDao
 import com.example.reclaim.data.UserManager
 import com.google.firebase.firestore.FirebaseFirestore
@@ -47,12 +48,12 @@ class MatchViewModel(
                     documentId = it.documents.get(0).id
 
                     val newRecord = ChatRecord(
-                        id = Random.nextLong(),
+
                         chatRoomKey = _chatRoomInfo.value.let { it!!.key },
                         content = text,
                         sendTime = System.currentTimeMillis().toString(),
                         sender = UserManager.userName,
-                        type = "message",
+                        type = MessageType.MESSAGE,
                         meetingId = "",
                         otherImage = _chatRoomInfo.value.let { it!!.otherImage },
                         selfImage = UserManager.userImage,
@@ -68,7 +69,6 @@ class MatchViewModel(
                         "content" to newRecord.content,
                         "sent_time" to newRecord.sendTime,
                         "sender_name" to newRecord.sender,
-                        "id" to newRecord.id,
                         "message_type" to newRecord.type,
                         "is_seen" to false,
                         "meeting_id" to newRecord.meetingId,

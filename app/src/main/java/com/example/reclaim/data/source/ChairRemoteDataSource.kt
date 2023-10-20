@@ -4,11 +4,9 @@ import android.util.Log
 import com.example.reclaim.data.ChatRoom
 import com.example.reclaim.data.MessageType
 import com.example.reclaim.data.UserManager
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import io.opencensus.metrics.export.Summary.Snapshot
 import kotlin.random.Random
 
 class ChairRemoteDataSource {
@@ -46,6 +44,7 @@ class ChairRemoteDataSource {
     fun getAllRecordFromRoom(chatRoomKey: String, callback: (Query, DocumentSnapshot) -> Unit){
         db.collection(COLLECTION_CHAT_ROOM).whereEqualTo(ROOM_KEY, chatRoomKey)
             .get().addOnSuccessListener { snapshots ->
+
                 val room = snapshots.documents.first()
                 val recordRegistration = room.reference.collection(COLLECTION_CHAT_RECORD).orderBy(
                     SENT_TIME, Query.Direction.ASCENDING)
@@ -109,7 +108,6 @@ class ChairRemoteDataSource {
             COLLECTION_CHAT_RECORD
         )
             .add(data).addOnSuccessListener {
-
                 updateOnChatList(content, chatRoomDocumentID, currentTimeString)
                 Log.i(TAG, "add data: ${it.id}")
 
@@ -156,13 +154,13 @@ class ChairRemoteDataSource {
     fun stopUserJoinMeeting(chatRoomDocumentID: String, meetingId: String){
 
         val chatRoom = db.collection(COLLECTION_CHAT_ROOM).document(chatRoomDocumentID)
-        var ChatRecordDocumentID = ""
+        var chatRecordDocumentID = ""
         chatRoom.collection(COLLECTION_CHAT_RECORD).whereEqualTo(MEETING_ID, meetingId).get()
-            .addOnSuccessListener {
+            .addOnSuccessListener { snapshot ->
 
-                ChatRecordDocumentID = it.documents.get(0).id
+                chatRecordDocumentID = snapshot.documents.firstOrNull().let { it!!.id }
 
-                val chatRecordDocument = chatRoom.collection(COLLECTION_CHAT_RECORD).document(ChatRecordDocumentID)
+                val chatRecordDocument = chatRoom.collection(COLLECTION_CHAT_RECORD).document(chatRecordDocumentID)
 
                 val dataUpdateToChatRecord = hashMapOf<String, Any>(
                     MEETING_OVER to true,
