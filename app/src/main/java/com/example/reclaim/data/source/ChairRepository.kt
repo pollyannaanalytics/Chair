@@ -17,10 +17,6 @@ class ChairRepository(private val remoteDataSource: ChairRemoteDataSource) {
         remoteDataSource.sendMessage(content, type, meetingID, chatRoom, chatRoomDocumentID, senderName, senderImageUri)
     }
 
-    fun updateOnChatList(content: String, chatRoomKey: String, currentTimeString: String){
-        remoteDataSource.updateOnChatList(content, chatRoomKey, currentTimeString)
-    }
-
     fun sendVideoCallMessage(meetingID: String, chatRoom: ChatRoom, chatRoomDocumentID: String, senderName: String, senderImageUri: String){
         remoteDataSource.sendVideoCallMessage(meetingID, chatRoom, chatRoomDocumentID, senderName, senderImageUri)
     }

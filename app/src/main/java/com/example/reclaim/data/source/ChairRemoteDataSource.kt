@@ -58,10 +58,8 @@ class ChairRemoteDataSource {
         val chatRoom = db.collection(COLLECTION_CHAT_ROOM)
             .document(documentID)
         chatRoom.get().addOnSuccessListener {
-            Log.i(TAG, "update unread time to 0")
+
             chatRoom.update(UNREAD_TIMES, 0)
-        }.addOnFailureListener {
-            Log.e(TAG, "failed to clear unread times: $it")
         }
 
     }
@@ -99,7 +97,7 @@ class ChairRemoteDataSource {
             MEETING_ID to meetingId,
             USER_B_IMG to chatRoom.otherImage,
             USER_A_IMG to senderImageUri,
-            USER_A_NAME to chatRoom.selfName,
+            USER_A_NAME to senderName,
             USER_B_NAME to chatRoom.otherName,
             MEETING_OVER to false
         )

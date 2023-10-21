@@ -19,14 +19,15 @@ const val TAG = "ChatRoomViewModel"
 
 class ChatRoomViewModel(
     private val chairRepository: ChairRepository,
-    private val navArgs: ChatRoomFragmentArgs
+    private val navArgs: ChatRoomFragmentArgs,
+    private val userName: String = UserManager.userName,
+    private val userImageUri: String = UserManager.userImage
 ) :
     ViewModel() {
     companion object {
         private const val TAG = "ChatRoomViewModel"
     }
-    private val userName = UserManager.userName
-    private val userImageUri = UserManager.userImage
+
 
     private val chatRoom = navArgs.chatRoom
     private val chatRoomKey = navArgs.chatRoom.key
@@ -63,10 +64,14 @@ class ChatRoomViewModel(
     }
 
 
-    private fun getAllRecordFromRoom(chatRoomKey: String) {
-        Log.i(TAG, "start to get data")
+    fun getAllRecordFromRoom(chatRoomKey: String) {
+//        Log.i(TAG, "start to get data")
 
         chairRepository.getAllRecordFromRoom(chatRoomKey) { query, room ->
+            if (!room.exists()){
+                return@getAllRecordFromRoom
+            }
+
             chatRoomDocumentID = room.id
 
             recordRegistraion = query.addSnapshotListener { snapshot, error ->
@@ -183,13 +188,12 @@ class ChatRoomViewModel(
         }
     }
 
-
-    private fun clearUnreadCounts(documentID: String) {
+    fun clearUnreadCounts(documentID: String) {
         chairRepository.clearUnreadCounts(documentID)
 
     }
 
-    private fun updateSeenStatus(chatRoomID: String, documentID: String) {
+    fun updateSeenStatus(chatRoomID: String, documentID: String) {
         chairRepository.updateSeenStatus(chatRoomID, documentID)
 
     }
@@ -217,7 +221,7 @@ class ChatRoomViewModel(
     }
 
     fun stopUserJoinMeeting() {
-        recordRegistraion.remove()
+//        recordRegistraion.remove()
        chairRepository.stopUserJoinMeeting(chatRoomDocumentID, meetingID)
 
     }

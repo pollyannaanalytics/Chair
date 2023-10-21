@@ -12,6 +12,10 @@ plugins {
 
 android {
 
+    kapt{
+        generateStubs = true
+    }
+
     packagingOptions {
         exclude("META-INF/LICENSE")
 
@@ -162,9 +166,9 @@ dependencies {
     implementation("androidx.arch.core:core-testing:2.1.0")
 
     // Optional -- Mockito framework
-    testImplementation ("org.mockito:mockito-core: 3.+")
+    testImplementation ("org.mockito:mockito-core:5.6.0")
     // Optional -- mockito-kotlin
-    testImplementation ("org.mockito.kotlin:mockito-kotlin:3.+")
+    testImplementation ("org.mockito.kotlin:mockito-kotlin:3.2.0")
 
 
 
