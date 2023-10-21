@@ -1,6 +1,3 @@
-import org.gradle.internal.impldep.org.junit.experimental.categories.Categories.CategoryFilter.exclude
-import java.util.regex.Pattern.compile
-
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -60,6 +57,7 @@ android {
 dependencies {
 
     implementation("com.google.android.ads:mediation-test-suite:3.0.0")
+    testImplementation("junit:junit:4.12")
     testImplementation("junit:junit:4.12")
     val kotlinVersion = "1.8.20"
     val ktorVersion = "1.1.4"
@@ -161,11 +159,13 @@ dependencies {
     // AndroidX Test - Instrumented testing
     androidTestImplementation ("androidx.test.ext:junit:1.1.3")
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.4.0")
-
+    implementation("androidx.arch.core:core-testing:2.1.0")
 
     // Optional -- Mockito framework
     testImplementation ("org.mockito:mockito-core: 3.+")
     // Optional -- mockito-kotlin
     testImplementation ("org.mockito.kotlin:mockito-kotlin:3.+")
+
+
 
 }

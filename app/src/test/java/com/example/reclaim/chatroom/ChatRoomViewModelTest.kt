@@ -4,14 +4,16 @@ import androidx.lifecycle.ViewModel
 import com.example.reclaim.data.ChatRoom
 import com.example.reclaim.data.source.ChairRemoteDataSource
 import com.example.reclaim.data.source.ChairRepository
+import com.google.firebase.database.Query
 import org.junit.Before
+import org.junit.Test
 
 class ChatRoomViewModelTest {
 
-    lateinit var chatRoomViewModel: ViewModel
-    lateinit var chairRepository: ChairRepository
-    lateinit var navArgs: ChatRoomFragmentArgs
-    lateinit var dataSource: ChairRemoteDataSource
+    private lateinit var chatRoomViewModel: ViewModel
+    private lateinit var chairRepository: ChairRepository
+    private lateinit var navArgs: ChatRoomFragmentArgs
+    private lateinit var dataSource: ChairRemoteDataSource
     @Before
     fun setUp(){
         val fakeChatRoom = ChatRoom(
@@ -36,5 +38,17 @@ class ChatRoomViewModelTest {
 
 
         chatRoomViewModel = ChatRoomViewModel(chairRepository, navArgs)
+    }
+
+    @Test
+    fun testGetAllRecord(){
+        val fakeQuery = Query::class.java
+
+
+    }
+
+    @Test
+    fun testClearUnreadCounts(){
+
     }
 }

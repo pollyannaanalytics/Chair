@@ -7,13 +7,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.reclaim.data.ChatRecord
-import com.example.reclaim.data.ChatRoom
 import com.example.reclaim.data.MessageType
 import com.example.reclaim.data.UserManager
 import com.example.reclaim.data.source.ChairRepository
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.TimeZone
@@ -172,7 +169,7 @@ class ChatRoomViewModel(
                             .toString() != "0"
                     ) {
                         Log.i("updateread", "is not sent by me")
-                        clearUnreadTimes(room.id)
+                        clearUnreadCounts(room.id)
                     }
 
                     Log.i(TAG, "current record: $currentRecord")
@@ -187,8 +184,8 @@ class ChatRoomViewModel(
     }
 
 
-    private fun clearUnreadTimes(documentID: String) {
-        chairRepository.clearUnreadTimes(documentID)
+    private fun clearUnreadCounts(documentID: String) {
+        chairRepository.clearUnreadCounts(documentID)
 
     }
 

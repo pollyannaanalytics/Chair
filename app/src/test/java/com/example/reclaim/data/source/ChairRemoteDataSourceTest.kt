@@ -1,7 +1,5 @@
 package com.example.reclaim.data.source
 
-import org.junit.Assert.*
-
 import org.junit.Test
 
 class ChairRemoteDataSourceTest {

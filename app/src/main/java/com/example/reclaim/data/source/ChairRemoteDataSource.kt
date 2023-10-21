@@ -53,7 +53,7 @@ class ChairRemoteDataSource {
     }
 
 
-    fun clearUnreadTimes(documentID: String) {
+    fun clearUnreadCounts(documentID: String) {
 
         val chatRoom = db.collection(COLLECTION_CHAT_ROOM)
             .document(documentID)
