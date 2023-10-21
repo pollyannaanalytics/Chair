@@ -42,6 +42,7 @@ android {
         }
     }
     buildFeatures.dataBinding = true
+    buildFeatures.viewBinding = true
 
     packagingOptions {
         exclude("META-INF/LICENSE")
@@ -162,7 +163,10 @@ dependencies {
 
     // AndroidX Test - Instrumented testing
     androidTestImplementation ("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation ("androidx.test.espresso:espresso-core:3.4.0")
+    androidTestImplementation ("androidx.test.espresso:espresso-core:3.3.0")
+    androidTestImplementation("androidx.test:core:1.5.0")
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
     implementation("androidx.arch.core:core-testing:2.1.0")
 
     // Optional -- Mockito framework
