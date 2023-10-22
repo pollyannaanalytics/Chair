@@ -37,7 +37,24 @@ import com.example.reclaim.databinding.FragmentCreateProfileBinding
  */
 class CreateProfileFragment : Fragment() {
 
-    val TAG = "CREATE_PROFILE_PAGE"
+    companion object {
+        private const val READ_IMAGE_PERMISSION_REQUEST_CODE = 1
+        private const val READ_IMAGE_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
+        private const val SELECT_PICTURE = 200
+        private const val USER_MANAGER = "UserManager"
+        private const val TAG = "CREATE_PROFILE_PAGE"
+        private const val DEFAULT_GENDER = "男"
+        private const val WARNING_HINT = "此為必填項"
+        private const val UPLOAD_IMAGE_TYPE = "image/*"
+        private const val SELECT_PICTURE_INTENT = "Select Picture"
+        private const val ALBUM_PERMISSION_TITLE = "Album Permission Required"
+        private const val ALBUM_PERMISSION_MESSAGE = "This app need use your album"
+        private const val PERMISSION_GRANT = "Grant"
+        private const val PERMISSION_DENY = "Deny"
+        private const val ALBUM_PERMISSION_DENY_MESSAGE = "Camera and Audio Permission Denied"
+    }
+
+
     var imageUri: Uri? = null
     lateinit var binding: FragmentCreateProfileBinding
     lateinit var viewModel: CreateProfileViewModel
@@ -63,7 +80,7 @@ class CreateProfileFragment : Fragment() {
 
 
         var username = ""
-        var gender = "男"
+        var gender = DEFAULT_GENDER
         var worriesDescription = ""
         var userAge = ""
         var selfDescription = ""
@@ -90,7 +107,7 @@ class CreateProfileFragment : Fragment() {
         binding.ageEdit.doAfterTextChanged {
             userAge = it.toString()
             if (userAge.isEmpty() || userAge == ""){
-                binding.ageEdit.error = "此為必填項"
+                binding.ageEdit.error = WARNING_HINT
             }
 
             Log.i(TAG, "userAge: $it")
@@ -113,7 +130,7 @@ class CreateProfileFragment : Fragment() {
         binding.usernameEdit.doAfterTextChanged {
             username = it.toString()
             if (username.isEmpty() || username == ""){
-                binding.usernameEdit.error = "此為必填項"
+                binding.usernameEdit.error = WARNING_HINT
             }
             Log.i(TAG, "userId: $it")
         }
@@ -135,7 +152,7 @@ class CreateProfileFragment : Fragment() {
         binding.selfDescriptionEdit.doAfterTextChanged {
             selfDescription = it.toString()
             if (selfDescription.isEmpty() || selfDescription == ""){
-                binding.selfDescription.error = "此為必填項"
+                binding.selfDescription.error = WARNING_HINT
             }else{
                 binding.progressBar.progress = 80
             }
@@ -197,23 +214,23 @@ class CreateProfileFragment : Fragment() {
     private fun pickImageFromGallery() {
         val intent = Intent()
 
-        intent.setType("image/*")
-        intent.setAction(Intent.ACTION_GET_CONTENT)
+        intent.type = UPLOAD_IMAGE_TYPE
+        intent.action = Intent.ACTION_GET_CONTENT
 
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE)
+        startActivityForResult(Intent.createChooser(intent, SELECT_PICTURE_INTENT), SELECT_PICTURE)
 
 
     }
 
     private fun showPermissionRationaleDialog() {
         AlertDialog.Builder(requireContext())
-            .setTitle("Album Permission Required")
-            .setMessage("This app need use your album")
-            .setPositiveButton("Grant") { dialog, _ ->
+            .setTitle(ALBUM_PERMISSION_TITLE)
+            .setMessage(ALBUM_PERMISSION_MESSAGE)
+            .setPositiveButton(PERMISSION_GRANT) { dialog, _ ->
                 dialog.dismiss()
                 (true)
             }
-            .setNegativeButton("Deny") { dialog, _ ->
+            .setNegativeButton(PERMISSION_DENY) { dialog, _ ->
                 dialog.dismiss()
                 onImageReadPermissionDenied()
             }
@@ -238,7 +255,7 @@ class CreateProfileFragment : Fragment() {
     }
 
     private fun onImageReadPermissionDenied() {
-        Toast.makeText(requireContext(), "Camera and Audio Permission Denied", Toast.LENGTH_LONG)
+        Toast.makeText(requireContext(), ALBUM_PERMISSION_DENY_MESSAGE, Toast.LENGTH_LONG)
             .show()
     }
 
@@ -255,11 +272,6 @@ class CreateProfileFragment : Fragment() {
         }
     }
 
-    companion object {
-        private const val READ_IMAGE_PERMISSION_REQUEST_CODE = 1
-        private const val READ_IMAGE_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
-        private const val SELECT_PICTURE = 200
-        const val USER_MANAGER = "UserManager"
-    }
+
 
 }
