@@ -32,4 +32,8 @@ class ChairRepository(private val remoteDataSource: ChairRemoteDataSource) {
     fun getAllRecordFromRoom(chatRoomKey: String, callback: (Query, DocumentSnapshot) -> Unit){
         remoteDataSource.getAllRecordFromRoom(chatRoomKey, callback)
     }
+
+    fun uploadImageToFireStorage(stringOfUri: String){
+        remoteDataSource.uploadImageToFireStorage(stringOfUri)
+    }
 }
