@@ -102,7 +102,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                                     worriesDescription = worriesDescription,
                                     imageUri = images,
                                     age = age,
-                                    selfDescription = selfDescription
+                                    selfDescription = selfDescription,
+                                    profileTime = 0L
                                 )
 
                                 Log.i(TAG, "load real profile: ${newUserProfile.userId}")
@@ -169,7 +170,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                                     worriesDescription = worriesDescription,
                                     imageUri = images,
                                     age = age,
-                                    selfDescription = selfDescription
+                                    selfDescription = selfDescription,
+                                    profileTime = 0L
                                 )
                                 currentList.add(newUserProfile)
                             }
@@ -229,7 +231,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                                 worriesDescription = worriesDescription,
                                 imageUri = images,
                                 age = age,
-                                selfDescription = selfDescription
+                                selfDescription = selfDescription,
+                                0L
                             )
 
                             currentList.add(newUserProfile)
@@ -281,7 +284,8 @@ class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewMo
                                 worriesDescription = worriesDescription,
                                 imageUri = images,
                                 age = age,
-                                selfDescription = selfDescription
+                                selfDescription = selfDescription,
+                                0L
                             )
                             currentList.add(newUserProfile)
                         }

@@ -2,18 +2,16 @@ package com.example.reclaim.data.source
 
 import android.util.Log
 import androidx.core.net.toUri
-import com.example.reclaim.chatgpt.ApiClient
-import com.example.reclaim.chatgpt.CompletionRequest
-import com.example.reclaim.chatgpt.CompletionResponse
 import com.example.reclaim.data.ChatRoom
 import com.example.reclaim.data.MessageType
 import com.example.reclaim.data.UserManager
+import com.example.reclaim.data.UserProfile
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.coroutines.coroutineScope
-import retrofit2.Response
+import java.util.Calendar
 import java.util.UUID
 
 class ChairRemoteDataSource {
@@ -43,6 +41,7 @@ class ChairRemoteDataSource {
         const val USER_A_NAME = "user_a_name"
         const val USER_B_NAME = "user_b_name"
         const val MEETING_OVER_HINT = "通話已結束"
+        const val USER_PROFILE_COLLECTION = "user_profile"
 
 
     }
@@ -208,20 +207,48 @@ class ChairRemoteDataSource {
     }
 
 
-    suspend fun callChatGPTApi(question: String){
-        val completionRequest = CompletionRequest(
-            model = "text-davinci-003",
-            prompt = question,
-            max_tokens = 4000
-        )
+    fun uploadUserProfile(callback: (DocumentReference)-> Unit){
+        val profile = FirebaseFirestore.getInstance().collection(USER_PROFILE_COLLECTION)
 
-        coroutineScope {
-                val response = ApiClient.apiService.getCompletion(completionRequest)
-                handleApiResponse(response)
+        try {
+            val newProfile = UserProfile(
+                userId = UserManager.userId,
+                userName = UserManager.userName,
+                gender = UserManager.gender,
+                worriesDescription = UserManager.worriesDescription,
+                worryType = UserManager.userType,
+                imageUri = UserManager.userImage,
+                age = UserManager.age,
+                selfDescription = UserManager.selfDescription,
+                profileTime = Calendar.getInstance().timeInMillis
+            )
+
+            val data = hashMapOf(
+                "user_id" to UserManager.userId,
+                "user_name" to UserManager.userName,
+                "gender" to UserManager.gender,
+                "worries_description" to UserManager.worriesDescription,
+                "worries_type" to UserManager.userType,
+                "images" to UserManager.userImage,
+                "user_age" to UserManager.age,
+                "self_description" to UserManager.selfDescription,
+                "profile_time" to Calendar.getInstance().timeInMillis
+            )
+            Log.i(TAG, "my profile is $data")
+
+            profile.add(newProfile)
+                .addOnSuccessListener {
+                    callback(it)
+                    Log.i(TAG, "upload success")
+                }
+                .addOnFailureListener {
+                    Log.i(TAG, "upload failed")
+                }
+        } catch (e: Exception) {
+            Log.e(TAG, "cannot upload: $e")
         }
     }
 
-    suspend fun handleApiResponse(response: Response<CompletionResponse>){}
 
 
 

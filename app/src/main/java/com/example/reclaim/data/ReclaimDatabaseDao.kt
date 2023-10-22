@@ -12,8 +12,7 @@ interface ReclaimDatabaseDao {
     @Insert
     fun insertUserInfo(userInfo: UserInfo)
 
-    @Insert
-    suspend fun insertUserProfile(userProfile: UserProfile)
+
 
     @Insert
     suspend fun insertChatRoom(chatRoom: ChatRoomLocal)
@@ -29,8 +28,7 @@ interface ReclaimDatabaseDao {
     @Update
     fun changeUserInfo(userInfo: UserInfo)
 
-    @Update
-    fun changeUserProfile(userProfile: UserProfile)
+   
 
 
     @Query("SELECT * from chat_room")

@@ -2,6 +2,7 @@ package com.example.reclaim.data.source
 
 import com.example.reclaim.data.ChatRoom
 import com.example.reclaim.data.MessageType
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 
@@ -35,5 +36,9 @@ class ChairRepository(private val remoteDataSource: ChairRemoteDataSource) {
 
     fun uploadImageToFireStorage(stringOfUri: String){
         remoteDataSource.uploadImageToFireStorage(stringOfUri)
+    }
+
+    fun uploadUserProfile(callback: (DocumentReference) -> Unit){
+        remoteDataSource.uploadUserProfile(callback)
     }
 }
