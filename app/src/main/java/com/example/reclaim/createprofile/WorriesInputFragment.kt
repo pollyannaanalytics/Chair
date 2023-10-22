@@ -6,19 +6,18 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.reclaim.R
-import com.example.reclaim.chatgpt.MessageToGPT
 import com.example.reclaim.data.UserManager
+import com.example.reclaim.data.source.ChairRemoteDataSource
+import com.example.reclaim.data.source.ChairRepository
 import com.example.reclaim.databinding.FragmentWorriesInputBinding
-import com.example.reclaim.editprofile.EditProfileFragmentDirections
 
 
 /**
@@ -27,10 +26,20 @@ import com.example.reclaim.editprofile.EditProfileFragmentDirections
  * create an instance of this fragment.
  */
 class WorriesInputFragment : Fragment() {
-    private val TAG = "Worries"
-    private val viewModel: WorriesInputViewModel by lazy {
-        ViewModelProvider(this).get(WorriesInputViewModel::class.java)
+
+
+    companion object{
+        private const val TAG = "Worries"
+        private const val TOTAL_PROGRESS = 100
+        private const val CURRENT_PROGRESS = 80
+        private const val ADD_PROGRESS = 20
+        private const val FLAG = 0
+        private const val LAYOUT_ALPHA_START = 1f
+        private const val LAYOUT_ALPHA_FINISH = 0.5f
+        private const val DELAY_1000_MILLS = 1000L
     }
+
+    lateinit var viewModel: WorriesInputViewModel
 
 
 
@@ -40,7 +49,13 @@ class WorriesInputFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentWorriesInputBinding.inflate(inflater)
-        binding.worriesLayout.alpha = 1f
+
+        val factory = WorriesInputFactory(ChairRepository(ChairRemoteDataSource()))
+
+        viewModel = ViewModelProvider(this, factory)[WorriesInputViewModel::class.java]
+
+        binding.worriesLayout.alpha = LAYOUT_ALPHA_START
+
         binding.viewModel = viewModel
 
         var worriesDescription = ""
@@ -48,16 +63,16 @@ class WorriesInputFragment : Fragment() {
         fun hideKeyboard() {
             val imm =
                 this.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(binding.worriesEdit.windowToken, 0)
+            imm.hideSoftInputFromWindow(binding.worriesEdit.windowToken, FLAG)
         }
 
         binding.progressBar.apply {
-            max = 100
-            progress = 80
+            max = TOTAL_PROGRESS
+            progress = CURRENT_PROGRESS
         }
         binding.worriesEdit.doAfterTextChanged {
             worriesDescription = it.toString()
-            binding.progressBar.progress += 20
+            binding.progressBar.progress += ADD_PROGRESS
         }
 
         binding.worriesEdit.setOnKeyListener { _, keyCode, keyEvent ->
@@ -71,7 +86,7 @@ class WorriesInputFragment : Fragment() {
 
         binding.finishBtn.setOnClickListener {
             it.isEnabled = false
-            binding.worriesLayout.alpha = 0.5f
+            binding.worriesLayout.alpha = LAYOUT_ALPHA_FINISH
             UserManager.worriesDescription = worriesDescription
             viewModel.sendDescriptionToGPT(UserManager.worriesDescription)
             Log.i(TAG, "userManager: ${UserManager.worriesDescription}")
@@ -93,7 +108,7 @@ class WorriesInputFragment : Fragment() {
                         binding.loadingAnimation.cancelAnimation()
                         binding.successfullyAnimation.playAnimation()
                         findNavController().navigate(WorriesInputFragmentDirections.actionWorriesInputFragmentToAiLoadingFragment())
-                    }, 1000
+                    }, DELAY_1000_MILLS
                 )
 
 
