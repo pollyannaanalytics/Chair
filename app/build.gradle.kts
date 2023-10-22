@@ -1,3 +1,6 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -7,6 +10,8 @@ plugins {
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
 }
+
+val key: String = gradleLocalProperties(rootDir).getProperty("OPEN_AI_KEY")
 
 
 
@@ -25,7 +30,11 @@ android {
     buildToolsVersion("33.0.1")
     namespace = "com.example.reclaim"
 
+
     defaultConfig {
+        val properties = Properties()
+        properties.load(rootProject.file("local.properties").inputStream())
+        buildConfigField("String", "OPEN_AI_KEY", "\"${properties.getProperty("OPEN_AI_KEY")}\"")
         applicationId = "com.example.reclaim"
         minSdkVersion(21)
         targetSdkVersion(33)
@@ -36,13 +45,21 @@ android {
     }
 
     buildTypes {
+
+
         getByName("release") {
+
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
+
+
+
+
     }
     buildFeatures.dataBinding = true
     buildFeatures.viewBinding = true
+    buildFeatures.buildConfig = true
 
     packagingOptions {
         exclude("META-INF/LICENSE")
@@ -58,6 +75,7 @@ android {
         jvmTarget = "17"
     }
 }
+
 
 dependencies {
 
