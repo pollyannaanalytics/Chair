@@ -1,6 +1,5 @@
 package com.example.reclaim.createprofile
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,7 +10,8 @@ import com.example.reclaim.chatgpt.CompletionRequest
 import com.example.reclaim.chatgpt.CompletionResponse
 import com.example.reclaim.chatgpt.MessageToGPT
 import com.example.reclaim.data.UserManager
-
+import com.example.reclaim.data.WorriesType
+import com.example.reclaim.data.source.ChairRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -25,24 +25,13 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-private const val TAG = "WorriesViewModel"
 
+class WorriesInputViewModel(
+    private val chairRepository: ChairRepository
+) : ViewModel() {
 
-
-
-
-
-
-class WorriesInputViewModel: ViewModel() {
-
-    enum class WorriesType {
-        WORK,
-        RELATIONSHIP,
-        FAMILY,
-        FRIENDSHIP,
-        LIFE,
-        HEALTH,
-        SCHOOL
+    companion object {
+        private const val TAG = "WorriesViewModel"
     }
 
     private var _showLottie = MutableLiveData<Boolean>()
@@ -51,8 +40,6 @@ class WorriesInputViewModel: ViewModel() {
     private val _messageList = MutableLiveData<MutableList<MessageToGPT>>()
     val messageList: LiveData<MutableList<MessageToGPT>>
         get() = _messageList
-
-
 
 
     private val type = WorriesType.values().map { it.toString() }
@@ -66,10 +53,11 @@ class WorriesInputViewModel: ViewModel() {
 
 
     }
-    private fun addToChatGPT(message: String, sentBy: String, timestamp: String) {
+
+    private fun addToChatGPT(message: String, sentBy: String, timeString: String) {
 
         val currentList = _messageList.value ?: mutableListOf()
-        currentList.add(MessageToGPT(message, sentBy, timestamp))
+        currentList.add(MessageToGPT(message, sentBy, timeString))
         _messageList.postValue(currentList)
 
         Log.i(TAG, "messageList is ${_messageList.value}")
@@ -123,11 +111,13 @@ class WorriesInputViewModel: ViewModel() {
             } else {
                 try {
                     val jObjError = JSONObject(response.errorBody()!!.string())
-                    Log.e(TAG, "GPT" +
+                    Log.e(
+                        TAG, "GPT" +
                                 jObjError.getJSONObject("error").getString("message")
                     )
                 } catch (e: Exception) {
-                    Log.e(TAG, "GPT" +
+                    Log.e(
+                        TAG, "GPT" +
                                 e.toString()
                     )
 
@@ -150,10 +140,10 @@ class WorriesInputViewModel: ViewModel() {
     }
 
 
-   fun uploadUserProfile() {
-       val profile = FirebaseFirestore.getInstance().collection("user_profile")
+    fun uploadUserProfile() {
+        val profile = FirebaseFirestore.getInstance().collection("user_profile")
 
-       try {
+        try {
             val data = hashMapOf(
                 "user_id" to UserManager.userId,
                 "user_name" to UserManager.userName,
@@ -175,7 +165,7 @@ class WorriesInputViewModel: ViewModel() {
                 .addOnFailureListener {
                     Log.i(TAG, "upload failed")
                 }
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Log.e(TAG, "cannot upload: $e")
         }
     }

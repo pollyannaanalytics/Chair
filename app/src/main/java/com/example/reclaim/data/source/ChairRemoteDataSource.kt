@@ -2,6 +2,9 @@ package com.example.reclaim.data.source
 
 import android.util.Log
 import androidx.core.net.toUri
+import com.example.reclaim.chatgpt.ApiClient
+import com.example.reclaim.chatgpt.CompletionRequest
+import com.example.reclaim.chatgpt.CompletionResponse
 import com.example.reclaim.data.ChatRoom
 import com.example.reclaim.data.MessageType
 import com.example.reclaim.data.UserManager
@@ -9,6 +12,8 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.coroutineScope
+import retrofit2.Response
 import java.util.UUID
 
 class ChairRemoteDataSource {
@@ -201,6 +206,25 @@ class ChairRemoteDataSource {
 
 
     }
+
+
+    suspend fun callChatGPTApi(question: String){
+        val completionRequest = CompletionRequest(
+            model = "text-davinci-003",
+            prompt = question,
+            max_tokens = 4000
+        )
+
+        coroutineScope {
+                val response = ApiClient.apiService.getCompletion(completionRequest)
+                handleApiResponse(response)
+        }
+    }
+
+    suspend fun handleApiResponse(response: Response<CompletionResponse>){}
+
+
+
 
 
 }

@@ -72,7 +72,7 @@ class CreateProfileFragment : Fragment() {
 
         val factory = CreateProfileFactory(ChairRepository(ChairRemoteDataSource()))
 
-        viewModel = ViewModelProvider(this, factory).get(CreateProfileViewModel::class.java)
+        viewModel = ViewModelProvider(this, factory)[CreateProfileViewModel::class.java]
 
         binding.viewModel = viewModel
         val userManagerInSharedPreferences = resources.getString(R.string.usermanager)
