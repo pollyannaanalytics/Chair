@@ -10,6 +10,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/loading_page_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
@@ -37,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/standard_margin"
             android:textSize="@dimen/detail_text_size"
-            android:text="我的屋裡有三把椅子， \n  一把方便獨處，兩把供促膝談心，三把為社交需求"
+            android:text="@string/loading_quote"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -47,7 +48,7 @@
             android:id="@+id/loading_hint_author"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint=" －－ 梭羅"
+            android:hint="@string/loading_author"
             app:layout_constraintEnd_toEndOf="@id/loading_hint"
             app:layout_constraintTop_toBottomOf="@id/loading_hint" />
 

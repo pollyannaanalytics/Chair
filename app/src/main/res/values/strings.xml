@@ -49,4 +49,6 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="loading_quote">我的屋裡有三把椅子， \n 一把方便獨處，兩把供促膝談心，三把為社交需求</string>
+    <string name="loading_author">－－ 梭羅</string>
 </resources>
