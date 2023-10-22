@@ -4,39 +4,27 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.content.res.ColorStateList
-import android.graphics.Color
-import android.graphics.drawable.RippleDrawable
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.RectShape
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
-import androidx.compose.ui.text.font.Typeface
-import androidx.core.animation.addListener
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.example.reclaim.R
-import com.example.reclaim.data.ReclaimDatabase
 import com.example.reclaim.data.UserManager
 import com.example.reclaim.data.UserProfile
+import com.example.reclaim.data.source.ChairRemoteDataSource
+import com.example.reclaim.data.source.ChairRepository
 import com.example.reclaim.databinding.FragmentHomeBinding
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.Direction
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.Date
-import java.util.Timer
-import kotlin.concurrent.schedule
-import kotlin.concurrent.timerTask
 
 
 /**
@@ -69,9 +57,8 @@ class HomeFragment : Fragment() {
     ): View? {
 
 // Inflate the layout for this fragment
-        val application = requireNotNull(this.activity).application
-        val databaseDao = ReclaimDatabase.getInstance(application).reclaimDao()
-        val homeFactory = HomeFactory(databaseDao)
+
+        val homeFactory = HomeFactory(ChairRepository(ChairRemoteDataSource()))
         viewModel = ViewModelProvider(this, homeFactory).get(HomeViewModel::class.java)
 
         val binding = FragmentHomeBinding.inflate(inflater)

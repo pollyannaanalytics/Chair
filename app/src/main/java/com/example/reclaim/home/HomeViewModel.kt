@@ -5,20 +5,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.reclaim.data.ChatRoom
-import com.example.reclaim.data.ReclaimDatabaseDao
 import com.example.reclaim.data.UserManager
 import com.example.reclaim.data.UserProfile
+import com.example.reclaim.data.source.ChairRepository
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.yuyakaido.android.cardstackview.Direction
 
 private const val TAG = "HOMEVIEWMODEL"
 
-class HomeViewModel(private val reclaimDatabaseDao: ReclaimDatabaseDao) : ViewModel() {
+class HomeViewModel(private val chairRepository: ChairRepository) : ViewModel() {
 
     private var _otherProfileList = MutableLiveData<MutableList<UserProfile>>()
     val otherProfileList: LiveData<MutableList<UserProfile>>
