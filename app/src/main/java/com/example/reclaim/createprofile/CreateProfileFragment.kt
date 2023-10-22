@@ -4,15 +4,12 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-
 import android.util.Log
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,12 +20,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.reclaim.R
 import com.example.reclaim.data.UserManager
+import com.example.reclaim.data.source.ChairRemoteDataSource
+import com.example.reclaim.data.source.ChairRepository
 import com.example.reclaim.databinding.FragmentCreateProfileBinding
-import com.google.firebase.firestore.auth.User
 
 
 /**
@@ -41,11 +40,9 @@ class CreateProfileFragment : Fragment() {
     val TAG = "CREATE_PROFILE_PAGE"
     var imageUri: Uri? = null
     lateinit var binding: FragmentCreateProfileBinding
+    lateinit var viewModel: CreateProfileViewModel
 
 
-    private val viewModel: CreateProfileViewModel by lazy {
-        ViewModelProvider(this).get(CreateProfileViewModel::class.java)
-    }
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreateView(
@@ -54,6 +51,12 @@ class CreateProfileFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentCreateProfileBinding.inflate(inflater)
+
+
+        val factory = CreateProfileFactory(ChairRepository(ChairRemoteDataSource()))
+
+        viewModel = ViewModelProvider(this, factory).get(CreateProfileViewModel::class.java)
+
         binding.viewModel = viewModel
         val userManagerInSharedPreferences = resources.getString(R.string.usermanager)
         val userManagerIdInSharePreferences = resources.getString(R.string.userid)
