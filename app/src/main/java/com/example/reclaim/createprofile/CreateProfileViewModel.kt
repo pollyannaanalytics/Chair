@@ -4,11 +4,14 @@ import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import com.example.reclaim.data.UserManager
+import com.example.reclaim.data.source.ChairRepository
 import com.google.firebase.storage.FirebaseStorage
 import java.util.UUID
 
 
-class CreateProfileViewModel: ViewModel() {
+class CreateProfileViewModel(
+    private val repository: ChairRepository
+): ViewModel() {
 private val TAG = "createprofile"
 
 
