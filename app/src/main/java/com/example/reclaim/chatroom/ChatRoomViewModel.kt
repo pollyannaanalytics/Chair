@@ -7,13 +7,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.reclaim.data.ChatRecord
-import com.example.reclaim.data.ChatRoom
 import com.example.reclaim.data.MessageType
 import com.example.reclaim.data.UserManager
 import com.example.reclaim.data.source.ChairRepository
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.TimeZone
@@ -22,12 +19,15 @@ const val TAG = "ChatRoomViewModel"
 
 class ChatRoomViewModel(
     private val chairRepository: ChairRepository,
-    private val navArgs: ChatRoomFragmentArgs
+    private val navArgs: ChatRoomFragmentArgs,
+    private val userName: String = UserManager.userName,
+    private val userImageUri: String = UserManager.userImage
 ) :
     ViewModel() {
     companion object {
         private const val TAG = "ChatRoomViewModel"
     }
+
 
     private val chatRoom = navArgs.chatRoom
     private val chatRoomKey = navArgs.chatRoom.key
@@ -64,10 +64,14 @@ class ChatRoomViewModel(
     }
 
 
-    private fun getAllRecordFromRoom(chatRoomKey: String) {
-        Log.i(TAG, "start to get data")
+    fun getAllRecordFromRoom(chatRoomKey: String) {
+//        Log.i(TAG, "start to get data")
 
         chairRepository.getAllRecordFromRoom(chatRoomKey) { query, room ->
+            if (!room.exists()){
+                return@getAllRecordFromRoom
+            }
+
             chatRoomDocumentID = room.id
 
             recordRegistraion = query.addSnapshotListener { snapshot, error ->
@@ -170,7 +174,7 @@ class ChatRoomViewModel(
                             .toString() != "0"
                     ) {
                         Log.i("updateread", "is not sent by me")
-                        clearUnreadTimes(room.id)
+                        clearUnreadCounts(room.id)
                     }
 
                     Log.i(TAG, "current record: $currentRecord")
@@ -184,13 +188,12 @@ class ChatRoomViewModel(
         }
     }
 
-
-    private fun clearUnreadTimes(documentID: String) {
-        chairRepository.clearUnreadTimes(documentID)
+    fun clearUnreadCounts(documentID: String) {
+        chairRepository.clearUnreadCounts(documentID)
 
     }
 
-    private fun updateSeenStatus(chatRoomID: String, documentID: String) {
+    fun updateSeenStatus(chatRoomID: String, documentID: String) {
         chairRepository.updateSeenStatus(chatRoomID, documentID)
 
     }
@@ -198,13 +201,13 @@ class ChatRoomViewModel(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun sendMessage(content: String, type: MessageType, meetingId: String = "") {
-        chairRepository.sendMessage(content, type, meetingId, chatRoom, chatRoomDocumentID)
+        chairRepository.sendMessage(content, type, meetingId, chatRoom, chatRoomDocumentID, userName, userImageUri)
     }
 
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun sendVideoCallMessage(meetingId: String) {
-        chairRepository.sendVideoCallMessage(meetingId, chatRoom, chatRoomDocumentID)
+        chairRepository.sendVideoCallMessage(meetingId, chatRoom, chatRoomDocumentID, userName, userImageUri)
 
     }
 
@@ -218,7 +221,7 @@ class ChatRoomViewModel(
     }
 
     fun stopUserJoinMeeting() {
-        recordRegistraion.remove()
+//        recordRegistraion.remove()
        chairRepository.stopUserJoinMeeting(chatRoomDocumentID, meetingID)
 
     }

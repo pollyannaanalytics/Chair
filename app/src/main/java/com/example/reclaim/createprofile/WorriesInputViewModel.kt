@@ -1,6 +1,5 @@
 package com.example.reclaim.createprofile
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,8 +10,8 @@ import com.example.reclaim.chatgpt.CompletionRequest
 import com.example.reclaim.chatgpt.CompletionResponse
 import com.example.reclaim.chatgpt.MessageToGPT
 import com.example.reclaim.data.UserManager
-
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.reclaim.data.WorriesType
+import com.example.reclaim.data.source.ChairRepository
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
@@ -21,28 +20,19 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import retrofit2.Response
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-private const val TAG = "WorriesViewModel"
 
+class WorriesInputViewModel(
+    private val chairRepository: ChairRepository
+) : ViewModel() {
 
-
-
-
-
-
-class WorriesInputViewModel: ViewModel() {
-
-    enum class WorriesType {
-        WORK,
-        RELATIONSHIP,
-        FAMILY,
-        FRIENDSHIP,
-        LIFE,
-        HEALTH,
-        SCHOOL
+    companion object {
+        private const val TAG = "WorriesViewModel"
+        private const val COMPLETION_MODEL = "text-davinci-003"
+        private const val MAX_TOKEN = 4000
+        private const val TYPING = "Typing..."
     }
 
     private var _showLottie = MutableLiveData<Boolean>()
@@ -51,8 +41,6 @@ class WorriesInputViewModel: ViewModel() {
     private val _messageList = MutableLiveData<MutableList<MessageToGPT>>()
     val messageList: LiveData<MutableList<MessageToGPT>>
         get() = _messageList
-
-
 
 
     private val type = WorriesType.values().map { it.toString() }
@@ -66,10 +54,11 @@ class WorriesInputViewModel: ViewModel() {
 
 
     }
-    private fun addToChatGPT(message: String, sentBy: String, timestamp: String) {
+
+    private fun addToChatGPT(message: String, sentBy: String, timeString: String) {
 
         val currentList = _messageList.value ?: mutableListOf()
-        currentList.add(MessageToGPT(message, sentBy, timestamp))
+        currentList.add(MessageToGPT(message, sentBy, timeString))
         _messageList.postValue(currentList)
 
         Log.i(TAG, "messageList is ${_messageList.value}")
@@ -83,12 +72,12 @@ class WorriesInputViewModel: ViewModel() {
     }
 
     private fun callApi(question: String) {
-        addToChatGPT("Typing...", MessageToGPT.SENT_BY_BOT, getCurrentTimestamp())
+        addToChatGPT(TYPING, MessageToGPT.SENT_BY_BOT, getCurrentTimestamp())
 
         val completionRequest = CompletionRequest(
-            model = "text-davinci-003",
+            model = COMPLETION_MODEL,
             prompt = question,
-            max_tokens = 4000
+            max_tokens = MAX_TOKEN
         )
 
         viewModelScope.launch {
@@ -123,11 +112,13 @@ class WorriesInputViewModel: ViewModel() {
             } else {
                 try {
                     val jObjError = JSONObject(response.errorBody()!!.string())
-                    Log.e(TAG, "GPT" +
+                    Log.e(
+                        TAG, "GPT" +
                                 jObjError.getJSONObject("error").getString("message")
                     )
                 } catch (e: Exception) {
-                    Log.e(TAG, "GPT" +
+                    Log.e(
+                        TAG, "GPT" +
                                 e.toString()
                     )
 
@@ -150,33 +141,9 @@ class WorriesInputViewModel: ViewModel() {
     }
 
 
-   fun uploadUserProfile() {
-       val profile = FirebaseFirestore.getInstance().collection("user_profile")
-
-       try {
-            val data = hashMapOf(
-                "user_id" to UserManager.userId,
-                "user_name" to UserManager.userName,
-                "gender" to UserManager.gender,
-                "worries_description" to UserManager.worriesDescription,
-                "worries_type" to UserManager.userType,
-                "images" to UserManager.userImage,
-                "user_age" to UserManager.age,
-                "self_description" to UserManager.selfDescription,
-                "profile_time" to Calendar.getInstance().timeInMillis
-            )
-            Log.i(TAG, "my profile is $data")
-
-            profile.add(data)
-                .addOnSuccessListener {
-                    _showLottie.value = true
-                    Log.i(TAG, "upload success")
-                }
-                .addOnFailureListener {
-                    Log.i(TAG, "upload failed")
-                }
-        }catch (e: Exception){
-            Log.e(TAG, "cannot upload: $e")
+    fun uploadUserProfile() {
+        chairRepository.uploadUserProfile {
+            _showLottie.value = true
         }
     }
 }

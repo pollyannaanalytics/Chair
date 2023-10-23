@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import com.example.reclaim.data.UserManager
 import com.example.reclaim.data.UserProfile
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.auth.User
 
 class LoadingViewModel: ViewModel() {
 
@@ -50,7 +49,8 @@ class LoadingViewModel: ViewModel() {
                             worriesDescription = worriesDescription,
                             worryType = worriesType,
                             age = age,
-                            selfDescription = selfDescription
+                            selfDescription = selfDescription,
+                            profileTime = 0L
 
                         )
 

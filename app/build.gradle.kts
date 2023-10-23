@@ -1,5 +1,4 @@
-import org.gradle.internal.impldep.org.junit.experimental.categories.Categories.CategoryFilter.exclude
-import java.util.regex.Pattern.compile
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -13,7 +12,13 @@ plugins {
 
 
 
+
+
 android {
+
+    kapt{
+        generateStubs = true
+    }
 
     packagingOptions {
         exclude("META-INF/LICENSE")
@@ -24,7 +29,11 @@ android {
     buildToolsVersion("33.0.1")
     namespace = "com.example.reclaim"
 
+
     defaultConfig {
+        val properties = Properties()
+        properties.load(rootProject.file("local.properties").inputStream())
+        buildConfigField("String", "OPEN_AI_KEY", "\"${properties.getProperty("OPEN_AI_KEY")}\"")
         applicationId = "com.example.reclaim"
         minSdkVersion(21)
         targetSdkVersion(33)
@@ -35,12 +44,21 @@ android {
     }
 
     buildTypes {
+
+
         getByName("release") {
+
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
+
+
+
+
     }
     buildFeatures.dataBinding = true
+    buildFeatures.viewBinding = true
+    buildFeatures.buildConfig = true
 
     packagingOptions {
         exclude("META-INF/LICENSE")
@@ -57,9 +75,12 @@ android {
     }
 }
 
+
 dependencies {
 
     implementation("com.google.android.ads:mediation-test-suite:3.0.0")
+    testImplementation("junit:junit:4.12")
+    testImplementation("junit:junit:4.12")
     val kotlinVersion = "1.8.20"
     val ktorVersion = "1.1.4"
 
@@ -76,6 +97,8 @@ dependencies {
 
     kapt("androidx.room:room-compiler:$room_version")
 
+    testImplementation ("junit:junit:4.13")
+
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     implementation("androidx.core:core-ktx:1.5.0")
@@ -86,6 +109,7 @@ dependencies {
 
     testImplementation("junit:junit:4.+")
 
+    testImplementation ("com.google.truth:truth:1.1.4")
     androidTestImplementation("androidx.test.ext:junit:1.1.2")
 
     androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
@@ -153,5 +177,23 @@ dependencies {
     implementation ("com.airbnb.android:lottie:6.1.0")
 
     implementation ("com.google.android.gms:play-services-auth:20.7.0")
+
+
+    // AndroidX Test - Instrumented testing
+    androidTestImplementation ("androidx.test.ext:junit:1.1.3")
+    androidTestImplementation ("androidx.test.espresso:espresso-core:3.3.0")
+//    androidTestImplementation("androidx.test:core:1.5.0")
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
+    implementation("androidx.arch.core:core-testing:2.1.0")
+
+    debugImplementation("androidx.fragment:fragment-testing:1.5.5")
+
+    // Optional -- Mockito framework
+    testImplementation ("org.mockito:mockito-core:5.6.0")
+    // Optional -- mockito-kotlin
+    testImplementation ("org.mockito.kotlin:mockito-kotlin:3.2.0")
+
+
 
 }

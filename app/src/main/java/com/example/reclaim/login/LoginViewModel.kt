@@ -44,7 +44,8 @@ class LoginViewModel : ViewModel() {
                             worriesDescription = worriesDescription,
                             worryType = worriesType,
                             age = age,
-                            selfDescription = selfDescription
+                            selfDescription = selfDescription,
+                            profileTime = 0L
                         )
                         _userProfile.value = userProfile
                         _canFindProfile.value = true
