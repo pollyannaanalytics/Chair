@@ -10,6 +10,7 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.storage.FirebaseStorage
 import java.util.Calendar
 import java.util.UUID
@@ -42,6 +43,9 @@ class ChairRemoteDataSource {
         const val USER_B_NAME = "user_b_name"
         const val MEETING_OVER_HINT = "通話已結束"
         const val USER_PROFILE_COLLECTION = "user_profile"
+        const val WORRIES_TYPE = "worryType"
+        const val USER_ID = "userId"
+        const val PROFILE_TIME = "profileTime"
 
 
     }
@@ -222,19 +226,7 @@ class ChairRemoteDataSource {
                 selfDescription = UserManager.selfDescription,
                 profileTime = Calendar.getInstance().timeInMillis
             )
-
-            val data = hashMapOf(
-                "user_id" to UserManager.userId,
-                "user_name" to UserManager.userName,
-                "gender" to UserManager.gender,
-                "worries_description" to UserManager.worriesDescription,
-                "worries_type" to UserManager.userType,
-                "images" to UserManager.userImage,
-                "user_age" to UserManager.age,
-                "self_description" to UserManager.selfDescription,
-                "profile_time" to Calendar.getInstance().timeInMillis
-            )
-            Log.i(TAG, "my profile is $data")
+            
 
             profile.add(newProfile)
                 .addOnSuccessListener {
@@ -247,6 +239,124 @@ class ChairRemoteDataSource {
         } catch (e: Exception) {
             Log.e(TAG, "cannot upload: $e")
         }
+    }
+
+
+    fun loadOtherProfile(currentFriends: List<String>, userType: String, noFriendCallback: (Boolean) -> Boolean, otherProfileCallback: (List<UserProfile>)-> List<UserProfile>){
+        if (currentFriends.isNotEmpty()){
+            val otherResultDocument = db.collection(USER_PROFILE_COLLECTION)
+                .whereEqualTo(WORRIES_TYPE, userType)
+                .whereNotIn(USER_ID, currentFriends)
+                .orderBy(USER_ID, Query.Direction.ASCENDING)
+                .orderBy(PROFILE_TIME, Query.Direction.DESCENDING)
+
+            otherResultDocument.get().addOnSuccessListener {
+                    querySnapshots ->
+                if (querySnapshots == null){
+                    return@addOnSuccessListener
+                }
+
+                if (querySnapshots.isEmpty){
+                    loadAllProfile(currentFriends, noFriendCallback, otherProfileCallback)
+                    return@addOnSuccessListener
+                }
+                val currentList = emptyList<UserProfile>().toMutableList()
+
+                for (querySnapshot in querySnapshots){
+                    querySnapshot.reference.get().addOnSuccessListener { document ->
+                        if (document == null){
+                            noFriendCallback(true)
+                            return@addOnSuccessListener
+                        }
+
+                        val newUserProfile = document.toObject(UserProfile::class.java)
+
+
+                        currentList.add(newUserProfile.let { it!! })
+
+
+
+                    }
+                }
+
+
+
+            }
+        }else{
+
+            val otherResultDocument = db.collection(USER_PROFILE_COLLECTION).whereNotEqualTo(
+                WORRIES_TYPE, UserManager.userType)
+                .orderBy(USER_ID, Query.Direction.DESCENDING)
+                .orderBy(PROFILE_TIME, Query.Direction.DESCENDING)
+
+            otherResultDocument.get().addOnSuccessListener { querySnapshots ->
+                if (querySnapshots.isEmpty){
+                    loadAllProfile(currentFriends, noFriendCallback, otherProfileCallback)
+                    return@addOnSuccessListener
+                }
+
+                val currentList = emptyList<UserProfile>().toMutableList()
+
+                for (querySnapshot in querySnapshots){
+                    val newUserProfile = querySnapshot.toObject<UserProfile>()
+
+                    currentList.add(newUserProfile.let { it!! })
+                }
+                otherProfileCallback(currentList)
+
+            }
+        }
+
+    }
+
+
+    private fun loadAllProfile(currentFriends: List<String>, noFriendCallback: (Boolean) -> Boolean, otherProfileList: (List<UserProfile>)-> List<UserProfile>){
+        var otherProfileResult: Query? = null
+
+        if (currentFriends.isNotEmpty()){
+            otherProfileResult = db.collection(USER_PROFILE_COLLECTION).whereNotIn(USER_ID, currentFriends)
+                .orderBy(USER_ID, Query.Direction.DESCENDING)
+                .orderBy(PROFILE_TIME, Query.Direction.DESCENDING)
+
+            otherProfileResult.get().addOnSuccessListener { querySnapshots ->
+                val currentList = emptyList<UserProfile>().toMutableList()
+
+                if (querySnapshots == null || querySnapshots.isEmpty){
+                    noFriendCallback(true)
+                    return@addOnSuccessListener
+                }
+                for (querySnapshot in querySnapshots){
+                    querySnapshot.reference.get().addOnSuccessListener { documentSnapshot ->
+
+                        val userProfile = documentSnapshot.toObject<UserProfile>()
+                        currentList.add(userProfile.let { it!! })
+                    }
+                    otherProfileList(currentList)
+                }
+
+
+            }
+        }else{
+            otherProfileResult = db.collection(USER_PROFILE_COLLECTION).whereEqualTo(USER_ID, UserManager.userId).orderBy(UserManager.userId, Query.Direction.DESCENDING)
+            otherProfileResult.get().addOnSuccessListener { querySnapshots ->
+                if (querySnapshots == null || querySnapshots.isEmpty){
+                    return@addOnSuccessListener
+                }
+                val currentList = emptyList<UserProfile>().toMutableList()
+                for (snapshot in querySnapshots){
+                    val userProfile = snapshot.toObject<UserProfile>()
+                    currentList.add(userProfile)
+                }
+                otherProfileList(currentList)
+
+
+            }
+        }
+    }
+
+
+    fun loadWhoLikeMe(userID: String){
+
     }
 
 
