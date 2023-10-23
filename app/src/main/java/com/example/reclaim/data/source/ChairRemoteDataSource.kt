@@ -215,20 +215,20 @@ class ChairRemoteDataSource {
         val profile = FirebaseFirestore.getInstance().collection(USER_PROFILE_COLLECTION)
 
         try {
-            val newProfile = UserProfile(
-                userId = UserManager.userId,
-                userName = UserManager.userName,
-                gender = UserManager.gender,
-                worriesDescription = UserManager.worriesDescription,
-                worryType = UserManager.userType,
-                imageUri = UserManager.userImage,
-                age = UserManager.age,
-                selfDescription = UserManager.selfDescription,
-                profileTime = Calendar.getInstance().timeInMillis
+            val data = hashMapOf(
+                "user_id" to UserManager.userId,
+                "user_name" to UserManager.userName,
+                "gender" to UserManager.gender,
+                "worries_description" to UserManager.worriesDescription,
+                "worries_type" to UserManager.userType,
+                "images" to UserManager.userImage,
+                "user_age" to UserManager.age,
+                "self_description" to UserManager.selfDescription,
+                "profile_time" to Calendar.getInstance().timeInMillis
             )
             
 
-            profile.add(newProfile)
+            profile.add(data)
                 .addOnSuccessListener {
                     callback(it)
                     Log.i(TAG, "upload success")
