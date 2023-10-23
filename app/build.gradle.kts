@@ -1,4 +1,3 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import java.util.Properties
 
 plugins {
@@ -11,7 +10,7 @@ plugins {
     id("com.google.gms.google-services")
 }
 
-val key: String = gradleLocalProperties(rootDir).getProperty("OPEN_AI_KEY")
+
 
 
 
@@ -110,6 +109,7 @@ dependencies {
 
     testImplementation("junit:junit:4.+")
 
+    testImplementation ("com.google.truth:truth:1.1.4")
     androidTestImplementation("androidx.test.ext:junit:1.1.2")
 
     androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")

@@ -73,7 +73,7 @@ class ChatRoomViewModelTest {
 
 
     @Test
-    fun getAllRecordFromRoom() {
+    fun getAllRecordFromChatRoom() {
         val fakeChatRoomKey = "chatRoomKey1"
 
         val fakeQuery = mock<Query>()
@@ -110,6 +110,42 @@ class ChatRoomViewModelTest {
 
 
     @Test
+    fun throwExceptionAllRecordFromChatRoom(){
+        val fakeChatRoomKey = "chatRoomKey11223"
+
+        val fakeQuery = mock<Query>()
+        val fakeDocumentSnapshot = mock<DocumentSnapshot>()
+
+
+
+        Mockito.`when`(chairRepository.getAllRecordFromRoom(eq(fakeChatRoomKey), anyOrNull()))
+            .thenAnswer {
+
+
+                val callback = it.arguments[1] as (Query, DocumentSnapshot) -> Unit
+                fakeDocumentID = if (fakeDocumentSnapshot.id != null) {
+                    fakeDocumentSnapshot.id
+                } else {
+                    ""
+                }
+
+                callback(fakeQuery, fakeDocumentSnapshot)
+            }
+
+
+
+        chatRoomViewModel.getAllRecordFromRoom(fakeChatRoomKey)
+
+        val recordObserver = Observer<MutableList<ChatRecord>> { recordList ->
+            assert(recordList.isEmpty())
+
+        }
+
+        chatRoomViewModel.recordWithFriend.observeForever(recordObserver)
+    }
+
+
+    @Test
     fun testClearUnreadCounts() {
 
 
@@ -120,10 +156,11 @@ class ChatRoomViewModelTest {
     }
 
 
+
+
     @Test
     fun testUpdateSeenStatus() {
         val fakeChatRoomID = fakeChatRoom.id
-
 
         chatRoomViewModel.updateSeenStatus(fakeChatRoomID, fakeDocumentID)
 
