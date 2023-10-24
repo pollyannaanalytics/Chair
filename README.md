@@ -2,10 +2,10 @@
 
 This is Pin-Yun's Personal Project at AppWorks School
 
-
-## Description
-Chair is a social app that uses AI to categorize users based on their worries. Additionally, the app offers a user-friendly experience through both text messaging and video calls.
 ![slash page](https://github.com/pollyannaanalytics/Chair/assets/114213570/345e4d9f-8274-40d4-ae52-82fd4b5cb0dd)
+## Description
+
+Chair is a social app that uses AI to categorize users based on their worries. Additionally, the app offers a user-friendly experience through both text messaging and video calls.
 
 You can also click this link to know more about Chair: https://drive.google.com/file/d/1RsuhBaxc3czIczBo1PxuITLlINtlcSel/view?usp=sharing
 
