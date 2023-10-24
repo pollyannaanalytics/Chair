@@ -29,6 +29,8 @@ You can also click this link to know more about Chair: https://drive.google.com/
 
 * User can log-in with Goolge Account
 * The app matches users based on the concerns they input with openAI.
+
+
 ![image](https://github.com/pollyannaanalytics/Chair/assets/114213570/921ed79f-3f0b-4acf-b5a3-648d5046101b)
 
 
