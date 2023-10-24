@@ -2,7 +2,8 @@
 
 This is Pin-Yun's Personal Project at AppWorks School
 
-![slash page](https://github.com/pollyannaanalytics/Chair/assets/114213570/345e4d9f-8274-40d4-ae52-82fd4b5cb0dd)
+![image](https://github.com/pollyannaanalytics/Chair/assets/114213570/7d1bc578-503e-4629-b1b3-7b7e694bcd5c)
+
 ## Description
 
 Chair is a social app that uses AI to categorize users based on their worries. Additionally, the app offers a user-friendly experience through both text messaging and video calls.
@@ -23,15 +24,16 @@ You can also click this link to know more about Chair: https://drive.google.com/
 ## Feature
 * This App Provides One-on-One Video Call by WebRTC
 
-![image](https://github.com/pollyannaanalytics/Chair/assets/114213570/3e0c99fd-e970-44a3-83a9-2c52f39401a6)
-![image](https://github.com/pollyannaanalytics/Chair/assets/114213570/3a6e3bae-397a-4ef4-81a1-1a4745538d16)
+![image](https://github.com/pollyannaanalytics/Chair/assets/114213570/4fc49fc3-9e99-4e1e-b489-f6a8b4fc723e)
+![image](https://github.com/pollyannaanalytics/Chair/assets/114213570/ea161653-e6c8-460d-a553-88c9e00f9b7e)
+
 
 
 * User can log-in with Goolge Account
 * The app matches users based on the concerns they input with openAI.
 
+![image](https://github.com/pollyannaanalytics/Chair/assets/114213570/3d01c1de-ee0d-4898-b076-017e1728037e)
 
-![image](https://github.com/pollyannaanalytics/Chair/assets/114213570/921ed79f-3f0b-4acf-b5a3-648d5046101b)
 
 
 ## Installation
