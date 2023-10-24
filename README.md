@@ -21,7 +21,7 @@ You can also click this link to know more about Chair: https://drive.google.com/
 
 ## Feature
 * This App Provides One-on-One Video Call by WebRTC
-![WebRTC](https://hackmd.io/_uploads/H1okL-BzT.png)
+![image](https://github.com/pollyannaanalytics/Chair/assets/114213570/3a6e3bae-397a-4ef4-81a1-1a4745538d16)
 
     ![WebRTC](https://hackmd.io/_uploads/S1w-Q-SMT.png)
 * User can log-in with Goolge Account
