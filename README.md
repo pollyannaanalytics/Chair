@@ -5,7 +5,7 @@ This is Pin-Yun's Personal Project at AppWorks School
 
 ## Description
 Chair is a social app that uses AI to categorize users based on their worries. Additionally, the app offers a user-friendly experience through both text messaging and video calls.
-![](https://hackmd.io/_uploads/BJ8qfWrzT.png)
+![Slash page](https://hackmd.io/_uploads/BJ8qfWrzT.png)
 You can also click this link to know more about Chair: https://drive.google.com/file/d/1RsuhBaxc3czIczBo1PxuITLlINtlcSel/view?usp=sharing
 
 
@@ -21,12 +21,12 @@ You can also click this link to know more about Chair: https://drive.google.com/
 
 ## Feature
 * This App Provides One-on-One Video Call by WebRTC
-![](https://hackmd.io/_uploads/H1okL-BzT.png)
+![WebRTC](https://hackmd.io/_uploads/H1okL-BzT.png)
 
-    ![](https://hackmd.io/_uploads/S1w-Q-SMT.png)
+    ![WebRTC](https://hackmd.io/_uploads/S1w-Q-SMT.png)
 * User can log-in with Goolge Account
 * The app matches users based on the concerns they input with openAI.
-![](https://hackmd.io/_uploads/ryp0fbBG6.png)
+![Home Page](https://hackmd.io/_uploads/ryp0fbBG6.png)
 
 ## Installation
 
