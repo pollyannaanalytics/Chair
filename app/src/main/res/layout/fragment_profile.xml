@@ -239,7 +239,7 @@
                     android:layout_marginTop="@dimen/standard_margin"
                     android:text="關於我的煩惱"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/info_icon"
                     app:layout_constraintStart_toStartOf="parent"
 
                     app:layout_constraintTop_toTopOf="parent" />
