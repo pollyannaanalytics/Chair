@@ -1,14 +1,11 @@
 # Chair -- Android Social App
 
-This is Pin-Yun's Personal Project at AppWorks School
-
-![image](https://github.com/pollyannaanalytics/Chair/assets/114213570/7d1bc578-503e-4629-b1b3-7b7e694bcd5c)
-
 ## Description
+This is Pin-Yun's Project at AppWorks School.
+Chair is an Android application born out of a background in social work and sociology. I believe that true friendship is about connecting with people who truly understand your concerns and struggles. With this in mind, I developed an innovative solution that leverages OpenAI's capabilities to help users find like-minded individuals who share their challenges. FriendConnect offers video chat functionality to facilitate these meaningful connections.
 
-Chair is a social app that uses AI to categorize users based on their worries. Additionally, the app offers a user-friendly experience through both text messaging and video calls.
 
-You can also click this link to know more about Chair: https://drive.google.com/file/d/1RsuhBaxc3czIczBo1PxuITLlINtlcSel/view?usp=sharing
+<img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/08db57e1-8db4-4b01-bf61-08028880a031" width="240" height="520">
 
 
 ## Skills
@@ -22,20 +19,27 @@ You can also click this link to know more about Chair: https://drive.google.com/
 
 
 ## Feature
-* This App Provides One-on-One Video Call by WebRTC
+**WebRTC**
 
-<img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/3ecbfabb-4ce1-415b-ab7a-2caefbe47839" width="400" height="800"/>
-![image](https://github.com/pollyannaanalytics/Chair/assets/114213570/ea161653-e6c8-460d-a553-88c9e00f9b7e)
+| Description | Image |
+|-------------|-------|
+| Click the top-left icon to launch a video call meeting | <img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/8d68ca19-58ef-48e4-9fde-4689663b8fbb" width="240" height="520"> |
+| When another user clicks the "Join Meeting" button, they can see each other via WebRTC | <img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/91abfa88-7c6c-47e7-876b-3617f1f397fc" width="240" height="520"> |
+
+**Google Login**
+
+| Description | Image |
+|-------------|-------|
+| Users can log in using their Google Account | <img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/d70a7c29-3158-4089-94ec-cb70ade43182" width="240" height="520"> |
 
 
+**AI-Based Matching**
 
-
-* User can log-in with Goolge Account
-* The app matches users based on the concerns they input with openAI.
-
-![image](https://github.com/pollyannaanalytics/Chair/assets/114213570/3d01c1de-ee0d-4898-b076-017e1728037e)
-
-
+| Description | Image |
+|-------------|-------|
+| After users create their profile information, Chair uses AI to categorize the concerns they input, prioritizing recommendations for users with similar worries through OpenAI | <img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/4dd6e1b3-1427-4638-a810-e47c6be8a0ff"  width="240" height="520"> |
+| Users can express their interest in other users by swiping left or right. If both individuals express mutual interest, they will be matched together | <img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/7a7fbd86-48e8-4caa-8690-27cc8dcb2f58"  width="240" height="520"> |
+| If users are matched together, a match page with canned responses is shown, allowing users to send messages to each other | <img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/92fbfa61-d345-42a3-a140-eced5da47e31" width="240" height="520"> |
 
 ## Installation
 
