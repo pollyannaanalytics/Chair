@@ -43,6 +43,8 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+
+
     buildTypes {
 
 
@@ -50,6 +52,7 @@ android {
 
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("debug")
         }
 
 
@@ -77,6 +80,14 @@ android {
 
 
 dependencies {
+
+    configurations{
+        all {
+            exclude(module = "commons-logging")
+            exclude(module = "httpclient")
+        }
+    }
+
 
     implementation("com.google.android.ads:mediation-test-suite:3.0.0")
     testImplementation("junit:junit:4.12")

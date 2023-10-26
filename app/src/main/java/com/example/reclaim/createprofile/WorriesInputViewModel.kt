@@ -31,7 +31,7 @@ class WorriesInputViewModel(
     companion object {
         private const val TAG = "WorriesViewModel"
         private const val COMPLETION_MODEL = "text-davinci-003"
-        private const val MAX_TOKEN = 8000
+        private const val MAX_TOKEN = 1000
         private const val TYPING = "Typing..."
     }
 
