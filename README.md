@@ -93,8 +93,13 @@ https://platform.openai.com/docs/api-reference/authentication
 4. create a variable named as OPEN_AI_KEY in local.properties
 
 
-## Contacts
+## Contacts 
+![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)
+![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)
+![Medium](https://img.shields.io/badge/Medium-12100E?style=for-the-badge&logo=medium&logoColor=white)
+
 For any comments or suggestions, please contact me:
+
 * Gmail: pinyunwuu@gmail.com
 * linkedin: https://www.linkedin.com/in/pin-yun-wu-1aab06231/
 * Medium: https://medium.com/@androidpollyanna
