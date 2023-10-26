@@ -24,7 +24,7 @@ You can also click this link to know more about Chair: https://drive.google.com/
 ## Feature
 * This App Provides One-on-One Video Call by WebRTC
 
-<img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/3ecbfabb-4ce1-415b-ab7a-2caefbe47839" width="800" height="400"/>
+<img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/3ecbfabb-4ce1-415b-ab7a-2caefbe47839" width="400" height="800"/>
 ![image](https://github.com/pollyannaanalytics/Chair/assets/114213570/ea161653-e6c8-460d-a553-88c9e00f9b7e)
 
 
