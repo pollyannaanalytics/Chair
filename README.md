@@ -1,15 +1,29 @@
-# Chair -- Android Social App
+
+# Chair - Dating Android App
+
 ![Android Studio](https://img.shields.io/badge/Android%20Studio-3DDC84.svg?style=for-the-badge&logo=android-studio&logoColor=white)
 ![Kotlin](https://img.shields.io/badge/kotlin-%237F52FF.svg?style=for-the-badge&logo=kotlin&logoColor=white)
 ![ChatGPT](https://img.shields.io/badge/chatGPT-74aa9c?style=for-the-badge&logo=openai&logoColor=white)
 
+<h1 align = "center">
+    <img src = "https://github.com/pollyannaanalytics/Chair/assets/114213570/c9369859-f7e0-471b-a71e-7ad93b19de33">
+</h1>
 
 
-## Description
-This is Pin-Yun's project at AppWorks School -- Chair, an Android application born out of a background in social work and sociology. I believe that true friendship is about connecting with people who truly understand your concerns and struggles. With this in mind, I have developed an innovative solution that leverages OpenAI's capabilities to help users find like-minded individuals who share their challenges. FriendConnect offers video chat functionality to facilitate these meaningful connections.
+
+Chair is an unconventional dating app designed to connect people who share common worries.
+True friendship is about connecting with people who truly understand your concerns and struggles. With this in mind, I have developed an innovative solution that leverages OpenAI's capabilities to help users find like-minded individuals who share their challenges. FriendConnect offers video chat functionality to facilitate these meaningful connections.
+
 
 
 <img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/08db57e1-8db4-4b01-bf61-08028880a031" width="240" height="520">
+
+
+## Table of Contents
+1. Skills
+2. Feature
+3. Installation
+4. Contacts
 
 
 ## Skills
@@ -24,57 +38,26 @@ This is Pin-Yun's project at AppWorks School -- Chair, an Android application bo
 
 ## Feature
 **WebRTC**
-* Used Firebase Cloud Firestore for signalling in WebRTC
-<body>
-    <table>
-        <tr>
-            <th>Description</th>
-            <th>Image</th>
-        </tr>
-        <tr>
-            <td>Click the top-left icon to launch a video call</td>
-            <td><img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/8d68ca19-58ef-48e4-9fde-4689663b8fbb" width="240" height="520"></td>
-        </tr>
-        <tr>
-            <td>Users can see each other via WebRTC</td>
-            <td><img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/91abfa88-7c6c-47e7-876b-3617f1f397fc" width="240" height="520"></td>
-        </tr>
-    </table>
-</body>
 
-**Google Login**
-<body>
-    <table>
-        <tr>
-            <th>Description</th>
-            <th>Image</th>
-        </tr>
-        <tr>
-            <td>Users can log in using their Google Account</td>
-            <td><img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/d70a7c29-3158-4089-94ec-cb70ade43182" width="240" height="520"></td>
-        </tr>
-    </table>
-</body>
+* I used WebRTC to enable direct real-time communication. without backend server support, I utilized Firebase as a signaling server due to its real-time database capabilities to facilitate this peer-to-peer communication.
+* After calling createOffer(), I set the local description as an Offerer to the peerConnection. Then, I stored the SDP offer, including the local description, in a document within a Firebase collection.
+* When another user joins the meeting as an Answerer, they retrieve their local description as an SDP answer from Firebase and send the SDP answer back to Firebase. 
+* Upon receiving the SDP answer and offer, the Offerer and Answerer exchange ICE candidates through Firebase to establish the optimal connection.
+
+![](https://hackmd.io/_uploads/ByFw1NFzp.jpg)
 
 
-**AI-Based Matching**
-* After users create their profile information, Chair uses AI to categorize the concerns they input, prioritizing recommendations for users with similar worries through OpenAI
-<body>
-    <table>
-        <tr>
-            <th>Description</th>
-            <th>Image</th>
-        </tr>
-        <tr>
-            <td>Users can express their interest in other users by swiping</td>
-            <td><img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/7a7fbd86-48e8-4caa-8690-27cc8dcb2f58" width="240" height="520"></td>
-        </tr>
-        <tr>
-            <td>A match page with canned responses which allows users to text</td>
-            <td><img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/92fbfa61-d345-42a3-a140-eced5da47e31" width="240" height="520"></td>
-        </tr>
-    </table>
-</body>
+
+
+**3rd Solutions**
+
+**1. Google Login**: 
+* With Google SDK, users can log in using their Google Account.
+<img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/d70a7c29-3158-4089-94ec-cb70ade43182" width="240" height="520">
+
+**2. Open AI**: 
+* After users create their profile information, Chair uses AI to categorize the concerns they input, prioritizing recommendations for users with similar worries through OpenAI.
+<img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/7a7fbd86-48e8-4caa-8690-27cc8dcb2f58" width="240" height="520">
 
 
 ## Installation
@@ -85,7 +68,7 @@ This is Pin-Yun's project at AppWorks School -- Chair, an Android application bo
 git clone https://github.com/pollyannaanalytics/Chair.git
 ```
 
-#### Enviroment Variable Setting
+#### How to Set Up Enviroment Variable
 You need to set up files before building up Chair as following:
 1. create a google.service from firebase: https://console.firebase.google.com/u/0/
 2. get openAI key from openAI reference: 
