@@ -15,5 +15,3 @@
 
 rootProject.name = "Reclaim"
 include(":app")
-include(":speechtotext")
-include(":cloudspeechtotext")
