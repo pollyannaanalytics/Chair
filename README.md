@@ -19,17 +19,12 @@ True friendship is about connecting with people who truly understand your concer
 <img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/08db57e1-8db4-4b01-bf61-08028880a031" width="240" height="520">
 
 
-## Table of Contents
-1. Skills
-2. Feature
-3. Installation
-4. Contacts
-
-
 ## Skills
 * WebRTC
 * Firebase
 * MVVM
+* Singleton
+* SharedPreferences
 * Unit test
 * Apply third parties services
     * Google Login
@@ -44,18 +39,22 @@ True friendship is about connecting with people who truly understand your concer
 * When another user joins the meeting as an Answerer, they retrieve their local description as an SDP answer from Firebase and send the SDP answer back to Firebase. 
 * Upon receiving the SDP answer and offer, the Offerer and Answerer exchange ICE candidates through Firebase to establish the optimal connection.
 
-![](https://hackmd.io/_uploads/ByFw1NFzp.jpg)
+![WebRTC Data Structure](https://github.com/pollyannaanalytics/Chair/assets/114213570/d827b8e7-1511-4814-8bf3-691e58b415c9)
 
 
 
 
 **3rd Solutions**
 
-**1. Google Login**: 
+1. Google Login:
 * With Google SDK, users can log in using their Google Account.
+* After Login successfully, Chair will save userID in SharePreference.
+* Chair will get user data from firebase, and save data in SharedPreferences.
 <img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/d70a7c29-3158-4089-94ec-cb70ade43182" width="240" height="520">
 
-**2. Open AI**: 
+
+
+2. Open AI:
 * After users create their profile information, Chair uses AI to categorize the concerns they input, prioritizing recommendations for users with similar worries through OpenAI.
 <img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/7a7fbd86-48e8-4caa-8690-27cc8dcb2f58" width="240" height="520">
 
