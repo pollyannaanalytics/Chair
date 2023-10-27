@@ -13,5 +13,5 @@
 //    }
 //}
 
-rootProject.name = "Reclaim"
+rootProject.name = "Chair"
 include(":app")
