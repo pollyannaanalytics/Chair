@@ -66,11 +66,11 @@ This is Pin-Yun's project at AppWorks School -- Chair, an Android application bo
             <th>Image</th>
         </tr>
         <tr>
-            <td>Users can express their interest in other users by swiping left or right</td>
+            <td>Users can express their interest in other users by swiping</td>
             <td><img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/7a7fbd86-48e8-4caa-8690-27cc8dcb2f58" width="240" height="520"></td>
         </tr>
         <tr>
-            <td>A match page with canned responses which allows users to send messages to each other</td>
+            <td>A match page with canned responses which allows users to text</td>
             <td><img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/92fbfa61-d345-42a3-a140-eced5da47e31" width="240" height="520"></td>
         </tr>
     </table>
