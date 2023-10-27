@@ -98,9 +98,10 @@ https://platform.openai.com/docs/api-reference/authentication
 ![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)
 ![Medium](https://img.shields.io/badge/Medium-12100E?style=for-the-badge&logo=medium&logoColor=white)
 
-For any comments or suggestions, please contact me:
+For any comments or suggestions, please feel free to reach out to me via the following channels:
 
 * Gmail: pinyunwuu@gmail.com
 * linkedin: https://www.linkedin.com/in/pin-yun-wu-1aab06231/
 * Medium: https://medium.com/@androidpollyanna
+
 
