@@ -32,11 +32,11 @@ This is Pin-Yun's project at AppWorks School -- Chair, an Android application bo
             <th>Image</th>
         </tr>
         <tr>
-            <td>Click the top-left icon to launch a video call meeting</td>
+            <td>Click the top-left icon to launch a video call</td>
             <td><img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/8d68ca19-58ef-48e4-9fde-4689663b8fbb" width="240" height="520"></td>
         </tr>
         <tr>
-            <td>When another user clicks the "Join Meeting" button, they can see each other via WebRTC</td>
+            <td>Users can see each other via WebRTC</td>
             <td><img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/91abfa88-7c6c-47e7-876b-3617f1f397fc" width="240" height="520"></td>
         </tr>
     </table>
