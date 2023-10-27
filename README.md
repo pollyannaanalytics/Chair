@@ -9,10 +9,12 @@
     <img src = "https://github.com/pollyannaanalytics/Chair/assets/114213570/c9369859-f7e0-471b-a71e-7ad93b19de33">
 </h1>
 
-
-
 Chair is an unconventional dating app designed to connect people who share common worries.
-True friendship is about connecting with people who truly understand your concerns and struggles. With this in mind, I have developed an innovative solution that leverages OpenAI's capabilities to help users find like-minded individuals who share their challenges. FriendConnect offers video chat functionality to facilitate these meaningful connections.
+
+When users enter Chair, they can input their worries, and we'll use OpenAI to categorize and prioritize matching them with people who share similar worries. In FriendConnect's chat rooms, users can use video functionality in addition to text messages, fostering deeper and more authentic connections.
+
+This makes it easier for people to find others who understand their concerns and, in turn, build more meaningful friendships.
+
 
 
 
@@ -28,34 +30,34 @@ True friendship is about connecting with people who truly understand your concer
 * Unit test
 * Apply third parties services
     * Google Login
-    * openAI
+    * OpenAI
 
 
 ## Feature
 **WebRTC**
 
-* I used WebRTC to enable direct real-time communication. without backend server support, I utilized Firebase as a signaling server due to its real-time database capabilities to facilitate this peer-to-peer communication.
-* After calling createOffer(), I set the local description as an Offerer to the peerConnection. Then, I stored the SDP offer, including the local description, in a document within a Firebase collection.
+* I used WebRTC to enable direct real-time communication. without backend server support for signalling server, I utilized Firebase as a signaling server due to its real-time database capabilities to facilitate this peer-to-peer communication.
+* At the beginning of meeting, I set the local description as an Offerer to the peerConnection. Then, I stored the SDP offer, including the local description, in a document within a Firebase collection.
 * When another user joins the meeting as an Answerer, they retrieve their local description as an SDP answer from Firebase and send the SDP answer back to Firebase. 
 * Upon receiving the SDP answer and offer, the Offerer and Answerer exchange ICE candidates through Firebase to establish the optimal connection.
 
-![WebRTC Data Structure](https://github.com/pollyannaanalytics/Chair/assets/114213570/d827b8e7-1511-4814-8bf3-691e58b415c9)
+![WebRTC Structure](https://github.com/pollyannaanalytics/Chair/assets/114213570/b2f2d576-cfa2-4d56-8b26-c1ea49e6f4eb)
 
 
 
 
-**3rd Solutions**
+**3rd Party Solutions**
 
 1. Google Login:
-* With Google SDK, users can log in using their Google Account.
-* After Login successfully, Chair will save userID in SharePreference.
-* Chair will get user data from firebase, and save data in SharedPreferences.
+
 <img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/d70a7c29-3158-4089-94ec-cb70ade43182" width="240" height="520">
 
 
 
-2. Open AI:
-* After users create their profile information, Chair uses AI to categorize the concerns they input, prioritizing recommendations for users with similar worries through OpenAI.
+
+2. OpenAI:
+* Matching users together and categorizing their worries through OpenAI.
+
 <img src="https://github.com/pollyannaanalytics/Chair/assets/114213570/7a7fbd86-48e8-4caa-8690-27cc8dcb2f58" width="240" height="520">
 
 
