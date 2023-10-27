@@ -173,6 +173,7 @@
 
                         <RadioButton
                             android:id="@+id/male"
+                            android:buttonTint="@color/bgPrimary"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/shadow"
@@ -180,6 +181,7 @@
 
                         <RadioButton
                             android:id="@+id/female"
+                            android:buttonTint="@color/bgPrimary"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/shadow"
@@ -190,6 +192,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/shadow"
+                            android:buttonTint="@color/bgPrimary"
                             android:text="非二元性別" />
 
                     </RadioGroup>
