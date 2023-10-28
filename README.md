@@ -42,7 +42,7 @@ When users enter Chair, they can input their worries, and I'll use OpenAI to cat
 ![WebRTC Structure](https://github.com/pollyannaanalytics/Chair/assets/114213570/b2f2d576-cfa2-4d56-8b26-c1ea49e6f4eb)
 
 1. At the beginning of meeting, I set the local description as an Offerer to the peerConnection. Then, I stored the SDP offer, including the local description, in a document within a Firebase collection.
-2. When another user joins the meeting as an Answerer, he/she retrieve local description as an SDP answer from Firebase and send the SDP answer back to Firebase. 
+2. When another user joins the meeting as an Answerer, he/she retrieves local description as an SDP answer from Firebase and send the SDP answer back to Firebase. 
 3. Upon receiving the SDP answer and offer, the Offerer and Answerer exchange ICE candidates through Firebase to establish the optimal connection.
 
 
