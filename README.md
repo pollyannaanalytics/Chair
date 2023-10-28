@@ -11,9 +11,8 @@
 
 Chair is an unconventional dating app designed to connect people who share common worries.
 
-When users enter Chair, they can input their worries, and we'll use OpenAI to categorize and prioritize matching them with people who share similar worries. In FriendConnect's chat rooms, users can use video functionality in addition to text messages, fostering deeper and more authentic connections.
+When users enter Chair, they can input their worries, and I'll use OpenAI to categorize and matching them with people who share similar worries. Via FriendConnect's chat rooms, users can build a more deepen and authentic connections via video calls and text messages in chat rooms.
 
-This makes it easier for people to find others who understand their concerns and, in turn, build more meaningful friendships.
 
 
 
@@ -36,14 +35,15 @@ This makes it easier for people to find others who understand their concerns and
 ## Feature
 **WebRTC**
 
-* I used WebRTC to enable direct real-time communication. without backend server support for signalling server, I utilized Firebase as a signaling server due to its real-time database capabilities to facilitate this peer-to-peer communication.
-* At the beginning of meeting, I set the local description as an Offerer to the peerConnection. Then, I stored the SDP offer, including the local description, in a document within a Firebase collection.
-* When another user joins the meeting as an Answerer, they retrieve their local description as an SDP answer from Firebase and send the SDP answer back to Firebase. 
-* Upon receiving the SDP answer and offer, the Offerer and Answerer exchange ICE candidates through Firebase to establish the optimal connection.
+* I used WebRTC to enable real-time communication.
+* Without backend server support for signalling server, I utilized Firebase as a signaling server due to its real-time database capabilities to facilitate this peer-to-peer communication.
+
 
 ![WebRTC Structure](https://github.com/pollyannaanalytics/Chair/assets/114213570/b2f2d576-cfa2-4d56-8b26-c1ea49e6f4eb)
 
-
+1. At the beginning of meeting, I set the local description as an Offerer to the peerConnection. Then, I stored the SDP offer, including the local description, in a document within a Firebase collection.
+2. When another user joins the meeting as an Answerer, he/she retrieve local description as an SDP answer from Firebase and send the SDP answer back to Firebase. 
+3. Upon receiving the SDP answer and offer, the Offerer and Answerer exchange ICE candidates through Firebase to establish the optimal connection.
 
 
 **3rd Party Solutions**
