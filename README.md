@@ -39,7 +39,8 @@ When users enter Chair, they can input their worries, and I'll use OpenAI to cat
 * Without backend server support for signalling server, I utilized Firebase as a signaling server due to its real-time database capabilities to facilitate this peer-to-peer communication.
 
 
-![WebRTC Structure](https://github.com/pollyannaanalytics/Chair/assets/114213570/b2f2d576-cfa2-4d56-8b26-c1ea49e6f4eb)
+![image](https://github.com/pollyannaanalytics/Chair/assets/114213570/6b556bda-8cbd-4a9d-b163-44b5156b2a36)
+
 
 1. At the beginning of meeting, I set the local description as an Offerer to the peerConnection. Then, I stored the SDP offer, including the local description, in a document within a Firebase collection.
 2. When another user joins the meeting as an Answerer, he/she retrieves local description as an SDP answer from Firebase and send the SDP answer back to Firebase. 
